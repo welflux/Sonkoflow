@@ -100,7 +100,7 @@ Expected settings to verify against the actual plan:
 - Framework/runtime: **Express / Node.js**, Node **22.12+** (prefer the supported LTS offered by the plan).
 - Install: `npm ci` with development dependencies available for the build.
 - Build: `npm run build`.
-- Server entry: `build/index.js`, or start command `npm start` where supported.
+- Server entry: `server.js`, or start command `npm start` where supported. The root entry imports the compiled backend. A `postinstall` hook runs the existing production build; its compiler/build dependencies are installed even when development dependencies are omitted. The Express wizard can therefore use its npm/server.js defaults.
 - Output: preserve both `dist/` (assets/HTML) and `build/` (server JavaScript); working directory must be the repository root. Never publish the repository itself as a static document root.
 - Listening: platform `PORT`, bound to `0.0.0.0`; HTTPS termination and app-origin forwarding verified.
 - Environment: set the server variables above in the app's environment settings. Keep all preexisting settings; do not blindly replace them. Restart/rebuild when required by hPanel.
