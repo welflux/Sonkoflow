@@ -99,3 +99,23 @@ test("invalid, oversized, undersized, and unsupported image contents are rejecte
     ),
   );
 });
+
+test("configuration errors identify field names without echoing supplied values", () => {
+  const sensitiveInvalid = 'private-value-that-must-not-appear';
+  const input = {
+    NODE_ENV: 'production', APP_ORIGIN: 'https://example.com',
+    SUPABASE_URL: 'https://example.supabase.co',
+    SUPABASE_PUBLISHABLE_KEY: 'a'.repeat(30), SUPABASE_SECRET_KEY: 'b'.repeat(30),
+    SESSION_ENCRYPTION_KEY: sensitiveInvalid, RATE_LIMIT_KEY: 'too-short',
+  };
+  assert.throws(() => loadConfig(input), error => {
+    assert(error instanceof Error);
+    assert(error.message.includes('SESSION_ENCRYPTION_KEY'));
+    assert(error.message.includes('RATE_LIMIT_KEY'));
+    assert(!error.message.includes(sensitiveInvalid));
+    assert(!error.message.includes('too-short'));
+    return true;
+  });
+  assert.throws(() => loadConfig({ ...input, NODE_ENV: ' production ' }), /NODE_ENV/);
+  assert.throws(() => loadConfig({ ...input, SESSION_ENCRYPTION_KEY: opaque(), RATE_LIMIT_KEY: opaque(), APP_ORIGIN: 'https://example.com/' }), /APP_ORIGIN/);
+});
