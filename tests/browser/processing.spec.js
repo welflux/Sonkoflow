@@ -4,7 +4,7 @@ const project = "11111111-1111-4111-8111-111111111111",
   image = "22222222-2222-4222-8222-222222222222",
   job = "33333333-3333-4333-8333-333333333333",
   output = "44444444-4444-4444-8444-444444444444";
-async function fixture(page, { enabled = true, status = "completed" } = {}) {
+async function fixture(page, { enabled = true, status = "completed", qualities = enabled ? ["low", "medium", "high"] : [], reason = enabled ? null : "configuration_required" } = {}) {
   const photograph = await readFile(
     new URL("../../public/images/footwear-small.webp", import.meta.url),
   );
@@ -42,7 +42,8 @@ async function fixture(page, { enabled = true, status = "completed" } = {}) {
       body = {
         enabled,
         history_available: true,
-        qualities: ["low", "medium", "high"],
+        qualities,
+        reason,
         default_quality: "high",
         daily_limit: 5,
       };
@@ -140,7 +141,28 @@ test("missing provider configuration disables generation without a fabricated re
     page.getByRole("button", { name: "Generate edited photograph" }),
   ).toBeDisabled();
   await expect(page.locator("#edit-notice")).toContainText("not available");
+  await expect(page.locator("#edit-notice")).not.toContainText("migration");
+  await expect(page.getByLabel("Output quality")).toBeDisabled();
+  await expect(page.getByLabel("Output quality")).toContainText("Unavailable");
+  await page.getByLabel("Enhancement mode").selectOption("portrait");
+  await expect(page.locator("#mode-description")).toContainText("photographs of people");
+  await expect(page.getByRole("button", { name: "Generate edited photograph" })).toBeDisabled();
   expect(state.submitted).toHaveLength(0);
+});
+test("missing quality options cannot enable generation when the mode changes", async ({ page }) => {
+  const state = await fixture(page, { enabled: true, qualities: [] });
+  await page.goto(`/app/edit/${image}`);
+  await page.getByLabel("Enhancement mode").selectOption("personal");
+  await expect(page.getByLabel("Output quality")).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Generate edited photograph" })).toBeDisabled();
+  expect(state.submitted).toHaveLength(0);
+});
+test("database unavailability has its own notice and the reference stays in normal document flow", async ({ page }) => {
+  await fixture(page, { enabled: false, reason: "migration_required" });
+  await page.goto(`/app/edit/${image}`);
+  await expect(page.locator("#edit-notice")).toContainText("processing database is not ready");
+  await expect(page.locator(".reference-panel")).toHaveCSS("position", "static");
+  await expect(page.locator("#reference-photo")).toHaveCount(1);
 });
 test("saved results show both private images and a working output download action", async ({
   page,

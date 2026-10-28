@@ -8,7 +8,7 @@ const modes = {
   },
   portrait: {
     name: "Professional Portraits",
-    copy: "A considered headshot for your professional world. Natural skin texture, realistic light, and recognizable identity come first.",
+    copy: "For photographs of people: a considered professional headshot with natural skin texture, realistic light, and recognizable identity. For items or merchandise, choose Product Photo Enhancement.",
     background: "studio",
   },
   product: {
@@ -45,6 +45,10 @@ export async function processingEditor(api, shell, imageId) {
     `/api/images/${image.id}/content`;
   page.querySelector("#reference-name").textContent = image.filename;
   const capabilities = await api("/processing/capabilities");
+  const qualities = (capabilities.qualities ?? []).filter((quality) =>
+    ["low", "medium", "high"].includes(quality),
+  );
+  const canGenerate = capabilities.enabled && qualities.length > 0;
   const form = page.querySelector("form");
   const submit = form.querySelector("button");
   const select = form.elements.mode;
@@ -59,14 +63,14 @@ export async function processingEditor(api, shell, imageId) {
     if (form.elements.background.disabled)
       form.elements.background.value = "preserve";
     submit.disabled =
-      !capabilities.enabled ||
+      !canGenerate ||
       (select.value === "product" &&
         capabilities.product_quality_available === false);
     page.querySelector("#product-assessment-note").textContent =
       capabilities.vision_assessment
         ? "Local checks and an additional, metered AI vision assessment will run. Review findings before approving."
         : "Local checks will run. Detailed labels, packaging, visibility and instruction compliance require your review; optional AI vision assessment is disabled.";
-    if (capabilities.enabled)
+    if (canGenerate)
       notice(
         page.querySelector("#edit-notice"),
         select.value === "product" &&
@@ -132,7 +136,7 @@ export async function processingEditor(api, shell, imageId) {
     page.querySelector("#product-region").hidden =
       !form.elements["comparison-region"].checked;
   });
-  for (const quality of capabilities.qualities ?? []) {
+  for (const quality of qualities) {
     const option = document.createElement("option");
     option.value = quality;
     option.textContent =
@@ -143,14 +147,26 @@ export async function processingEditor(api, shell, imageId) {
           : "Low · economical";
     form.elements.quality.append(option);
   }
-  form.elements.quality.value = capabilities.default_quality;
+  if (qualities.length) {
+    form.elements.quality.value = qualities.includes(capabilities.default_quality)
+      ? capabilities.default_quality
+      : qualities[0];
+  } else {
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = "Unavailable until AI processing is ready";
+    form.elements.quality.append(option);
+  }
+  form.elements.quality.disabled = !canGenerate;
   if(capabilities.billing_plan==="free"){form.elements.framing.value="square";form.elements.framing.disabled=true;}
   if (new URLSearchParams(location.search).has("review"))
     page.querySelector("#uncertain-ack").hidden = false;
-  if (!capabilities.enabled) {
+  if (!canGenerate) {
     notice(
       page.querySelector("#edit-notice"),
-      "AI processing is not available until the owner completes provider configuration and the Phase 2 database migration. Your reference remains stored privately.",
+      capabilities.reason === "migration_required"
+        ? "AI processing is not available because the processing database is not ready. Please contact support. Your uploaded reference remains private; no edit has been generated."
+        : "AI processing is not available yet. Service activation is pending; generation and quality selection are disabled. Your uploaded reference remains private; no edit has been generated.",
     );
     return;
   }

@@ -1101,8 +1101,7 @@ textarea:focus-visible {
   align-items: start;
 }
 .reference-panel {
-  position: sticky;
-  top: 30px;
+  position: static;
   min-width: 0;
 }
 .reference-panel > img {
