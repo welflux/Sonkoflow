@@ -9,10 +9,13 @@ export function crc32(bytes: Buffer) {
   for (const b of bytes) c = table[(c ^ b) & 255] ^ (c >>> 8);
   return (c ^ 0xffffffff) >>> 0;
 }
-export function imageZip(files: { name: string; bytes: Buffer }[]): Buffer {
+export function imageZip(
+  files: { name: string; bytes: Buffer }[],
+  maxEntries = 5,
+): Buffer {
   if (
     files.length < 1 ||
-    files.length > 5 ||
+    files.length > Math.min(100, maxEntries) ||
     new Set(files.map((f) => f.name)).size !== files.length
   )
     throw new Error("archive_limit");

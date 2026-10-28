@@ -1,3 +1,6 @@
+import sharp from "sharp";
+import {batchConfig} from "./batches/service.js";
+import {batchRoutes} from "./batches/routes.js";
 import { brandRoutes } from "./brand/routes.js";
 import { packRoutes } from "./packs/routes.js";
 import { ProcessingEngine } from "./processing/engine.js";
@@ -407,6 +410,12 @@ export function createApp(config: Config | null) {
           "missing_image",
           "Choose a photograph to upload.",
         );
+      if(req.get('X-Sonkoflow-Bulk')==='1'){
+        const policy=batchConfig();
+        if(req.file.size>policy.AI_BATCH_FILE_BYTES)throw new AppError(400,'batch_file_limit','This file exceeds the configured bulk upload limit.');
+        const metadata=await sharp(req.file.buffer,{limitInputPixels:25000000,failOn:'warning'}).metadata().catch(()=>null);
+        if(!metadata?.format||!policy.AI_BATCH_FORMATS.includes(`image/${metadata.format}` as any))throw new AppError(400,'batch_file_format','This file format is not enabled for bulk uploads.');
+      }
       const validated = await validateImage(req.file.buffer);
       const objectKey = `${identity.userId}/${input.id}.webp`;
       const prior = await identity.client
@@ -558,6 +567,7 @@ export function createApp(config: Config | null) {
     processingRoutes(app, processing, who);
     packRoutes(app, processing, who, limit);
     brandRoutes(app, processing, who, limit);
+    batchRoutes(app, processing, who, limit);
   }
   app.use("/api", (_req, _res, next) =>
     next(new AppError(404, "not_found", "Endpoint not found.")),

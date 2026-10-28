@@ -326,6 +326,9 @@ export class PackService {
     };
   }
   async zip(id: string, identity: Identity) {
+    return imageZip(await this.zipFiles(id, identity));
+  }
+  async zipFiles(id: string, identity: Identity) {
     const result = await this.get(id, identity),
       approved = result.outputs.filter((o: any) => o.approved);
     if (!approved.length)
@@ -384,6 +387,6 @@ export class PackService {
         "pack_changed",
         "Pack decisions changed during download. Refresh and try again.",
       );
-    return imageZip(files);
+    return files;
   }
 }
