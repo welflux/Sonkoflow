@@ -1,3 +1,8 @@
+import {
+  processingEditor,
+  processingResult,
+  projectProcessing,
+} from "./processing-ui.js";
 const root = document.querySelector("#workspace");
 const signout = document.querySelector("#signout");
 const audienceNames = {
@@ -87,7 +92,7 @@ function accountPage() {
         : confirm
           ? "Confirm your email"
           : "Welcome back";
-  root.innerHTML = `<div class="account-layout"><div class="account-intro"><p class="eyebrow">A space for your perspective</p><h1>Your images.<br>In good company.</h1><p>Products, people, and everything in between. A private place to bring your next collection together.</p><div class="account-art"><img src="/images/footwear.webp" alt="Illustrative ivory sneaker on blue studio blocks" width="1536" height="1024"><img class="account-portrait" src="/images/portrait-small.webp" alt="Illustrative portrait of a creative professional" width="640" height="427"><span class="account-art-note">A place for every point of view.</span></div><p class="account-scope">Concept imagery. AI editing and paid plans are not available yet.</p></div><section class="panel"><h2>${title}</h2><p>${signup ? "Verify your email to open a private photo workspace." : recovery ? "We’ll send a single-use recovery link to your email." : reset ? "Use at least 12 characters. You’ll sign in again after updating." : confirm ? "Continue to verify this single-use email link." : "Sign in to your projects and photographs."}</p><form id="account-form">${!reset && !confirm ? '<label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254"></label>' : ""}${!recovery && !confirm ? `<label>Password<input name="password" type="password" minlength="12" maxlength="128" autocomplete="${signup || reset ? "new-password" : "current-password"}" required></label>` : ""}${signup ? '<p class="help">Use at least 12 characters. No image generation or payment is included. Do not upload sensitive photographs until the owner publishes the privacy and retention policies.</p>' : ""}<div class="notice" role="status"></div><button type="submit">${signup ? "Create account" : recovery ? "Send recovery email" : reset ? "Save password" : confirm ? "Confirm email" : "Sign in"}</button></form><nav class="account-links" aria-label="Account options"><a href="/account/${signup ? "signin" : "signup"}">${signup ? "Already have an account? Sign in" : "Create an account"}</a><a href="/account/recover">Forgot password?</a><a href="/">Back to SONKOFLOW</a></nav></section></div>`;
+  root.innerHTML = `<div class="account-layout"><div class="account-intro"><p class="eyebrow">A space for your perspective</p><h1>Your images.<br>In good company.</h1><p>Products, people, and everything in between. A private place to bring your next collection together.</p><div class="account-art"><img src="/images/footwear.webp" alt="Illustrative ivory sneaker on blue studio blocks" width="1536" height="1024"><img class="account-portrait" src="/images/portrait-small.webp" alt="Illustrative portrait of a creative professional" width="640" height="427"><span class="account-art-note">A place for every point of view.</span></div><p class="account-scope">Concept imagery. AI editing depends on provider availability. Paid plans are not offered.</p></div><section class="panel"><h2>${title}</h2><p>${signup ? "Verify your email to open a private photo workspace." : recovery ? "We’ll send a single-use recovery link to your email." : reset ? "Use at least 12 characters. You’ll sign in again after updating." : confirm ? "Continue to verify this single-use email link." : "Sign in to your projects and photographs."}</p><form id="account-form">${!reset && !confirm ? '<label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254"></label>' : ""}${!recovery && !confirm ? `<label>Password<input name="password" type="password" minlength="12" maxlength="128" autocomplete="${signup || reset ? "new-password" : "current-password"}" required></label>` : ""}${signup ? '<p class="help">Use at least 12 characters. No image generation or payment is included. Do not upload sensitive photographs until the owner publishes the privacy and retention policies.</p>' : ""}<div class="notice" role="status"></div><button type="submit">${signup ? "Create account" : recovery ? "Send recovery email" : reset ? "Save password" : confirm ? "Confirm email" : "Sign in"}</button></form><nav class="account-links" aria-label="Account options"><a href="/account/${signup ? "signin" : "signup"}">${signup ? "Already have an account? Sign in" : "Create an account"}</a><a href="/account/recover">Forgot password?</a><a href="/">Back to SONKOFLOW</a></nav></section></div>`;
   bindForm(root.querySelector("form"), async (data, notice) => {
     const body = Object.fromEntries(data);
     if (confirm) {
@@ -122,7 +127,7 @@ function accountPage() {
 }
 function shell(active) {
   releasePreview();
-  root.innerHTML = `<div class="workspace-layout"><nav class="sidebar" aria-label="Workspace"><p>Your workspace</p><a href="/app" ${active === "projects" ? 'aria-current="page"' : ""}>${icon("grid")} Projects</a><a href="/app/profile" ${active === "profile" ? 'aria-current="page"' : ""}>${icon("person")} Account profile</a><a href="/">${icon("arrow")} Product website</a><div class="sidebar-note"><span class="sidebar-spark" aria-hidden="true"><svg class="star-svg" viewBox="0 0 32 32"><path d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"/></svg></span><p>Your perspective.<br>Your private collection.</p><small>AI editing is in development.</small></div></nav><section class="workspace-content"><div id="page"></div></section></div>`;
+  root.innerHTML = `<div class="workspace-layout"><nav class="sidebar" aria-label="Workspace"><p>Your workspace</p><a href="/app" ${active === "projects" ? 'aria-current="page"' : ""}>${icon("grid")} Projects</a><a href="/app/profile" ${active === "profile" ? 'aria-current="page"' : ""}>${icon("person")} Account profile</a><a href="/">${icon("arrow")} Product website</a><div class="sidebar-note"><span class="sidebar-spark" aria-hidden="true"><svg class="star-svg" viewBox="0 0 32 32"><path d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"/></svg></span><p>Your perspective.<br>Your private collection.</p><small>Reference-based editing, when configured.</small></div></nav><section class="workspace-content"><div id="page"></div></section></div>`;
   signout.hidden = false;
   signout.onclick = async () => {
     signout.disabled = true;
@@ -260,6 +265,13 @@ async function projectPage(id) {
     await projectPage(id);
   });
   const result = await api(`/images?project_id=${encodeURIComponent(id)}`);
+  void projectProcessing(api, page, id).catch((error) => {
+    const note = document.createElement("p");
+    note.className = "notice error";
+    note.setAttribute("role", "alert");
+    note.textContent = `Saved edits could not load: ${error.message}`;
+    page.querySelector(".processing-history")?.append(note);
+  });
   const list = page.querySelector("#images");
   if (!result.images.length) {
     list.innerHTML =
@@ -303,6 +315,13 @@ async function projectPage(id) {
       download.href = `/api/images/${image.id}/content?download=1`;
       download.textContent = "Download WebP ↓";
       actions.append(download);
+      if (image.role === "original") {
+        const enhance = document.createElement("a");
+        enhance.href = `/app/edit/${image.id}`;
+        enhance.textContent = "Enhance photograph";
+        enhance.className = "enhance-link";
+        actions.append(enhance);
+      }
     }
     const remove = document.createElement("button");
     remove.className = "danger";
@@ -386,7 +405,11 @@ async function main() {
   }
   try {
     profile = (await api("/session")).profile;
-    if (location.pathname === "/app/profile") await profilePage();
+    if (/^\/app\/edit\/[a-f0-9-]{36}$/.test(location.pathname))
+      await processingEditor(api, shell, location.pathname.split("/").pop());
+    else if (/^\/app\/edits\/[a-f0-9-]{36}$/.test(location.pathname))
+      await processingResult(api, shell, location.pathname.split("/").pop());
+    else if (location.pathname === "/app/profile") await profilePage();
     else if (/^\/app\/projects\/[a-f0-9-]{36}$/.test(location.pathname))
       await projectPage(location.pathname.split("/").pop());
     else await projectsPage();

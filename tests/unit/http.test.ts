@@ -16,7 +16,7 @@ const config: Config = {
 };
 test("unconfigured account services fail closed without fabricated success", async () => {
   const app = createApp(null);
-  for (const route of ["/api/session", "/api/projects", "/api/images"]) {
+  for (const route of ["/api/session", "/api/projects", "/api/images", "/api/jobs?project_id=11111111-1111-4111-8111-111111111111", "/api/processing/capabilities"]) {
     const response = await request(app).get(route);
     assert.equal(response.status, 503);
     assert.equal(response.body.error.code, "not_configured");
@@ -29,7 +29,7 @@ test("unconfigured account services fail closed without fabricated success", asy
 });
 test("protected APIs reject missing sessions before accessing external services", async () => {
   const app = createApp(config);
-  for (const route of ["/api/session", "/api/projects", "/api/images"]) {
+  for (const route of ["/api/session", "/api/projects", "/api/images", "/api/jobs?project_id=11111111-1111-4111-8111-111111111111", "/api/processing/capabilities"]) {
     const result = await request(app).get(route);
     assert.equal(result.status, 401);
   }

@@ -1,3 +1,5 @@
+import { ProcessingEngine } from "./processing/engine.js";
+import { processingRoutes } from "./processing/routes.js";
 import express, {
   type Request,
   type Response,
@@ -23,6 +25,8 @@ import {
 export function createApp(config: Config | null) {
   const app = express();
   const svc = config ? services(config) : null;
+  const processing = svc ? new ProcessingEngine(svc.admin) : null;
+  app.locals.processing = processing;
   const secure = config?.NODE_ENV === "production";
   const cookieName = secure ? "__Host-sonkoflow_session" : "sonkoflow_session";
   app.disable("x-powered-by");
@@ -347,7 +351,7 @@ export function createApp(config: Config | null) {
     const projectId = uuid.parse(req.query.project_id);
     const { data, error } = await who(res)
       .client.from("images")
-      .select("id,project_id,filename,width,height,byte_size,status,created_at")
+      .select("id,project_id,role,filename,width,height,byte_size,status,created_at")
       .eq("project_id", projectId)
       .order("created_at", { ascending: false })
       .limit(100);
@@ -529,6 +533,8 @@ export function createApp(config: Config | null) {
       .update({ status: "deleting" })
       .eq("id", id)
       .eq("user_id", identity.userId);
+    if (marked.error?.message?.includes("processing_image_busy"))
+      throw new AppError(409, "image_busy", "Wait for the active edit before deleting this photograph.");
     databaseError(marked.error);
     const removed = await svc!.admin.storage
       .from("photos")
@@ -546,6 +552,7 @@ export function createApp(config: Config | null) {
     databaseError(done.error);
     res.json({ ok: true });
   });
+  if (processing) processingRoutes(app, processing, who);
   app.use("/api", (_req, _res, next) =>
     next(new AppError(404, "not_found", "Endpoint not found.")),
   );
@@ -614,7 +621,14 @@ export function createApp(config: Config | null) {
               "internal_error",
               "An unexpected error occurred. Please try again.",
             );
-      if (safe.status === 429) res.set("Retry-After", "900");
+      if (safe.status === 429) {
+        const daily = ["daily_limit", "budget_limit"].includes(safe.code);
+        const now = new Date();
+        const seconds = daily
+          ? Math.ceil((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1) - now.getTime()) / 1000)
+          : 900;
+        res.set("Retry-After", String(seconds));
+      }
       if (safe.status >= 500)
         console.error(
           JSON.stringify({

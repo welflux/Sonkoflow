@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { test, expect } from "@playwright/test";
 
 const projectId = "11111111-1111-4111-8111-111111111111";
@@ -6,6 +7,9 @@ async function workspaceFixture(
   page,
   { empty = false, hasImage = false } = {},
 ) {
+  const photograph = await readFile(
+    new URL("../../public/images/footwear-small.webp", import.meta.url),
+  );
   const state = {
     projects: empty
       ? []
@@ -42,7 +46,9 @@ async function workspaceFixture(
     const path = new URL(request.url()).pathname;
     let body = {};
     let status = 200;
-    if (path === "/api/session")
+    if (path === "/api/processing/capabilities")
+      body = { enabled: false, history_available: false };
+    else if (path === "/api/session")
       body = {
         profile: { display_name: "Creative owner", audience: "ecommerce" },
       };
@@ -74,8 +80,11 @@ async function workspaceFixture(
       }
       body = { images: state.images };
     } else if (path === `/api/images/${imageId}/content`) {
-      const response = await page.request.get("/images/footwear-small.webp");
-      await route.fulfill({ response });
+      await route.fulfill({
+        status: 200,
+        contentType: "image/webp",
+        body: photograph,
+      });
       return;
     } else if (
       path === `/api/images/${imageId}` &&
@@ -182,13 +191,11 @@ test("invalid uploads stay local and malicious filenames render as text", async 
   state.images[0].filename =
     "<img src=x onerror=alert(1)> very-long-photograph-name-".repeat(3);
   await page.goto(`/app/projects/${projectId}`);
-  await page
-    .getByLabel("Photograph", { exact: true })
-    .setInputFiles({
-      name: "script.txt",
-      mimeType: "text/plain",
-      buffer: Buffer.from("not an image"),
-    });
+  await page.getByLabel("Photograph", { exact: true }).setInputFiles({
+    name: "script.txt",
+    mimeType: "text/plain",
+    buffer: Buffer.from("not an image"),
+  });
   await expect(page.getByRole("alert")).toContainText(
     "Choose a JPEG, PNG, or WebP",
   );
