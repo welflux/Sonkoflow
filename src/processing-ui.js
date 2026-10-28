@@ -1,3 +1,4 @@
+import { brandPicker, brandHistory } from "./brand-ui.js";
 import { renderQuality, qualitySummary } from "./quality-ui.js";
 const modes = {
   personal: {
@@ -84,6 +85,38 @@ export async function processingEditor(api, shell, imageId) {
       : image.audience === "professional"
         ? "portrait"
         : "personal";
+  const touched = new Set();
+  for (const field of ["background", "framing"])
+    form.elements[field].addEventListener("change", () => touched.add(field));
+  const brand = await brandPicker(
+    api,
+    page.querySelector("#product-controls"),
+    {
+      explicitSettings: (s) => ({
+        canvas: form.elements.framing.value,
+        background_style:
+          form.elements.background.value === "preserve"
+            ? "preserve"
+            : form.elements.background.value === "studio"
+              ? "studio"
+              : s.background_style === "solid"
+                ? "solid"
+                : "neutral",
+      }),
+      onDefaults: (s) => {
+        if (!touched.has("background"))
+          form.elements.background.value =
+            s.background_style === "preserve"
+              ? "preserve"
+              : s.background_style === "studio"
+                ? "studio"
+                : "clean";
+        if (!touched.has("framing")) form.elements.framing.value = s.canvas;
+      },
+    },
+  );
+  for (const field of ["background", "framing"])
+    form.elements[field].addEventListener("change", () => brand.refresh?.());
   setMode();
   select.addEventListener("change", setMode);
   form
@@ -147,6 +180,7 @@ export async function processingEditor(api, shell, imageId) {
         acknowledge_uncertain: values.acknowledge_uncertain === "on",
       };
       if (select.value === "product") {
+        if (brand.value()) body.brand = brand.value();
         body.product_options = {
           operations: new FormData(form).getAll("product-operation"),
           preserve_arrangement: form.elements.preserve_arrangement.checked,
@@ -247,6 +281,11 @@ export async function processingResult(api, shell, id) {
     if (stopped) return;
     try {
       const { job } = await api(`/jobs/${id}`);
+      page.querySelector(".brand-history")?.remove();
+      if (job.settings?.brand_snapshot)
+        page
+          .querySelector(".result-review")
+          .after(brandHistory(job.settings.brand_snapshot));
       page.querySelector("#result-project").href = job.project_id
         ? `/app/projects/${job.project_id}`
         : "/app";

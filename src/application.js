@@ -1,3 +1,4 @@
+import { brandStudio } from "./brand-ui.js";
 import { packEditor, packResult, projectPacks } from "./packs-ui.js";
 import {
   processingEditor,
@@ -128,7 +129,7 @@ function accountPage() {
 }
 function shell(active) {
   releasePreview();
-  root.innerHTML = `<div class="workspace-layout"><nav class="sidebar" aria-label="Workspace"><p>Your workspace</p><a href="/app" ${active === "projects" ? 'aria-current="page"' : ""}>${icon("grid")} Projects</a><a href="/app/profile" ${active === "profile" ? 'aria-current="page"' : ""}>${icon("person")} Account profile</a><a href="/">${icon("arrow")} Product website</a><div class="sidebar-note"><span class="sidebar-spark" aria-hidden="true"><svg class="star-svg" viewBox="0 0 32 32"><path d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"/></svg></span><p>Your perspective.<br>Your private collection.</p><small>Reference-based editing, when configured.</small></div></nav><section class="workspace-content"><div id="page"></div></section></div>`;
+  root.innerHTML = `<div class="workspace-layout"><nav class="sidebar" aria-label="Workspace"><p>Your workspace</p><a href="/app" ${active === "projects" ? 'aria-current="page"' : ""}>${icon("grid")} Projects</a><a href="/app/brands" ${active === "brands" ? 'aria-current="page"' : ""}>${icon("grid")} Brand Studio</a><a href="/app/profile" ${active === "profile" ? 'aria-current="page"' : ""}>${icon("person")} Account profile</a><a href="/">${icon("arrow")} Product website</a><div class="sidebar-note"><span class="sidebar-spark" aria-hidden="true"><svg class="star-svg" viewBox="0 0 32 32"><path d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"/></svg></span><p>Your perspective.<br>Your private collection.</p><small>Reference-based editing, when configured.</small></div></nav><section class="workspace-content"><div id="page"></div></section></div>`;
   signout.hidden = false;
   signout.onclick = async () => {
     signout.disabled = true;
@@ -412,7 +413,8 @@ async function main() {
   }
   try {
     profile = (await api("/session")).profile;
-    if (/^\/app\/packs\/new\/[a-f0-9-]{36}$/.test(location.pathname))
+    if (location.pathname === "/app/brands") await brandStudio(api, shell);
+    else if (/^\/app\/packs\/new\/[a-f0-9-]{36}$/.test(location.pathname))
       await packEditor(api, shell, location.pathname.split("/").pop());
     else if (/^\/app\/packs\/[a-f0-9-]{36}$/.test(location.pathname))
       await packResult(api, shell, location.pathname.split("/").pop());

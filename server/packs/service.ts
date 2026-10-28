@@ -1,3 +1,4 @@
+import { BrandService } from "../brand/service.js";
 import { randomUUID } from "node:crypto";
 import { AppError, hash } from "../security.js";
 import { ProcessingEngine, supabaseJobStore } from "../processing/engine.js";
@@ -168,6 +169,10 @@ export class PackService {
         this.engine.quality.vision,
         pc,
         this.engine.quality.retryLimit,
+        await new BrandService(this.engine.admin).resolve(
+          input.brand,
+          identity,
+        ),
       ),
       allowance = await this.allowance(identity, true);
     return {
@@ -179,6 +184,7 @@ export class PackService {
       can_generate: allowance.available_credits >= plan.reserved_credits,
       estimate_version: plan.estimate_version,
       price_version: plan.price_version,
+      brand_snapshot: plan.outputs[0]?.job.settings.brand_snapshot ?? null,
     };
   }
   async create(raw: unknown, identity: Identity) {
@@ -224,6 +230,10 @@ export class PackService {
         this.engine.quality.vision,
         pc,
         this.engine.quality.retryLimit,
+        await new BrandService(this.engine.admin).resolve(
+          input.brand,
+          identity,
+        ),
       );
     if (plan.fingerprint !== parsed.quote_fingerprint)
       throw new AppError(
@@ -238,7 +248,10 @@ export class PackService {
         input_image_id: input.input_image_id,
         submission_key: parsed.submission_key,
         request_fingerprint: fingerprint,
-        configuration: input,
+        configuration: {
+          ...input,
+          brand_snapshot: plan.outputs[0]?.job.settings.brand_snapshot ?? null,
+        },
         plan: {
           outputs: plan.outputs.map(({ job, ...o }) => o),
           estimated_credits: plan.estimated_credits,

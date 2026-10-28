@@ -1,3 +1,4 @@
+import { brandSelection } from "../brand/contracts.js";
 import { z } from "zod";
 import { hash, AppError } from "../security.js";
 export const PACK_PROMPT_VERSION = "product-pack-v1";
@@ -53,6 +54,7 @@ export const outputSpecs = {
 } as const;
 export const packInput = z
   .object({
+    brand: brandSelection.optional(),
     project_id: z.uuid(),
     input_image_id: z.uuid(),
     outputs: z

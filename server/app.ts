@@ -1,3 +1,4 @@
+import { brandRoutes } from "./brand/routes.js";
 import { packRoutes } from "./packs/routes.js";
 import { ProcessingEngine } from "./processing/engine.js";
 import { processingRoutes } from "./processing/routes.js";
@@ -556,6 +557,7 @@ export function createApp(config: Config | null) {
   if (processing) {
     processingRoutes(app, processing, who);
     packRoutes(app, processing, who, limit);
+    brandRoutes(app, processing, who, limit);
   }
   app.use("/api", (_req, _res, next) =>
     next(new AppError(404, "not_found", "Endpoint not found.")),
@@ -609,7 +611,9 @@ export function createApp(config: Config | null) {
         error = new AppError(
           413,
           "upload_limits",
-          "Upload one image no larger than 10 MB.",
+          _req.path.startsWith("/api/brands/")
+            ? "Upload one brand asset no larger than 2 MB."
+            : "Upload one image no larger than 10 MB.",
         );
       if (error instanceof SyntaxError)
         error = new AppError(

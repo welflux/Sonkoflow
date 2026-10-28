@@ -1,3 +1,5 @@
+import sharp from "sharp";
+import { brandSettings } from "../../server/brand/contracts.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -95,11 +97,87 @@ test(
         ).status,
         201,
       );
+      // Optional Phase 5 extension: same real provider/pack/quality/allowance path.
+      let brand: any = null;
+      if (process.env.RUN_LIVE_PACK_BRAND === "1") {
+        const profileId = randomUUID(),
+          assetId = randomUUID(),
+          presetId = randomUUID();
+        const logo = await sharp({
+          create: {
+            width: 120,
+            height: 60,
+            channels: 4,
+            background: "#24543A",
+          },
+        })
+          .png()
+          .toBuffer();
+        const asset = await agents[0]
+          .post("/api/brands/assets")
+          .set("Origin", origin)
+          .field("id", assetId)
+          .field("name", "Isolated test logo")
+          .field("kind", "logo")
+          .attach("asset", logo, {
+            filename: "logo.png",
+            contentType: "image/png",
+          });
+        assert.equal(
+          asset.status,
+          201,
+          "Brand migration and private asset storage must be available.",
+        );
+        assert.equal(
+          (await agents[1].get(`/api/brands/assets/${assetId}/content`)).status,
+          404,
+        );
+        const profile = await agents[0]
+          .post("/api/brands")
+          .set("Origin", origin)
+          .send({
+            id: profileId,
+            data: {
+              name: "Phase 5 isolated identity",
+              description: "Integration fixture",
+              settings: brandSettings.parse({
+                logo_asset_id: assetId,
+                logo_placement: "footer",
+                theme: "warm",
+              }),
+            },
+          });
+        assert.equal(profile.status, 200);
+        const preset = await agents[0]
+          .post(`/api/brands/${profileId}/presets`)
+          .set("Origin", origin)
+          .send({
+            id: presetId,
+            data: {
+              name: "Live listing",
+              purpose: "listing",
+              settings: { spacing: "generous" },
+            },
+          });
+        assert.equal(preset.status, 200);
+        brand = {
+          profile_id: profileId,
+          profile_revision: profile.body.profile.revision,
+          preset_id: presetId,
+          preset_revision: preset.body.preset.revision,
+          overrides: { theme: "natural" },
+        };
+        assert.equal(
+          (await agents[1].get(`/api/brands/${profileId}`)).status,
+          404,
+        );
+      }
       const types =
         process.env.LIVE_PACK_COMPLETE === "1"
           ? ["listing", "lifestyle", "detail", "social", "wide"]
           : ["listing", "lifestyle"];
       const input = {
+        ...(brand ? { brand } : {}),
         project_id: project.body.project.id,
         input_image_id: image,
         outputs: types.map((type) => ({ type, quality: "low" })),
@@ -149,6 +227,21 @@ test(
         (await agents[1].get(`/api/packs/${id}/download`)).status,
         404,
       );
+      if (brand) {
+        const edit = await agents[0]
+          .post("/api/brands")
+          .set("Origin", origin)
+          .send({
+            id: brand.profile_id,
+            revision: brand.profile_revision,
+            data: {
+              name: "Changed after submission",
+              description: "",
+              settings: brandSettings.parse({ theme: "cool" }),
+            },
+          });
+        assert.equal(edit.status, 200);
+      }
       let pack = await awaitPack(id, types.length);
       assert.equal(pack.outputs.length, types.length);
       for (const output of pack.outputs) {
@@ -156,6 +249,29 @@ test(
         assert.equal(j.status, "completed", "A real output did not finish.");
         assert(j.provider_usage, "Real generation usage is required.");
         assert.equal(j.input_image_id, image);
+        if (brand) {
+          assert.equal(
+            j.settings.brand_snapshot.profile_name,
+            "Phase 5 isolated identity",
+          );
+          assert.equal(
+            j.settings.brand_snapshot.profile_revision,
+            brand.profile_revision,
+          );
+          assert.equal(j.settings.brand_snapshot.settings.theme, "natural");
+          assert.equal(j.settings.brand_snapshot.settings.spacing, "generous");
+          assert(
+            j.quality_report.checks.some(
+              (c: any) => c.id === "brand_layout" && c.status === "passed",
+            ),
+          );
+          assert(
+            j.quality_report.checks.some(
+              (c: any) =>
+                c.id === "brand_adherence" && c.status === "needs_review",
+            ),
+          );
+        }
         assert(
           j.quality_report?.checks.some(
             (c: any) => c.id === "integrity" && c.status === "passed",
@@ -276,6 +392,7 @@ test(
           outputs: types.length,
           status: "passed",
           controlled_retry: process.env.RUN_LIVE_PACK_RETRY === "1",
+          brand_studio: !!brand,
         }),
       );
     } finally {
@@ -323,6 +440,22 @@ test(
             .from("photos")
             .remove(photos.data.map((i) => i.object_key));
           assert(!r.error, "Test storage cleanup needs attention.");
+        }
+        if (process.env.RUN_LIVE_PACK_BRAND === "1") {
+          const assets = await svc.admin
+            .from("brand_assets")
+            .select("object_key")
+            .eq("user_id", owner);
+          assert(!assets.error, "Brand cleanup metadata unavailable.");
+          if (assets.data?.length) {
+            const deleted = await svc.admin.storage
+              .from("photos")
+              .remove(assets.data.map((a) => a.object_key));
+            assert(
+              !deleted.error,
+              "Brand test storage cleanup needs attention.",
+            );
+          }
         }
         const r = await svc.admin.auth.admin.deleteUser(owner);
         assert(!r.error, "Test account cleanup needs attention.");

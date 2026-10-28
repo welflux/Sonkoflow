@@ -1,3 +1,4 @@
+import { brandPicker, brandHistory } from "./brand-ui.js";
 import { renderQuality, qualitySummary } from "./quality-ui.js";
 const names = {
   queued: "Queued",
@@ -129,6 +130,13 @@ export async function packEditor(api, shell, imageId) {
     selectionRevision++;
     quoteBox.hidden = true;
   };
+  const brand = await brandPicker(api, form, {
+    pack: true,
+    onChange: () => {
+      selectionRevision++;
+      quoteBox.hidden = true;
+    },
+  });
   if (!cap.enabled) {
     notify(
       page.querySelector("#pack-form-notice"),
@@ -155,6 +163,7 @@ export async function packEditor(api, shell, imageId) {
           `Choose at most ${cap.max_outputs} outputs for this pack.`,
         );
       const body = {
+        ...(brand.value() ? { brand: brand.value() } : {}),
         project_id: image.project_id,
         input_image_id: image.id,
         outputs,
@@ -280,6 +289,20 @@ export async function packResult(api, shell, id) {
     try {
       const result = await api(`/packs/${id}`);
       if (sequence !== serial || stopped) return;
+      if (
+        result.pack.configuration?.brand_snapshot &&
+        !page.querySelector(".brand-history")
+      ) {
+        const history = brandHistory(result.pack.configuration.brand_snapshot);
+        history.append(
+          el(
+            "p",
+            "Each pack output keeps the canvas shown on its card. This style preview uses the first planned output.",
+            "help",
+          ),
+        );
+        page.querySelector("#pack-gallery").before(history);
+      }
       const p = result.progress;
       page.querySelector("#pack-back").href = result.pack.project_id
         ? `/app/projects/${result.pack.project_id}`

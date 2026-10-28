@@ -39,6 +39,8 @@ export const checkId = z.enum([
   "assessment_availability",
   "customer_detail",
   "pack_fidelity",
+  "brand_adherence",
+  "brand_layout",
 ]);
 export type CheckId = z.infer<typeof checkId>;
 export const checkSchema = z
@@ -123,6 +125,9 @@ export const retryRequest = z
   })
   .strict();
 const corrections: Record<CheckId, string> = {
+  brand_adherence:
+    "Apply the saved brand surroundings and composition without altering the real product.",
+  brand_layout: "Keep the actual logo in its separate composited brand strip.",
   integrity: "Produce a valid complete photograph in the requested format.",
   canvas:
     "Fit the requested canvas without stretching, cropping or clipping the product.",

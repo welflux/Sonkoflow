@@ -1,3 +1,4 @@
+import type { BrandSnapshot } from "../brand/contracts.js";
 import { hash, AppError } from "../security.js";
 import { buildPrompt } from "../processing/contracts.js";
 import { priceSnapshot, type ProcessingConfig } from "../processing/config.js";
@@ -20,6 +21,7 @@ export function makeOutputPlan(
   pc: PackConfig,
   retryLimit: number,
   controlledRetry = "",
+  brand?: BrandSnapshot,
 ) {
   if (pc.AI_PACK_TOKEN_ESTIMATES_JSON.model !== c.AI_IMAGE_MODEL)
     throw new AppError(
@@ -57,6 +59,17 @@ export function makeOutputPlan(
     )[],
     preserve_arrangement: type === "listing",
   };
+  const snapshot = brand
+    ? {
+        ...brand,
+        settings: {
+          ...brand.settings,
+          canvas: (spec.aspect === "1:1" ? "square" : "landscape") as
+            | "square"
+            | "landscape",
+        },
+      }
+    : undefined;
   const prompt = buildPrompt({
     mode: "product",
     instructions: input.instructions,
@@ -64,6 +77,7 @@ export function makeOutputPlan(
     product_options,
     pack_context: context,
     controlled_retry: controlledRetry,
+    brand_snapshot: snapshot,
   });
   // Explicit conservative estimate, not a claim of exact tokenizer/provider usage.
   const textTokens = Buffer.byteLength(prompt, "utf8");
@@ -134,8 +148,9 @@ export function makeOutputPlan(
         product_options,
         pack_context: context,
         controlled_retry: controlledRetry,
+        ...(snapshot ? { brand_snapshot: snapshot } : {}),
       },
-      prompt_version: PACK_PROMPT_VERSION,
+      prompt_version: snapshot ? "brand-pack-v1" : PACK_PROMPT_VERSION,
       price_snapshot: priceSnapshot(c),
       reserved_micro_usd: generationReserve + assessmentReserve,
       quality_model: q?.AI_QUALITY_VISION_MODEL ?? null,
@@ -154,6 +169,7 @@ export function makePackPlan(
   q: VisionConfig | null,
   pc: PackConfig,
   retryLimit: number,
+  brand?: BrandSnapshot,
 ) {
   if (input.outputs.length > pc.AI_PACK_MAX_OUTPUTS)
     throw new AppError(
@@ -175,7 +191,9 @@ export function makePackPlan(
       (a, b) =>
         packType.options.indexOf(a.type) - packType.options.indexOf(b.type),
     )
-    .map((o) => makeOutputPlan(o.type, o.quality, input, c, q, pc, retryLimit));
+    .map((o) =>
+      makeOutputPlan(o.type, o.quality, input, c, q, pc, retryLimit, "", brand),
+    );
   return {
     outputs,
     estimated_credits: outputs.reduce((n, o) => n + o.estimated_credits, 0),

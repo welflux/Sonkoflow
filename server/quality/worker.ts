@@ -1,3 +1,5 @@
+import { assessBrandLayout } from "../brand/assessment.js";
+import { brandDirection, type BrandSnapshot } from "../brand/contracts.js";
 import { packDirection, type PackContext } from "../packs/contracts.js";
 import { randomUUID } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -27,6 +29,7 @@ export type QualityJob = {
     product_options?: unknown;
     background: string;
     pack_context?: PackContext;
+    brand_snapshot?: BrandSnapshot;
   };
   instructions: string;
   quality_model: string | null;
@@ -155,6 +158,11 @@ export class QualityWorker {
         throw new Error("integrity");
       const options = productOptions.parse(job.settings.product_options ?? {});
       result = await localAssessment(source, output, job.output_size, options);
+      if (job.settings.brand_snapshot)
+        result = report([
+          ...result.checks,
+          ...(await assessBrandLayout(output, job.settings.brand_snapshot)),
+        ]);
       if (
         job.settings.pack_context &&
         ["lifestyle", "detail", "wide"].includes(job.settings.pack_context.type)
@@ -199,7 +207,7 @@ export class QualityWorker {
           output,
           options,
           job.settings.background,
-          `${job.instructions}\n${direction}\n${job.settings.pack_context ? packDirection(job.settings.pack_context) : ""}`,
+          `${job.instructions}\n${direction}\n${brandDirection(job.settings.brand_snapshot)}\n${job.settings.pack_context ? packDirection(job.settings.pack_context) : ""}`,
           job.id,
           controller.signal,
         );

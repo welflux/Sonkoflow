@@ -1,3 +1,6 @@
+import { BrandService } from "../brand/service.js";
+import { compositeBrand } from "../brand/assets.js";
+import type { BrandSnapshot } from "../brand/contracts.js";
 import { loadPackConfig } from "../packs/config.js";
 import { makeOutputPlan } from "../packs/plan.js";
 import { packType, type PackContext } from "../packs/contracts.js";
@@ -51,6 +54,7 @@ export type WorkerJob = {
     product_options?: ProductOptions;
     provider_consent?: boolean;
     pack_context?: PackContext;
+    brand_snapshot?: BrandSnapshot;
   };
   quality_retry_targets?: CheckId[];
   quality_retry_instructions?: string;
@@ -88,10 +92,25 @@ export interface JobStore {
   ): Promise<boolean>;
   image(id: string, owner: string): Promise<StoredImage | null>;
   read(key: string): Promise<Buffer>;
+  brandAsset?(
+    id: string,
+    owner: string,
+  ): Promise<{ object_key: string; checksum: string } | null>;
   write(key: string, bytes: Buffer): Promise<void>;
 }
 export function supabaseJobStore(admin: SupabaseClient): JobStore {
   return {
+    async brandAsset(id, owner) {
+      const r = await admin
+        .from("brand_assets")
+        .select("object_key,checksum")
+        .eq("id", id)
+        .eq("user_id", owner)
+        .in("status", ["ready", "deleted"])
+        .maybeSingle();
+      if (r.error) throw Error("brand_asset");
+      return r.data;
+    },
     async claim(worker, lease, concurrency) {
       const { data, error } = await admin.rpc("claim_processing_job", {
         worker,
@@ -250,6 +269,15 @@ export class ProcessingWorker {
       } catch {
         throw new Error("source");
       }
+      let logo: Buffer | undefined;
+      const brand = job.settings.brand_snapshot;
+      if (brand?.logo && brand.settings.logo_placement === "footer") {
+        const asset = await this.store.brandAsset?.(brand.logo.id, job.user_id);
+        if (!asset || asset.checksum !== brand.logo.checksum)
+          throw Error("brand_asset");
+        logo = await this.store.read(asset.object_key);
+        if (hash(logo) !== brand.logo.checksum) throw Error("brand_asset");
+      }
       if (controller.signal.aborted) return;
       if (!(await this.store.step(job.id, worker, "dispatch"))) return;
       dispatched = true;
@@ -272,7 +300,23 @@ export class ProcessingWorker {
         }))
       )
         return;
-      const output = await validateOutput(result.encoded, job.output_size);
+      let output = await validateOutput(result.encoded, job.output_size);
+      if (logo && brand) {
+        try {
+          output = await validateOutput(
+            (await compositeBrand(output.bytes, logo, brand)).toString(
+              "base64",
+            ),
+            job.output_size,
+          );
+        } catch {
+          throw new AppError(
+            502,
+            "brand_composite_failed",
+            "Brand compositing failed.",
+          );
+        }
+      }
       if (
         !(await this.checkpoint(job.id, worker, "prepare", {
           filename: `sonkoflow-${job.mode}-${job.id.slice(0, 8)}.webp`,
@@ -312,13 +356,22 @@ export class ProcessingWorker {
       // A prepared result is reconciled from its deterministic private object key.
       // The SQL lease limits storage recovery to five passes; no new API edit runs.
       if (prepared) return;
-      let code = "source_unavailable",
+      let code =
+          error instanceof Error && error.message === "brand_asset"
+            ? "brand_asset_unavailable"
+            : "source_unavailable",
         safe = !dispatched,
         uncertain = false;
       if (error instanceof ProviderFailure) {
         code = error.code;
         safe = error.safe;
         uncertain = error.uncertain;
+      } else if (
+        error instanceof AppError &&
+        error.code === "brand_composite_failed"
+      ) {
+        code = "brand_composite_failed";
+        safe = false;
       } else if (error instanceof AppError && error.code === "invalid_output") {
         code = "invalid_output";
         safe = false;
@@ -478,6 +531,7 @@ export class ProcessingEngine {
       this.packConfig,
       this.quality.retryLimit,
       retryDirection(targets, instructions),
+      parent.settings.brand_snapshot,
     );
     return {
       plan,
@@ -533,6 +587,47 @@ export class ProcessingEngine {
     processingDbError(error);
     if (!image || image.role !== "original" || image.status !== "ready")
       throw new AppError(404, "not_found", "Reference photograph not found.");
+    if (input.brand && !retry) {
+      const prior = await identity.client
+        .from("processing_jobs")
+        .select("*")
+        .eq("submission_key", input.submission_key)
+        .maybeSingle();
+      processingDbError(prior.error);
+      if (prior.data) {
+        if (prior.data.request_fingerprint !== fingerprint(input))
+          throw new AppError(
+            409,
+            "submission_conflict",
+            "This identifier belongs to a different edit.",
+          );
+        return prior.data as WorkerJob;
+      }
+    }
+    let brand = retry?.parent.settings.brand_snapshot as
+      | BrandSnapshot
+      | undefined;
+    if (!retry && input.brand) {
+      brand = await new BrandService(this.admin).resolve(input.brand, identity);
+      if (brand) {
+        brand.settings.canvas = input.framing;
+        brand.settings.background_style =
+          input.background === "preserve"
+            ? "preserve"
+            : input.background === "studio"
+              ? "studio"
+              : ["solid", "neutral"].includes(brand.settings.background_style)
+                ? brand.settings.background_style
+                : "neutral";
+      }
+    }
+    if (
+      brand &&
+      !retry &&
+      input.product_options &&
+      !input.product_options.operations.includes("background")
+    )
+      brand.settings.background_style = "preserve";
     let packRetryPlan: ReturnType<typeof makeOutputPlan> | null = null;
     if (retry?.parent.pack_id) {
       if (
@@ -572,6 +667,7 @@ export class ProcessingEngine {
                 framing: input.framing,
                 preserve_appearance: true,
                 provider_consent: true,
+                ...(brand ? { brand_snapshot: brand } : {}),
                 ...(input.mode === "product"
                   ? {
                       product_options: productOptions.parse(
@@ -582,8 +678,11 @@ export class ProcessingEngine {
               },
           model: c.AI_IMAGE_MODEL,
           output_size: outputSize(input, image.width, image.height),
-          prompt_version:
-            input.mode === "product" ? PRODUCT_PROMPT_VERSION : PROMPT_VERSION,
+          prompt_version: brand
+            ? "brand-product-v1"
+            : input.mode === "product"
+              ? PRODUCT_PROMPT_VERSION
+              : PROMPT_VERSION,
           request_fingerprint: retry
             ? hash(
                 JSON.stringify({
