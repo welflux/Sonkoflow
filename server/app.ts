@@ -1,3 +1,4 @@
+import {libraryRoutes,libraryError} from "./library/routes.js";
 import sharp from "sharp";
 import {batchConfig} from "./batches/service.js";
 import {batchRoutes} from "./batches/routes.js";
@@ -314,11 +315,10 @@ export function createApp(config: Config | null) {
     res.json({ profile: data });
   });
   app.get("/api/projects", async (_req, res) => {
-    const { data, error } = await who(res)
-      .client.from("projects")
-      .select("id,name,audience,created_at")
-      .order("created_at", { ascending: false })
-      .limit(100);
+    const gallery=await svc!.admin.rpc('library_schema_version');
+    let query=who(res).client.from('projects').select('id,name,audience,created_at').order('created_at',{ascending:false}).limit(100);
+    if(!gallery.error&&gallery.data===2026102806)query=query.eq('archived',false);
+    const {data,error}=await query;
     databaseError(error);
     res.json({ projects: data });
   });
@@ -337,6 +337,9 @@ export function createApp(config: Config | null) {
   app.delete("/api/projects/:id", async (req, res) => {
     const id = uuid.parse(req.params.id);
     const identity = who(res);
+    const gallery=await svc!.admin.rpc('library_schema_version');
+    if(!gallery.error&&gallery.data===2026102806){const removed=await svc!.admin.rpc('library_project_action',{owner:identity.userId,target:id,action:'delete',value:null});libraryError(removed.error);if(!removed.data)throw new AppError(404,'not_found','Project not found.');res.json({ok:true});return;}
+    if(gallery.error&&!['PGRST202','42883'].includes(gallery.error.code))libraryError(gallery.error);
     const { data, error } = await identity.client
       .from("projects")
       .delete()
@@ -539,6 +542,9 @@ export function createApp(config: Config | null) {
     databaseError(result.error);
     if (!result.data)
       throw new AppError(404, "not_found", "Photograph not found.");
+    const library=await svc!.admin.rpc('library_schema_version');
+    if(library.error&&!['PGRST202','42883'].includes(library.error.code))libraryError(library.error);
+    if(!library.error&&library.data===2026102806){const trashed=await svc!.admin.rpc('library_action',{owner:identity.userId,ids:[id],action:'trash',value:null});libraryError(trashed.error);res.json({ok:true,trashed:true,retention_days:30});return;}
     const marked = await svc!.admin
       .from("images")
       .update({ status: "deleting" })
@@ -568,6 +574,7 @@ export function createApp(config: Config | null) {
     packRoutes(app, processing, who, limit);
     brandRoutes(app, processing, who, limit);
     batchRoutes(app, processing, who, limit);
+    libraryRoutes(app, processing, who, limit);
   }
   app.use("/api", (_req, _res, next) =>
     next(new AppError(404, "not_found", "Endpoint not found.")),

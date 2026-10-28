@@ -1,4 +1,5 @@
-import {batchesPage,batchPage} from "./batches-ui.js";
+import { libraryPage } from "./library-ui.js";
+import { batchesPage, batchPage } from "./batches-ui.js";
 import { brandStudio } from "./brand-ui.js";
 import { packEditor, packResult, projectPacks } from "./packs-ui.js";
 import {
@@ -130,7 +131,7 @@ function accountPage() {
 }
 function shell(active) {
   releasePreview();
-  root.innerHTML = `<div class="workspace-layout"><nav class="sidebar" aria-label="Workspace"><p>Your workspace</p><a href="/app" ${active === "projects" ? 'aria-current="page"' : ""}>${icon("grid")} Projects</a><a href="/app/batches">${icon("grid")} Bulk processing</a><a href="/app/brands" ${active === "brands" ? 'aria-current="page"' : ""}>${icon("grid")} Brand Studio</a><a href="/app/profile" ${active === "profile" ? 'aria-current="page"' : ""}>${icon("person")} Account profile</a><a href="/">${icon("arrow")} Product website</a><div class="sidebar-note"><span class="sidebar-spark" aria-hidden="true"><svg class="star-svg" viewBox="0 0 32 32"><path d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"/></svg></span><p>Your perspective.<br>Your private collection.</p><small>Reference-based editing, when configured.</small></div></nav><section class="workspace-content"><div id="page"></div></section></div>`;
+  root.innerHTML = `<div class="workspace-layout"><nav class="sidebar" aria-label="Workspace"><p>Your workspace</p><a href="/app" ${active === "projects" ? 'aria-current="page"' : ""}>${icon("grid")} Projects</a><a href="/app/library" ${active === "library" ? 'aria-current="page"' : ""}>${icon("grid")} Image library</a><a href="/app/batches" ${active === "batches" ? 'aria-current="page"' : ""}>${icon("grid")} Bulk processing</a><a href="/app/brands" ${active === "brands" ? 'aria-current="page"' : ""}>${icon("grid")} Brand Studio</a><a href="/app/profile" ${active === "profile" ? 'aria-current="page"' : ""}>${icon("person")} Account profile</a><a href="/">${icon("arrow")} Product website</a><div class="sidebar-note"><span class="sidebar-spark" aria-hidden="true"><svg class="star-svg" viewBox="0 0 32 32"><path d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"/></svg></span><p>Your perspective.<br>Your private collection.</p><small>Reference-based editing, when configured.</small></div></nav><section class="workspace-content"><div id="page"></div></section></div>`;
   signout.hidden = false;
   signout.onclick = async () => {
     signout.disabled = true;
@@ -414,8 +415,11 @@ async function main() {
   }
   try {
     profile = (await api("/session")).profile;
-    if(location.pathname==="/app/batches")await batchesPage(api,shell);
-    else if(/^\/app\/batches\/[a-f0-9-]{36}$/.test(location.pathname))await batchPage(api,shell,location.pathname.split("/").pop());
+    if (location.pathname === "/app/library") await libraryPage(api, shell);
+    else if (location.pathname === "/app/batches")
+      await batchesPage(api, shell);
+    else if (/^\/app\/batches\/[a-f0-9-]{36}$/.test(location.pathname))
+      await batchPage(api, shell, location.pathname.split("/").pop());
     else if (location.pathname === "/app/brands") await brandStudio(api, shell);
     else if (/^\/app\/packs\/new\/[a-f0-9-]{36}$/.test(location.pathname))
       await packEditor(api, shell, location.pathname.split("/").pop());

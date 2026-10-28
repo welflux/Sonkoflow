@@ -1,9 +1,17 @@
+import { purgeDeletedImage } from "./library/cleanup.js";
 import { loadConfig } from "./config.js";
 import { services, databaseError } from "./services.js";
 const config = loadConfig();
 if (!config) throw new Error("Configure services before maintenance.");
 const { admin } = services(config);
 // Only process old interrupted/deleting records. Valid ready photographs are retained.
+const expiry = await admin.rpc("expire_library_trash");
+if (
+  expiry.error &&
+  expiry.error.code !== "PGRST202" &&
+  expiry.error.code !== "42883"
+)
+  databaseError(expiry.error);
 const cutoff = new Date(Date.now() - 86400000).toISOString();
 const stale = await admin
   .from("images")
@@ -14,22 +22,21 @@ const stale = await admin
 databaseError(stale.error);
 let reconciled = 0;
 for (const image of stale.data ?? []) {
+  if (image.status === "deleting") {
+    if (await purgeDeletedImage(admin, image)) reconciled++;
+    continue;
+  }
   const object = await admin.storage.from("photos").remove([image.object_key]);
   if (object.error) continue;
-  const result =
-    image.status === "deleting"
-      ? await admin.rpc("complete_deletion", {
-          image_id: image.id,
-          owner_id: image.user_id,
-        })
-      : await admin
-          .from("images")
-          .delete()
-          .eq("id", image.id)
-          .eq("user_id", image.user_id)
-          .eq("status", "pending");
+  const result = await admin
+    .from("images")
+    .delete()
+    .eq("id", image.id)
+    .eq("user_id", image.user_id)
+    .eq("status", "pending");
   if (!result.error) reconciled++;
 }
+
 databaseError(
   (
     await admin

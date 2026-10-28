@@ -1,6 +1,6 @@
 # SONKOFLOW
 
-The review stack now includes [reference-image processing](docs/phase-2-processing.md), [product quality review](docs/phase-3-product-quality.md), [product image packs](docs/phase-4-product-packs.md), and [Brand Studio](docs/phase-5-brand-studio.md). These additions reuse the Phase 1 Express/Supabase architecture. Production publication is on hold; API funding, pending hosted migrations, reviewed pack estimates and real-service validation remain activation requirements. See each phase document for implemented behavior and actual limitations.
+The review stack now includes [reference-image processing](docs/phase-2-processing.md), [product quality review](docs/phase-3-product-quality.md), [product image packs](docs/phase-4-product-packs.md), [Brand Studio](docs/phase-5-brand-studio.md), [bulk processing](docs/phase-6-bulk-processing.md), and [the image library](docs/phase-7-image-library.md). These additions reuse the Phase 1 Express/Supabase architecture. Production publication is on hold; API funding, pending hosted migrations, reviewed pack estimates and real-service validation remain activation requirements. See each phase document for implemented behavior and actual limitations.
 
 The original Phase 1 notes below describe the earlier starting point.
 
