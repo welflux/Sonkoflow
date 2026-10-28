@@ -8,7 +8,7 @@ const schema = z.object({
       "gpt-image-2.5-sunburst-2026-09-08",
       "gpt-image-1.5",
     ])
-    .default("gpt-image-2.5-flare-2026-09-08"),
+    .default("gpt-image-2.5-sunburst-2026-09-08"),
   AI_MAX_QUALITY: z.enum(["low", "medium", "high"]).default("high"),
   AI_TIMEOUT_SECONDS: z.coerce.number().int().min(30).max(600).default(300),
   AI_GLOBAL_CONCURRENCY: z.coerce.number().int().min(1).max(4).default(1),

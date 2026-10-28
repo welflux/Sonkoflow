@@ -35,6 +35,36 @@ export class ProviderFailure extends Error {
     super(code);
   }
 }
+// Inspect only a bounded error body and map known codes. Never surface provider
+// messages, account details, headers, or transport internals to users or logs.
+async function billingRejected(response: Response): Promise<boolean> {
+  const reader = response.body?.getReader();
+  if (!reader) return false;
+  const chunks: Uint8Array[] = [];
+  let length = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      length += value.length;
+      if (length > 8192) return false;
+      chunks.push(value);
+    }
+    const body = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+    return (
+      [
+        "credit_balance_exhausted",
+        "insufficient_quota",
+        "billing_hard_limit_reached",
+      ].includes(body?.error?.code) ||
+      body?.error?.type === "insufficient_quota"
+    );
+  } catch {
+    return false;
+  } finally {
+    await reader.cancel().catch(() => {});
+  }
+}
 export async function editImage(
   c: ProcessingConfig,
   input: JobInput,
@@ -76,11 +106,17 @@ export async function editImage(
     throw new ProviderFailure("provider_interrupted", true, false);
   }
   if (!response.ok) {
+    if (response.status === 429) {
+      const billing = await billingRejected(response);
+      throw new ProviderFailure(
+        billing ? "provider_billing" : "provider_rate_limit",
+        false,
+        true,
+      );
+    }
     await response.body?.cancel();
     if ([401, 403].includes(response.status))
       throw new ProviderFailure("provider_credentials", false, true);
-    if (response.status === 429)
-      throw new ProviderFailure("provider_rate_limit", false, true);
     if ([400, 404, 413, 422].includes(response.status))
       throw new ProviderFailure("provider_rejected", false, false);
     throw new ProviderFailure("provider_unavailable", true, false);

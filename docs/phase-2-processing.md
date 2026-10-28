@@ -1,6 +1,6 @@
 # Phase 2 — reference-image processing
 
-Status on 28 October 2026: implemented locally; **not verified against real OpenAI and not ready to close Phase 2**. The production `main` branch must retain the verified Phase 1 release until activation prerequisites are satisfied.
+Status on 28 October 2026: implemented locally; **a genuine OpenAI edit was attempted but rejected for exhausted API credit. Phase 2 remains open**. The production `main` branch must retain the verified Phase 1 release until activation prerequisites are satisfied.
 
 ## What was implemented
 
@@ -12,14 +12,18 @@ The result screen polls durable job state, displays the reference and completed 
 
 ## API research and limitations
 
-Official sources retrieved successfully through the allowed GitHub route:
+Current official documentation was retrieved successfully on 28 October 2026 through the enforced proxy:
 
-- [OpenAI Node SDK image resource](https://github.com/openai/openai-node/blob/master/src/resources/images.ts).
-- [OpenAI OpenAPI specification](https://github.com/openai/openai-openapi/blob/master/openapi.yaml).
+- [Image generation and reference editing guide](https://developers.openai.com/api/docs/guides/image-generation).
+- [GPT Image 2.5 Sunburst](https://developers.openai.com/api/docs/models/gpt-image-2.5-sunburst).
+- [GPT Image 2.5 Flare](https://developers.openai.com/api/docs/models/gpt-image-2.5-flare).
+- [API pricing, standard image processing](https://developers.openai.com/api/docs/pricing).
 
-These sources currently document reference-image edits, PNG/JPEG/WebP inputs below 50 MB per image, base64 results for GPT Image models, WebP output/compression controls, and low/medium/high quality. They list newer 2.5 models and indicate that the old `gpt-image-1` has been shut down. They document `input_fidelity=high` for `gpt-image-1.5`; this parameter is omitted for the newer models. The service deliberately retains the stricter existing application upload limits.
+The default is now the pinned `gpt-image-2.5-sunburst-2026-09-08`: OpenAI recommends Sunburst where editing precision matters most. Flare is positioned for fast everyday generation. Both support reference edits through `/v1/images/edits`, text/image inputs, image output, and WebP output/compression. PNG/JPEG/WebP reference support is documented; application limits remain stricter than provider limits. The pinned Flare snapshot and `gpt-image-1.5` remain allowlisted. `input_fidelity=high` is sent only for 1.5, as previously implemented. Additional organization verification may be required; listing a model does not prove paid generation access.
 
-The configured candidate is the pinned `gpt-image-2.5-flare-2026-09-08`. The pinned sunburst snapshot and `gpt-image-1.5` are also allowlisted server-side. This is **not a verified claim that flare has the lowest cost or best quality**: the current [image guide](https://developers.openai.com/api/docs/guides/image-generation), [model documentation](https://developers.openai.com/api/docs/models), and [pricing page](https://openai.com/api/pricing/) were blocked by this environment's proxy. Primary pricing/model-comparison review remains an activation blocker. No numeric production prices were invented.
+For both 2.5 models, verified **standard** rates per million tokens are **$5 text input, $8 image input, $30 image output**. Text output is not billed because these models output images. Set `AI_PRICE_VERSION=openai-standard-images-2026-10-28` and the matching three rate settings; leave text-output pricing empty for these models. The 1.5 fallback has different rates and requires a separate matching configuration. Cached discounts apply only through the Responses API, so this direct Images API implementation does not apply them. Batch prices also do not apply. Equal unit rates do not imply equal per-image cost; 2.5 token consumption must be measured, not inferred from a GPT Image 2 calculator.
+
+The official guide also supports `xhigh`/`max` and custom dimensions for 2.5. The current release deliberately bounds quality at high and uses the three established canvases until measured cost and output validation justify expanding them. This is an application safeguard, not a claim that higher quality or custom dimensions are unsupported by OpenAI.
 
 For predictable limits the initial implementation requests one image at `1024x1024`, `1536x1024`, or `1024x1536`; it does not advertise experimental/custom/native 4K output. High is the default maximum quality, configurable downward. Closest-match framing selects a supported canvas; the prompt requests subject preservation and restrained background extension rather than distortion. This does not guarantee exact aspect ratio preservation or recovery of lost detail. Higher quality/resolution offerings need separate cost and capability validation before inclusion.
 
@@ -77,7 +81,9 @@ These are application **reservation and operation-count safeguards, not a guaran
 4. Enable processing and restart the Node service with these settings. No service key or OpenAI key is sent to the browser. The cloud environment and Hostinger have separate environment configuration; a cloud key binding does not configure Hostinger automatically.
 5. Execute the genuine, explicitly billable integration test against designated development Supabase/OpenAI projects, then verify the deployed authenticated workflow before production promotion. Existing production mail/callback configuration must work for customer sign-up; this change does not replace it.
 
-A cloud draft has been saved with `api.openai.com`, `developers.openai.com`, `openai.com`, and the existing Hostinger hostname added alongside the existing Supabase host. It declares `SONKOFLOW_OPENAI_API_KEY` delivered as `AI_OPENAI_API_KEY`; the platform reserves `OPENAI_` variable names. Saving the draft does not apply it: review, secure key entry, save and publish are still required.
+The restored running cloud environment reports current observations at desired/observed spec revision 5, ready OpenAI and Supabase bindings, and enforced destinations for `api.openai.com`, `developers.openai.com`, `openai.com`, and the existing Supabase host. Actual OpenAI authentication and documentation retrieval succeeded. These changes are effective in this running session, rather than merely an untested draft. The configuration tool still exposes a saved draft and its base version; no separate publication action or new publication version was established by this verification. No further key entry is needed for this session.
+
+The canonical website is now `https://sonkoflow.com/`. The current cloud outbound allowlist still contains the temporary Hostinger hostname and does not contain `sonkoflow.com`; this does not prevent OpenAI/Supabase integration, but live custom-domain browser verification was not performed. API secrets remain restricted to their respective API hostnames. Cloud configuration does not automatically update Hostinger runtime variables.
 
 ## Commands and evidence
 
@@ -88,7 +94,9 @@ A cloud draft has been saved with `api.openai.com`, `developers.openai.com`, `op
 - `npm run check:processing`: read-only configuration/schema/model-access check. It never generates an image.
 - `RUN_LIVE_PROCESSING=1 npm run test:live:processing`: real, billable integration test for three modes, duplicate protection, cross-tenant denial, private output download and saved history. Isolated development test accounts are cleaned up when terminal; active interrupted jobs are retained and identified for reconciliation.
 
-Observed hosted readiness: the version RPC returned **HTTP 404 / PGRST202**, so the new migration is not verified on the real project. The OpenAI key is absent, processing is disabled, and OpenAI destinations/pricing pages remain blocked by the currently enforced network policy. The genuine live test was skipped; no real OpenAI result has been received by this application during this task. Local passing tests must not be presented as completion of the Phase 2 real-service criterion.
+See [the resumed verification record](phase-2-verification-2026-10-28.md) for current service results. OpenAI authentication returned HTTP 200, but the single genuine edit returned HTTP 429 with `credit_balance_exhausted` / `insufficient_quota`. No generated image, usage token breakdown, stored output, or cost-per-image measurement was received. The adapter now distinguishes billing exhaustion from temporary rate limiting without exposing raw provider error messages.
+
+Supabase's version RPC still returns **HTTP 404 / PGRST202**. Read-only counts show zero projects, images, processing jobs and usage rows, and the existing private WebP bucket remains correct. No SQL-management credential, database connection, or SQL connector is available; the application key cannot apply the reviewed migration. No hosted database change was made. Processing remains disabled, and the three-mode end-to-end test cannot complete until billing and migration/configuration blockers are resolved.
 
 ## Local verification result
 
@@ -96,4 +104,4 @@ The production build and TypeScript compilation passed. All 42 backend/database/
 
 An additional real HTTP proxy transport check caught and fixed a multipart branding mismatch: matching Undici FormData now emits an actual binary multipart upload rather than `text/plain`. Multipart encoding and abort deadlines passed on both the workspace Node runtime and Node 22.12.0. A Node 22.12.0 root-entry smoke check passed health, marketing content, and unauthenticated job denial (HTTP 401).
 
-The genuine three-mode OpenAI integration test was **skipped**, not passed. The hosted migration check remains HTTP 404/PGRST202. No hosted migration was applied and no real provider image was generated by this application. Code is prepared for review on `phase-2/core-processing`; promotion to the production `main` branch remains pending the real-service gates above.
+The genuine three-mode integration was not run during the resumed verification because its database prerequisite is missing. A separate provider-only real edit was attempted and failed with exhausted project credit, as recorded above. After the billing-classification correction, all **43 backend/database/provider tests** and the production build passed. The earlier 39 browser checks remain prior evidence, not newly rerun live-service checks. No hosted migration was applied, no successful provider image was generated, and production `main` was not changed. Review work stays on `phase-2/core-processing`.

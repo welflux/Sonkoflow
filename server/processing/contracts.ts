@@ -57,6 +57,8 @@ export const errors: Record<string, string> = {
     "The provider declined this edit. Review the photograph and instructions before trying again.",
   provider_rate_limit:
     "The image provider is rate limited or out of available quota. Please try later.",
+  provider_billing:
+    "Image processing is unavailable because the provider's billing quota has been reached. The site owner needs to restore API credit before you retry.",
   provider_interrupted:
     "The provider request was interrupted. It may have incurred a charge. It will not be repeated automatically.",
   provider_unavailable:

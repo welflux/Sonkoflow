@@ -279,6 +279,48 @@ test("provider 401/429, moderation rejection and network uncertainty remain dist
       !e.message.includes("sensitive"),
   );
 });
+test("billing exhaustion is distinct from rate limiting and never exposes provider error details or retries", async () => {
+  for (const body of [
+    JSON.stringify({
+      error: {
+        code: "credit_balance_exhausted",
+        type: "insufficient_quota",
+        message: "private billing detail",
+      },
+    }),
+    JSON.stringify({ error: { code: "insufficient_quota" } }),
+    JSON.stringify({ error: { code: "billing_hard_limit_reached" } }),
+    JSON.stringify({ error: { type: "insufficient_quota" } }),
+    "not-json",
+    "x".repeat(8193),
+  ]) {
+    let calls = 0;
+    const expected = body.startsWith("{")
+      ? "provider_billing"
+      : "provider_rate_limit";
+    await assert.rejects(
+      editImage(
+        config,
+        input,
+        Buffer.from("reference"),
+        "1024x1024",
+        jobId,
+        new AbortController().signal,
+        async () => {
+          calls++;
+          return new Response(body, { status: 429 });
+        },
+      ),
+      (e) =>
+        e instanceof ProviderFailure &&
+        e.code === expected &&
+        e.safe &&
+        !e.uncertain &&
+        !e.message.includes("private"),
+    );
+    assert.equal(calls, 1);
+  }
+});
 test("output validation rejects missing, corrupt, wrong-size and unsupported returned images", async () => {
   const f = await fixture();
   await validateOutput(f.generated.toString("base64"), "1024x1024");
