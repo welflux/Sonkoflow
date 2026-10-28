@@ -7,13 +7,27 @@
     <meta name="referrer" content="no-referrer" />
     <title>Workspace — SONKOFLOW</title>
     <link rel="icon" href="/favicon.svg" />
+    <link
+      rel="preload"
+      href="/fonts/manrope-latin.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="/src/design-system.css" />
     <link rel="stylesheet" href="/src/app.css" />
   </head>
   <body class="application">
     <a class="skip" href="#workspace">Skip to workspace</a>
     <header class="app-header">
-      <a class="logo" href="/">SONKOFLOW<span>.</span></a
-      ><span class="foundation-tag">PHOTO WORKSPACE</span
+      <a class="logo" href="/"
+        ><svg class="logo-icon" viewBox="0 0 32 32" aria-hidden="true">
+          <path
+            fill="currentColor"
+            d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"
+          /></svg
+        >SONKOFLOW<span class="logo-dot">.</span></a
+      ><span class="foundation-tag">Your photo workspace</span
       ><button id="signout" class="secondary" hidden>Sign out</button>
     </header>
     <main id="workspace" tabindex="-1">

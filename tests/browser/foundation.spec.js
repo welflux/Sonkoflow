@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-test("account shell renders without horizontal overflow and keeps landing page intact", async ({
+test("account shell renders without horizontal overflow and keeps landing page reachable", async ({
   page,
 }) => {
   const errors = [];
@@ -25,7 +25,7 @@ test("account shell renders without horizontal overflow and keeps landing page i
   ).toBeVisible();
   await page.getByRole("link", { name: "Back to SONKOFLOW" }).click();
   await expect(
-    page.getByRole("heading", { name: /Product photography/ }),
+    page.getByRole("heading", { name: /Every image/ }),
   ).toBeVisible();
   expect(errors).toEqual([]);
 });
