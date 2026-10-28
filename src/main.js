@@ -1,54 +1,30 @@
-document.documentElement.classList.add("enhanced");
-const menu = document.querySelector(".menu-toggle");
-const nav = document.querySelector("#navigation");
-function closeMenu() {
-  menu.setAttribute("aria-expanded", "false");
-  nav.classList.remove("open");
-}
-menu.addEventListener("click", () => {
-  const open = menu.getAttribute("aria-expanded") !== "true";
-  menu.setAttribute("aria-expanded", String(open));
-  nav.classList.toggle("open", open);
-});
-nav.addEventListener("click", (event) => {
-  if (event.target.closest("a")) closeMenu();
-});
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && menu.getAttribute("aria-expanded") === "true") {
-    closeMenu();
-    menu.focus();
-  }
-});
-window.matchMedia("(min-width: 901px)").addEventListener("change", (event) => {
-  if (event.matches) closeMenu();
-});
+import "./public.js";
 const slider = document.querySelector("#comparison-range");
-slider.addEventListener("input", () => {
+slider?.addEventListener("input", () =>
   document
     .querySelector(".comparison")
-    .style.setProperty("--split", `${slider.value}%`);
-});
-document.querySelector("#year").textContent = new Date().getFullYear();
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-if ("IntersectionObserver" in window && !reducedMotion.matches) {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries)
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-    },
-    { threshold: 0.08 },
-  );
-  document.documentElement.classList.add("motion-ready");
-  document
-    .querySelectorAll("[data-reveal]")
-    .forEach((element) => observer.observe(element));
-  reducedMotion.addEventListener("change", (event) => {
-    if (event.matches) {
-      observer.disconnect();
-      document.documentElement.classList.remove("motion-ready");
-    }
+    .style.setProperty("--split", `${slider.value}%`),
+);
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+function selectTab(tab, focus = false) {
+  for (const t of tabs) {
+    const selected = t === tab;
+    t.setAttribute("aria-selected", String(selected));
+    t.tabIndex = selected ? 0 : -1;
+    document.getElementById(t.getAttribute("aria-controls")).hidden = !selected;
+  }
+  if (focus) tab.focus();
+}
+for (const tab of tabs) {
+  tab.addEventListener("click", () => selectTab(tab));
+  tab.addEventListener("keydown", (e) => {
+    let n = tabs.indexOf(tab);
+    if (e.key === "ArrowRight") n = (n + 1) % tabs.length;
+    else if (e.key === "ArrowLeft") n = (n + tabs.length - 1) % tabs.length;
+    else if (e.key === "Home") n = 0;
+    else if (e.key === "End") n = tabs.length - 1;
+    else return;
+    e.preventDefault();
+    selectTab(tabs[n], true);
   });
 }

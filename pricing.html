@@ -7,20 +7,36 @@
       name="description"
       content="Explore SONKOFLOW plans for personal photographs, professional portraits and product collections. Clear processing allowances and separate one-time packs."
     />
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/public.css" />
     <title>Pricing & plans — SONKOFLOW</title>
   </head>
   <body>
     <header class="price-nav">
       <a class="price-logo" href="/" aria-label="SONKOFLOW home"
-        ><span aria-hidden="true">✳</span> SONKOFLOW<span class="logo-dot"
-          >.</span
-        ></a
-      >
+        ><img
+          class="brand-wordmark"
+          src="/brand/wordmark-ink.svg"
+          alt="SonkoFlow"
+          width="222"
+          height="46"
+      /></a>
       <nav aria-label="Pricing navigation">
         <a href="#plans">Plans</a><a href="#compare">Compare</a
         ><a href="#usage">How units work</a><a href="#questions">FAQs</a>
       </nav>
-      <a href="/account/signin" class="nav-signin">Sign in ↗</a>
+      <a href="/account/signin" class="nav-signin"
+        >Sign in
+        <svg
+          class="public-arrow"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          aria-hidden="true"
+        >
+          <path d="M6 18 18 6M6 6h12v12" /></svg
+      ></a>
     </header>
     <main>
       <section class="price-hero wrap">
@@ -32,8 +48,18 @@
             products. Choose a rhythm that works for you.
           </p>
           <a class="price-button" href="#plans"
-            >Find your plan <span aria-hidden="true">↓</span></a
-          >
+            >Find your plan
+            <span aria-hidden="true"
+              ><svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M12 4v16m-6-6 6 6 6-6" /></svg></span
+          ></a>
           <p class="hero-note">
             Personal photos · Professional portraits · Product imagery
           </p>
@@ -307,22 +333,79 @@
           <p>Bring your own original. Choose the finish when you’re ready.</p>
         </div>
         <a class="price-button light" href="/account/signup"
-          >Create your workspace ↗</a
-        >
+          >Create your workspace
+          <svg
+            class="public-arrow"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            aria-hidden="true"
+          >
+            <path d="M6 18 18 6M6 6h12v12" /></svg
+        ></a>
       </section>
     </main>
-    <footer class="price-footer wrap">
-      <a class="price-logo" href="/">✳ SONKOFLOW.</a>
-      <p>Products, people, and everything in between.</p>
-      <nav aria-label="Footer">
-        <a href="/">Product website</a
-        ><a href="/account/signin">Your workspace</a
-        ><a href="#questions">Questions & availability</a>
-      </nav>
-      <small
-        >Generative results require review. No unlimited AI processing or
-        guaranteed business outcome is offered.</small
-      >
+    <footer class="public-footer">
+      <div class="public-wrap footer-top">
+        <div class="footer-brand">
+          <a href="/" aria-label="SONKOFLOW home"
+            ><img
+              class="brand-wordmark"
+              src="/brand/wordmark-white.svg"
+              alt="SonkoFlow"
+              width="222"
+              height="46"
+          /></a>
+          <p>Your original.<br />A new perspective.</p>
+          <a class="footer-workspace" href="/account/signup"
+            >Create your workspace
+            <span aria-hidden="true"
+              ><svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M6 18 18 6M6 6h12v12" /></svg></span
+          ></a>
+        </div>
+        <div>
+          <h2>Image tools</h2>
+          <a href="/#solutions">Personal photo enhancement</a
+          ><a href="/#solutions">Professional portraits</a
+          ><a href="/#product">Product photo enhancement</a
+          ><a href="/#collections">Product image packs</a>
+        </div>
+        <div>
+          <h2>Your workspace</h2>
+          <a href="/app/brands">Brand Studio</a
+          ><a href="/app/batches">Bulk processing</a
+          ><a href="/app/library">Image library</a
+          ><a href="/pricing">Plans & pricing</a>
+        </div>
+        <div>
+          <h2>Resources</h2>
+          <a href="/#how-it-works">How it works</a
+          ><a href="/#faq">Questions & answers</a
+          ><a href="/account/signin">Sign in</a
+          ><a href="/account/recover">Account recovery</a>
+        </div>
+      </div>
+      <div class="public-wrap footer-bottom">
+        <p>
+          All rights reserved © 2026 SonkoFlow, a product of AaronPrime PTY
+          LTD.
+        </p>
+        <nav aria-label="Legal navigation">
+          <a href="/terms">Terms & Conditions</a
+          ><a href="/privacy">Privacy Policy</a
+          ><a href="/cookies">Cookie Policy</a
+          ><a href="/legal">Legal Information</a>
+        </nav>
+      </div>
     </footer>
     <dialog id="plan-dialog" aria-labelledby="order-title">
       <button

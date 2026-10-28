@@ -10,9 +10,9 @@ test("navigation, artwork, disclosures, and layout", async ({
     "Every image",
   );
   await expect(page.locator("#availability")).toContainText(
-    "still taking shape",
+    "service activation",
   );
-  for (const image of await page.locator("img").all()) {
+  for (const image of await page.locator("img:visible").all()) {
     await image.scrollIntoViewIfNeeded();
     await expect
       .poll(() => image.evaluate((el) => el.complete && el.naturalWidth > 0))
@@ -28,10 +28,17 @@ test("navigation, artwork, disclosures, and layout", async ({
     .evaluateAll((els) => els.map((el) => el.getAttribute("href")))) {
     expect(
       href.startsWith("#") ||
+        href.startsWith("/#") ||
+        href.startsWith("/app/") ||
+        href.startsWith("/pricing#") ||
         [
           "/",
           "/app",
           "/pricing",
+          "/terms",
+          "/privacy",
+          "/cookies",
+          "/legal",
           "/account/signin",
           "/account/signup",
           "/account/recover",
@@ -77,10 +84,15 @@ test("comparison and FAQ are functional", async ({ page }) => {
   await slider.focus();
   await page.keyboard.press("ArrowRight");
   await expect(slider).toHaveValue("71");
-  const question = page.locator("summary").first();
+  const question = page.locator(".faq-list summary").first();
   await question.click();
-  await expect(page.locator("details").first()).toHaveAttribute("open", "");
-  await expect(page.locator("details").first()).toContainText("AI enhancement");
+  await expect(page.locator(".faq-list details").first()).toHaveAttribute(
+    "open",
+    "",
+  );
+  await expect(page.locator(".faq-list details").first()).toContainText(
+    "AI enhancement",
+  );
 });
 test("reduced motion is respected", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
@@ -111,4 +123,26 @@ test("landing content and navigation remain accessible without JavaScript", asyn
     ),
   ).toBeTruthy();
   await context.close();
+});
+
+test("enhancement audiences support keyboard tabs and disclose illustrative content", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const first = page.getByRole("tab", { name: "For your products" });
+  await first.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(
+    page.getByRole("tab", { name: "For your profession" }),
+  ).toHaveAttribute("aria-selected", "true");
+  await expect(page.locator("#panel-portrait")).toBeVisible();
+  await expect(page.locator("#panel-product")).toBeHidden();
+  await page.keyboard.press("End");
+  await expect(page.locator("#panel-personal")).toBeVisible();
+  await expect(page.locator(".image-disclosure")).toContainText(
+    "not customer photographs",
+  );
+  await expect(page.locator(".footer-bottom")).toContainText(
+    "All rights reserved © 2026 SonkoFlow, a product of AaronPrime PTY LTD.",
+  );
 });

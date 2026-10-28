@@ -45,8 +45,12 @@ Portrait sections use abstract typographic illustrations pending approved portra
 
 ## Before public launch
 
-Supply approved portrait and personal photography, support contact, legal business identity, privacy policy, and terms. No contact details, legal documents, pricing, free trial, customer endorsements, or integrations have been invented. Real application routes should replace pre-launch disclosures only as their functionality becomes available. Hostinger plan compatibility and deployment are not verified by this task. No analytics, cookies, forms, or image uploads are included.
+Verify the publisher and support details, complete the legal documents, review concept artwork, and finish provider/payment activation before commercial publication. The public site does not invent endorsements, statistics, certifications or contact details. Account, upload and checkout-selection features now use essential cookies and the existing private application; no analytics or advertising trackers are implemented. Legal policy content is deliberately deferred by the owner. Production publication remains on hold.
 
 ## Commercial pricing review
 
 The dedicated `/pricing` page and account purchase/onboarding flow are documented in [the pricing and PayPal runbook](docs/pricing-and-paypal.md), with the [cost audit and plan rationale](docs/pricing-implementation-audit.md). Starter $9/month, Pro $19/month, optional yearly billing and separate one-time packs use the existing metered wallet. Checkout remains disabled until reviewed database activation, funded provider calibration and real PayPal configuration/testing. This supersedes earlier pre-launch pricing placeholders; it does not authorize production publication.
+
+## Public brand and account redesign
+
+The original framed-S identity, image-led landing page, shared footer and redesigned email-authentication screens are covered in [the redesign report](docs/public-brand-auth-redesign.md). `/terms`, `/privacy`, `/cookies` and `/legal` are reserved title pages, per the owner’s instruction to supply policy content later. Optional Google OAuth reuses Supabase and existing server-managed sessions; its button stays hidden until provider configuration is verified. No production merge or deployment is included.

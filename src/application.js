@@ -1,4 +1,5 @@
-import {checkoutPage,billingPage,welcomePage} from "./billing-ui.js";
+import { accountPage as renderAccountPage } from "./auth-ui.js";
+import { checkoutPage, billingPage, welcomePage } from "./billing-ui.js";
 import { libraryPage } from "./library-ui.js";
 import { batchesPage, batchPage } from "./batches-ui.js";
 import { brandStudio } from "./brand-ui.js";
@@ -34,8 +35,12 @@ window.addEventListener("pagehide", releasePreview);
 async function api(path, options = {}) {
   const response = await fetch(`/api${path}`, {
     ...options,
-    headers:
-      {...(options.body instanceof FormData?{}:{"Content-Type":"application/json"}),...options.headers},
+    headers: {
+      ...(options.body instanceof FormData
+        ? {}
+        : { "Content-Type": "application/json" }),
+      ...options.headers,
+    },
     credentials: "same-origin",
   });
   const data = await response.json();
@@ -77,60 +82,11 @@ function bindForm(form, handler) {
   });
 }
 function accountPage() {
-  const route = location.pathname.split("/").pop();
-  const signup = route === "signup";
-  const recovery = route === "recover";
-  const reset = route === "reset";
-  const confirm = route === "confirm";
-  const params = new URLSearchParams(location.hash.slice(1));
-  const token = params.get("token_hash");
-  const type = params.get("type");
-  if (location.hash) history.replaceState(null, "", location.pathname);
-  const title = signup
-    ? "Create your account"
-    : recovery
-      ? "Reset your password"
-      : reset
-        ? "Choose a new password"
-        : confirm
-          ? "Confirm your email"
-          : "Welcome back";
-  root.innerHTML = `<div class="account-layout"><div class="account-intro"><p class="eyebrow">A space for your perspective</p><h1>Your images.<br>In good company.</h1><p>Products, people, and everything in between. A private place to bring your next collection together.</p><div class="account-art"><img src="/images/footwear.webp" alt="Illustrative ivory sneaker on blue studio blocks" width="1536" height="1024"><img class="account-portrait" src="/images/portrait-small.webp" alt="Illustrative portrait of a creative professional" width="640" height="427"><span class="account-art-note">A place for every point of view.</span></div><p class="account-scope">Concept imagery. AI editing depends on provider availability. View plan availability and usage terms on our pricing page.</p></div><section class="panel"><h2>${title}</h2><p>${signup ? "Verify your email to open a private photo workspace." : recovery ? "We’ll send a single-use recovery link to your email." : reset ? "Use at least 12 characters. You’ll sign in again after updating." : confirm ? "Continue to verify this single-use email link." : "Sign in to your projects and photographs."}</p><form id="account-form">${!reset && !confirm ? '<label>Email address<input name="email" type="email" autocomplete="email" required maxlength="254"></label>' : ""}${!recovery && !confirm ? `<label>Password<input name="password" type="password" minlength="12" maxlength="128" autocomplete="${signup || reset ? "new-password" : "current-password"}" required></label>` : ""}${signup ? '<p class="help">Use at least 12 characters. Processing is subject to your activated allowance; payment is never taken by this registration form. Do not upload sensitive photographs until the owner publishes the privacy and retention policies.</p>' : ""}<div class="notice" role="status"></div><button type="submit">${signup ? "Create account" : recovery ? "Send recovery email" : reset ? "Save password" : confirm ? "Confirm email" : "Sign in"}</button></form><nav class="account-links" aria-label="Account options"><a href="/account/${signup ? "signin" : "signup"}">${signup ? "Already have an account? Sign in" : "Create an account"}</a><a href="/account/recover">Forgot password?</a><a href="/">Back to SONKOFLOW</a></nav></section></div>`;
-  bindForm(root.querySelector("form"), async (data, notice) => {
-    const body = Object.fromEntries(data);
-    if (confirm) {
-      if (!token || !type)
-        throw new Error(
-          "This link is missing its confirmation token. Request a new email.",
-        );
-      const result = await api("/auth/confirm", {
-        method: "POST",
-        body: JSON.stringify({ token_hash: token, type }),
-      });
-      location.assign(result.recovery ? "/account/reset" : result.next === "/app/checkout" ? result.next : "/app");
-      return;
-    }
-    const endpoint = signup
-      ? "signup"
-      : recovery
-        ? "recover"
-        : reset
-          ? "password"
-          : "signin";
-    const result = await api(`/auth/${endpoint}`, {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
-    if (signup || recovery) {
-      message(notice, result.message);
-      return;
-    }
-    location.assign(reset ? "/account/signin" : result.next === "/app/checkout" ? result.next : "/app");
-  });
+  renderAccountPage({ root, api, bindForm, message });
 }
 function shell(active) {
   releasePreview();
-  root.innerHTML = `<div class="workspace-layout"><nav class="sidebar" aria-label="Workspace"><p>Your workspace</p><a href="/app" ${active === "projects" ? 'aria-current="page"' : ""}>${icon("grid")} Projects</a><a href="/app/library" ${active === "library" ? 'aria-current="page"' : ""}>${icon("grid")} Image library</a><a href="/app/batches" ${active === "batches" ? 'aria-current="page"' : ""}>${icon("grid")} Bulk processing</a><a href="/app/brands" ${active === "brands" ? 'aria-current="page"' : ""}>${icon("grid")} Brand Studio</a><a href="/app/billing" ${active === "billing" ? 'aria-current="page"' : ""}>${icon("grid")} Plan & usage</a><a href="/app/profile" ${active === "profile" ? 'aria-current="page"' : ""}>${icon("person")} Account profile</a><a href="/">${icon("arrow")} Product website</a><div class="sidebar-note"><span class="sidebar-spark" aria-hidden="true"><svg class="star-svg" viewBox="0 0 32 32"><path d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"/></svg></span><p>Your perspective.<br>Your private collection.</p><small>Reference-based editing, when configured.</small></div></nav><section class="workspace-content"><div id="page"></div></section></div>`;
+  root.innerHTML = `<div class="workspace-layout"><nav class="sidebar" aria-label="Workspace"><p>Your workspace</p><a href="/app" ${active === "projects" ? 'aria-current="page"' : ""}>${icon("grid")} Projects</a><a href="/app/library" ${active === "library" ? 'aria-current="page"' : ""}>${icon("grid")} Image library</a><a href="/app/batches" ${active === "batches" ? 'aria-current="page"' : ""}>${icon("grid")} Bulk processing</a><a href="/app/brands" ${active === "brands" ? 'aria-current="page"' : ""}>${icon("grid")} Brand Studio</a><a href="/app/billing" ${active === "billing" ? 'aria-current="page"' : ""}>${icon("grid")} Plan & usage</a><a href="/app/profile" ${active === "profile" ? 'aria-current="page"' : ""}>${icon("person")} Account profile</a><a href="/">${icon("arrow")} Product website</a><div class="sidebar-note"><span class="sidebar-spark" aria-hidden="true"><img src="/brand/mark-ink.svg" alt="" width="32" height="32"></span><p>Your perspective.<br>Your private collection.</p><small>Reference-based editing, when configured.</small></div></nav><section class="workspace-content"><div id="page"></div></section></div>`;
   signout.hidden = false;
   signout.onclick = async () => {
     signout.disabled = true;
@@ -414,10 +370,13 @@ async function main() {
   }
   try {
     profile = (await api("/session")).profile;
-    if(location.pathname==="/app/checkout")await checkoutPage(api,shell);
-    else if(location.pathname==="/app/billing")await billingPage(api,shell);
-    else if(location.pathname==="/app/welcome")await welcomePage(api,shell);
-    else if (location.pathname === "/app/library") await libraryPage(api, shell);
+    if (location.pathname === "/app/checkout") await checkoutPage(api, shell);
+    else if (location.pathname === "/app/billing")
+      await billingPage(api, shell);
+    else if (location.pathname === "/app/welcome")
+      await welcomePage(api, shell);
+    else if (location.pathname === "/app/library")
+      await libraryPage(api, shell);
     else if (location.pathname === "/app/batches")
       await batchesPage(api, shell);
     else if (/^\/app\/batches\/[a-f0-9-]{36}$/.test(location.pathname))

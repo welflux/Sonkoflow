@@ -208,3 +208,34 @@ button:disabled {
   width: 1em;
   height: 1em;
 }
+
+/* Vector logo; outlined letterforms stay sharp at every device density. */
+.brand-wordmark {
+  display: block;
+  width: 172px;
+  height: auto;
+}
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.brand-lockup .brand-wordmark {
+  width: 172px;
+  height: auto;
+}
+
+.public-arrow {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  min-width: 15px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.comparison-handle .public-arrow {
+  width: 21px;
+  height: 21px;
+  min-width: 21px;
+}

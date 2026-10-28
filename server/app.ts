@@ -1,8 +1,16 @@
-import {catalogRoutes,webhookRoute,intentRoutes,billingRoutes,billingNext,rememberIntent} from './billing/routes.js';
-import {libraryRoutes,libraryError} from "./library/routes.js";
+import { GoogleAuth } from "./auth/google.js";
+import {
+  catalogRoutes,
+  webhookRoute,
+  intentRoutes,
+  billingRoutes,
+  billingNext,
+  rememberIntent,
+} from "./billing/routes.js";
+import { libraryRoutes, libraryError } from "./library/routes.js";
 import sharp from "sharp";
-import {batchConfig} from "./batches/service.js";
-import {batchRoutes} from "./batches/routes.js";
+import { batchConfig } from "./batches/service.js";
+import { batchRoutes } from "./batches/routes.js";
 import { brandRoutes } from "./brand/routes.js";
 import { packRoutes } from "./packs/routes.js";
 import { ProcessingEngine } from "./processing/engine.js";
@@ -33,6 +41,7 @@ export function createApp(config: Config | null) {
   const app = express();
   const svc = config ? services(config) : null;
   const processing = svc ? new ProcessingEngine(svc.admin) : null;
+  const google = config ? new GoogleAuth(config) : null;
   app.locals.processing = processing;
   const secure = config?.NODE_ENV === "production";
   const cookieName = secure ? "__Host-sonkoflow_session" : "sonkoflow_session";
@@ -63,7 +72,13 @@ export function createApp(config: Config | null) {
   );
   app.use(cookieParser());
   app.use(express.json({ limit: "16kb", type: "application/json" }));
-  catalogRoutes(app,processing);webhookRoute(app,processing,limit);
+  catalogRoutes(app, processing);
+  webhookRoute(app, processing, limit);
+  app.get("/api/public/auth", async (_q, r) => {
+    r.set("Cache-Control", "no-store").json({
+      google: google ? await google.available() : false,
+    });
+  });
   app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
   app.use("/api", (_req, res, next) => {
     res.set("Cache-Control", "no-store");
@@ -138,29 +153,67 @@ export function createApp(config: Config | null) {
       path: "/",
       maxAge: 7 * 86400000,
     });
-  intentRoutes(app,processing,config,limit);
+  const oauthCookie = secure ? "__Host-sonkoflow_oauth" : "sonkoflow_oauth";
+  const oauthCookieOptions = {
+    httpOnly: true,
+    secure,
+    sameSite: "lax" as const,
+    path: "/",
+  };
+  app.post("/api/auth/google", async (req, res) => {
+    await limit(req, "google-signin", 10, 900);
+    z.object({}).strict().parse(req.body);
+    const flow = await google!.start();
+    res.cookie(oauthCookie, flow.cookie, {
+      ...oauthCookieOptions,
+      maxAge: 600000,
+    });
+    res.set("Cache-Control", "no-store").json({ url: flow.url });
+  });
+  app.get("/api/auth/google/callback", async (req, res) => {
+    res.set("Cache-Control", "no-store");
+    res.clearCookie(oauthCookie, oauthCookieOptions);
+    try {
+      await limit(req, "google-callback", 20, 900);
+      const session = await google!.finish(
+        req.cookies[oauthCookie],
+        req.query.state,
+        req.query.code,
+      );
+      setCookie(res, await svc!.newSession(session));
+      res.redirect(
+        await billingNext(
+          processing,
+          req,
+          session.user.id,
+          session.user.email!,
+          config!.RATE_LIMIT_KEY,
+        ),
+      );
+    } catch {
+      // Never echo provider errors, codes, tokens or callback query strings.
+      res.redirect("/account/signin?auth_error=google");
+    }
+  });
+  intentRoutes(app, processing, config, limit);
   app.post("/api/auth/signup", async (req, res) => {
     await limit(req, "signup", 10);
     const input = credentials.parse(req.body);
-    await rememberIntent(processing,req,input.email,config!.RATE_LIMIT_KEY);
-    const { error } = await svc!
-      .anonymous()
-      .auth.signUp({
-        ...input,
-        options: { emailRedirectTo: `${config!.APP_ORIGIN}/account/confirm` },
-      });
+    await rememberIntent(processing, req, input.email, config!.RATE_LIMIT_KEY);
+    const { error } = await svc!.anonymous().auth.signUp({
+      ...input,
+      options: { emailRedirectTo: `${config!.APP_ORIGIN}/account/confirm` },
+    });
     if (error)
       throw new AppError(
         400,
         "signup_failed",
         "Unable to create an account. Check your details or try password recovery.",
       );
-    res
-      .status(202)
-      .json({
-        message:
-          "Check your email to confirm your account. If you already have an account, sign in or reset your password.",
-      });
+    res.status(202).json({
+      message:
+        "Check your email to confirm your account. If you already have an account, sign in or reset your password.",
+    });
   });
   app.post("/api/auth/signin", async (req, res) => {
     await limit(req, "signin", 20);
@@ -175,7 +228,16 @@ export function createApp(config: Config | null) {
         "Email or password is incorrect, or your email is not yet verified.",
       );
     setCookie(res, await svc!.newSession(data.session));
-    res.json({ ok: true,next:await billingNext(processing,req,data.user.id,data.user.email!,config!.RATE_LIMIT_KEY) });
+    res.json({
+      ok: true,
+      next: await billingNext(
+        processing,
+        req,
+        data.user.id,
+        data.user.email!,
+        config!.RATE_LIMIT_KEY,
+      ),
+    });
   });
   app.post("/api/auth/recover", async (req, res) => {
     await limit(req, "recover", 5, 3600);
@@ -183,23 +245,18 @@ export function createApp(config: Config | null) {
       .object({ email: z.string().trim().email().max(254) })
       .strict()
       .parse(req.body);
-    const { error } = await svc!
-      .anonymous()
-      .auth.resetPasswordForEmail(email, {
-        redirectTo: `${config!.APP_ORIGIN}/account/confirm`,
-      });
+    const { error } = await svc!.anonymous().auth.resetPasswordForEmail(email, {
+      redirectTo: `${config!.APP_ORIGIN}/account/confirm`,
+    });
     if (error)
       throw new AppError(
         503,
         "mail_unavailable",
         "Recovery email is unavailable. Please try again later.",
       );
-    res
-      .status(202)
-      .json({
-        message:
-          "If an account exists, a password recovery email will be sent.",
-      });
+    res.status(202).json({
+      message: "If an account exists, a password recovery email will be sent.",
+    });
   });
   app.post("/api/auth/confirm", async (req, res) => {
     await limit(req, "confirm", 20);
@@ -226,7 +283,19 @@ export function createApp(config: Config | null) {
         type === "recovery" ? "recovery" : "account",
       ),
     );
-    res.json({ recovery: type === "recovery",next:type==='recovery'?'/account/reset':await billingNext(processing,req,data.user!.id,data.user!.email!,config!.RATE_LIMIT_KEY) });
+    res.json({
+      recovery: type === "recovery",
+      next:
+        type === "recovery"
+          ? "/account/reset"
+          : await billingNext(
+              processing,
+              req,
+              data.user!.id,
+              data.user!.email!,
+              config!.RATE_LIMIT_KEY,
+            ),
+    });
   });
   app.use("/api", async (req, _res, next) => {
     if (/^[a-f0-9]{64}$/.test(req.cookies[cookieName] ?? ""))
@@ -249,7 +318,12 @@ export function createApp(config: Config | null) {
       .delete()
       .eq("id", who(res).id);
     databaseError(error);
-    res.clearCookie("sonkoflow_checkout", {path:"/",httpOnly:true,secure,sameSite:"lax"});
+    res.clearCookie("sonkoflow_checkout", {
+      path: "/",
+      httpOnly: true,
+      secure,
+      sameSite: "lax",
+    });
     res.clearCookie(cookieName, {
       path: "/",
       httpOnly: true,
@@ -276,7 +350,12 @@ export function createApp(config: Config | null) {
       .delete()
       .eq("user_id", id.userId);
     databaseError(revoked.error);
-    res.clearCookie("sonkoflow_checkout", {path:"/",httpOnly:true,secure,sameSite:"lax"});
+    res.clearCookie("sonkoflow_checkout", {
+      path: "/",
+      httpOnly: true,
+      secure,
+      sameSite: "lax",
+    });
     res.clearCookie(cookieName, {
       path: "/",
       httpOnly: true,
@@ -297,7 +376,12 @@ export function createApp(config: Config | null) {
       .delete()
       .eq("user_id", id.userId);
     databaseError(result.error);
-    res.clearCookie("sonkoflow_checkout", {path:"/",httpOnly:true,secure,sameSite:"lax"});
+    res.clearCookie("sonkoflow_checkout", {
+      path: "/",
+      httpOnly: true,
+      secure,
+      sameSite: "lax",
+    });
     res.clearCookie(cookieName, {
       path: "/",
       httpOnly: true,
@@ -322,10 +406,15 @@ export function createApp(config: Config | null) {
     res.json({ profile: data });
   });
   app.get("/api/projects", async (_req, res) => {
-    const gallery=await svc!.admin.rpc('library_schema_version');
-    let query=who(res).client.from('projects').select('id,name,audience,created_at').order('created_at',{ascending:false}).limit(100);
-    if(!gallery.error&&gallery.data===2026102806)query=query.eq('archived',false);
-    const {data,error}=await query;
+    const gallery = await svc!.admin.rpc("library_schema_version");
+    let query = who(res)
+      .client.from("projects")
+      .select("id,name,audience,created_at")
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (!gallery.error && gallery.data === 2026102806)
+      query = query.eq("archived", false);
+    const { data, error } = await query;
     databaseError(error);
     res.json({ projects: data });
   });
@@ -344,9 +433,22 @@ export function createApp(config: Config | null) {
   app.delete("/api/projects/:id", async (req, res) => {
     const id = uuid.parse(req.params.id);
     const identity = who(res);
-    const gallery=await svc!.admin.rpc('library_schema_version');
-    if(!gallery.error&&gallery.data===2026102806){const removed=await svc!.admin.rpc('library_project_action',{owner:identity.userId,target:id,action:'delete',value:null});libraryError(removed.error);if(!removed.data)throw new AppError(404,'not_found','Project not found.');res.json({ok:true});return;}
-    if(gallery.error&&!['PGRST202','42883'].includes(gallery.error.code))libraryError(gallery.error);
+    const gallery = await svc!.admin.rpc("library_schema_version");
+    if (!gallery.error && gallery.data === 2026102806) {
+      const removed = await svc!.admin.rpc("library_project_action", {
+        owner: identity.userId,
+        target: id,
+        action: "delete",
+        value: null,
+      });
+      libraryError(removed.error);
+      if (!removed.data)
+        throw new AppError(404, "not_found", "Project not found.");
+      res.json({ ok: true });
+      return;
+    }
+    if (gallery.error && !["PGRST202", "42883"].includes(gallery.error.code))
+      libraryError(gallery.error);
     const { data, error } = await identity.client
       .from("projects")
       .delete()
@@ -366,7 +468,9 @@ export function createApp(config: Config | null) {
     const projectId = uuid.parse(req.query.project_id);
     const { data, error } = await who(res)
       .client.from("images")
-      .select("id,project_id,role,filename,width,height,byte_size,status,created_at")
+      .select(
+        "id,project_id,role,filename,width,height,byte_size,status,created_at",
+      )
       .eq("project_id", projectId)
       .order("created_at", { ascending: false })
       .limit(100);
@@ -420,11 +524,29 @@ export function createApp(config: Config | null) {
           "missing_image",
           "Choose a photograph to upload.",
         );
-      if(req.get('X-Sonkoflow-Bulk')==='1'){
-        const policy=batchConfig();
-        if(req.file.size>policy.AI_BATCH_FILE_BYTES)throw new AppError(400,'batch_file_limit','This file exceeds the configured bulk upload limit.');
-        const metadata=await sharp(req.file.buffer,{limitInputPixels:25000000,failOn:'warning'}).metadata().catch(()=>null);
-        if(!metadata?.format||!policy.AI_BATCH_FORMATS.includes(`image/${metadata.format}` as any))throw new AppError(400,'batch_file_format','This file format is not enabled for bulk uploads.');
+      if (req.get("X-Sonkoflow-Bulk") === "1") {
+        const policy = batchConfig();
+        if (req.file.size > policy.AI_BATCH_FILE_BYTES)
+          throw new AppError(
+            400,
+            "batch_file_limit",
+            "This file exceeds the configured bulk upload limit.",
+          );
+        const metadata = await sharp(req.file.buffer, {
+          limitInputPixels: 25000000,
+          failOn: "warning",
+        })
+          .metadata()
+          .catch(() => null);
+        if (
+          !metadata?.format ||
+          !policy.AI_BATCH_FORMATS.includes(`image/${metadata.format}` as any)
+        )
+          throw new AppError(
+            400,
+            "batch_file_format",
+            "This file format is not enabled for bulk uploads.",
+          );
       }
       const validated = await validateImage(req.file.buffer);
       const objectKey = `${identity.userId}/${input.id}.webp`;
@@ -549,16 +671,31 @@ export function createApp(config: Config | null) {
     databaseError(result.error);
     if (!result.data)
       throw new AppError(404, "not_found", "Photograph not found.");
-    const library=await svc!.admin.rpc('library_schema_version');
-    if(library.error&&!['PGRST202','42883'].includes(library.error.code))libraryError(library.error);
-    if(!library.error&&library.data===2026102806){const trashed=await svc!.admin.rpc('library_action',{owner:identity.userId,ids:[id],action:'trash',value:null});libraryError(trashed.error);res.json({ok:true,trashed:true,retention_days:30});return;}
+    const library = await svc!.admin.rpc("library_schema_version");
+    if (library.error && !["PGRST202", "42883"].includes(library.error.code))
+      libraryError(library.error);
+    if (!library.error && library.data === 2026102806) {
+      const trashed = await svc!.admin.rpc("library_action", {
+        owner: identity.userId,
+        ids: [id],
+        action: "trash",
+        value: null,
+      });
+      libraryError(trashed.error);
+      res.json({ ok: true, trashed: true, retention_days: 30 });
+      return;
+    }
     const marked = await svc!.admin
       .from("images")
       .update({ status: "deleting" })
       .eq("id", id)
       .eq("user_id", identity.userId);
     if (marked.error?.message?.includes("processing_image_busy"))
-      throw new AppError(409, "image_busy", "Wait for the active edit or quality assessment before deleting this photograph.");
+      throw new AppError(
+        409,
+        "image_busy",
+        "Wait for the active edit or quality assessment before deleting this photograph.",
+      );
     databaseError(marked.error);
     const removed = await svc!.admin.storage
       .from("photos")
@@ -582,12 +719,16 @@ export function createApp(config: Config | null) {
     brandRoutes(app, processing, who, limit);
     batchRoutes(app, processing, who, limit);
     libraryRoutes(app, processing, who, limit);
-    billingRoutes(app,processing,config!,who,limit);
+    billingRoutes(app, processing, config!, who, limit);
   }
   app.use("/api", (_req, _res, next) =>
     next(new AppError(404, "not_found", "Endpoint not found.")),
   );
-  app.get("/pricing",(_q,r)=>r.sendFile(path.resolve("dist/pricing.html")));
+  for (const page of ["terms", "privacy", "cookies", "legal"])
+    app.get(`/${page}`, (_q, r) =>
+      r.sendFile(path.resolve(`dist/${page}.html`)),
+    );
+  app.get("/pricing", (_q, r) => r.sendFile(path.resolve("dist/pricing.html")));
   app.get(["/account", "/account/{*path}"], (_req, res) => {
     res.set("Cache-Control", "no-store");
     res.sendFile(path.resolve("dist/app.html"));
@@ -622,15 +763,13 @@ export function createApp(config: Config | null) {
   app.use(
     (error: unknown, _req: Request, res: Response, _next: NextFunction) => {
       if (error instanceof ZodError) {
-        res
-          .status(400)
-          .json({
-            error: {
-              code: "invalid_input",
-              message: "Check the required fields and try again.",
-              requestId: res.locals.requestId,
-            },
-          });
+        res.status(400).json({
+          error: {
+            code: "invalid_input",
+            message: "Check the required fields and try again.",
+            requestId: res.locals.requestId,
+          },
+        });
         return;
       }
       if (error instanceof multer.MulterError)
@@ -659,7 +798,15 @@ export function createApp(config: Config | null) {
         const daily = ["daily_limit", "budget_limit"].includes(safe.code);
         const now = new Date();
         const seconds = daily
-          ? Math.ceil((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1) - now.getTime()) / 1000)
+          ? Math.ceil(
+              (Date.UTC(
+                now.getUTCFullYear(),
+                now.getUTCMonth(),
+                now.getUTCDate() + 1,
+              ) -
+                now.getTime()) /
+                1000,
+            )
           : 900;
         res.set("Retry-After", String(seconds));
       }
@@ -671,15 +818,13 @@ export function createApp(config: Config | null) {
             requestId: res.locals.requestId,
           }),
         );
-      res
-        .status(safe.status)
-        .json({
-          error: {
-            code: safe.code,
-            message: safe.publicMessage,
-            requestId: res.locals.requestId,
-          },
-        });
+      res.status(safe.status).json({
+        error: {
+          code: safe.code,
+          message: safe.publicMessage,
+          requestId: res.locals.requestId,
+        },
+      });
     },
   );
   return app;

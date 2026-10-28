@@ -6,10 +6,10 @@
     <meta name="theme-color" content="#142f3e" />
     <meta
       name="description"
-      content="A better perspective on your photographs. Explore SONKOFLOW’s image-production vision and open your private photo workspace to organize, upload, and download your images."
+      content="A new perspective for products, portraits and personal photographs. Explore SonkoFlow’s connected image workspace, product packs and reusable brand identity."
     />
-    <title>SONKOFLOW — Every image, a new perspective.</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>SONKOFLOW — Every image. Made for what’s next.</title>
+    <link rel="icon" href="/favicon.svg" />
     <link
       rel="preload"
       href="/fonts/manrope-latin.woff2"
@@ -18,783 +18,1028 @@
       crossorigin
     />
     <link rel="stylesheet" href="/src/design-system.css" />
+    <link rel="stylesheet" href="/src/public.css" />
     <link rel="stylesheet" href="/src/style.css" />
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
-    <header class="site-header">
-      <div class="header-inner">
-        <a class="logo" href="/" aria-label="SONKOFLOW home"
-          ><svg class="logo-icon" viewBox="0 0 32 32" aria-hidden="true">
-            <path
-              fill="currentColor"
-              d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"
-            /></svg
-          >SONKOFLOW<span class="logo-dot">.</span></a
+    <header class="public-header">
+      <div class="public-wrap public-header-inner">
+        <a class="public-brand" href="/" aria-label="SONKOFLOW home"
+          ><img
+            class="brand-wordmark"
+            src="/brand/wordmark-ink.svg"
+            alt="SonkoFlow"
+            width="222"
+            height="46" /></a
         ><button
           class="menu-toggle"
+          type="button"
           aria-expanded="false"
           aria-controls="navigation"
         >
-          Menu <span aria-hidden="true">☰</span>
+          Menu
+          <span aria-hidden="true"
+            ><svg
+              class="public-arrow"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <path d="M4 6h16M4 12h16M4 18h16" /></svg
+          ></span>
         </button>
         <nav id="navigation" aria-label="Main navigation">
-          <a href="#product">The workspace</a
-          ><a href="#solutions">Possibilities</a
-          ><a href="#brand-studio">Brand Studio</a><a href="/pricing">Pricing</a
-          ><a class="nav-signin" href="/account/signin"
-            >Sign in
+          <a href="/#product">The workspace</a
+          ><a href="/#solutions">Image tools</a
+          ><a href="/#brand-studio">Brand Studio</a
+          ><a href="/pricing">Pricing</a>
+          <details class="nav-resources">
+            <summary>Resources</summary>
+            <div>
+              <a href="/#how-it-works">How it works</a
+              ><a href="/#faq">Questions & answers</a
+              ><a href="/legal">Legal & privacy</a>
+            </div>
+          </details>
+        </nav>
+        <div class="public-header-actions">
+          <a href="/account/signin">Sign in</a
+          ><a class="public-button small" href="/account/signup"
+            >Create workspace
             <span aria-hidden="true"
               ><svg
-                class="icon arrow-icon"
+                class="public-arrow"
                 viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
                 aria-hidden="true"
               >
                 <path d="M6 18 18 6M6 6h12v12" /></svg></span
           ></a>
-        </nav>
+        </div>
       </div>
     </header>
-    <main id="main">
-      <section class="hero wrap" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="eyebrow">
-            <span class="live-dot"></span> A fresh perspective on photo
-            production
-          </p>
-          <h1 id="hero-title">
-            Every image.<br />A new
-            <span class="headline-emphasis">perspective.</span>
-          </h1>
-          <p class="lead">
-            A more considered home for your products, portraits, and next big
-            idea.
-          </p>
-          <div class="actions">
-            <a class="button" href="/app"
-              >Open your workspace
-              <span aria-hidden="true"
-                ><svg
-                  class="icon arrow-icon"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
-            ><a class="text-link" href="#solutions"
-              >Explore <span aria-hidden="true">↓</span></a
-            >
-          </div>
-          <p class="hero-availability">
-            Private photo workspace available. <br />AI editing is in
-            development.
-          </p>
+    <main id="main" tabindex="-1">
+      <section class="landing-hero public-wrap">
+        <p class="public-eyebrow">A FRESH PERSPECTIVE ON PHOTO PRODUCTION</p>
+        <h1>Every image.<br />Made for <em>what’s next.</em></h1>
+        <p class="hero-intro">
+          Better light for your portraits. A consistent look for your
+          products.<br class="desktop-break" />
+          A thoughtful workspace for bringing it all together.
+        </p>
+        <div class="public-actions">
+          <a class="public-button" href="/account/signup"
+            >Create your workspace
+            <span aria-hidden="true"
+              ><svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
+          ><a class="public-text-link" href="#solutions"
+            >Find your starting point
+            <span aria-hidden="true"
+              ><svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M12 4v16m-6-6 6 6 6-6" /></svg></span
+          ></a>
         </div>
-        <div class="hero-art">
-          <div class="hero-photo">
+        <p class="hero-fine">
+          Start with a private account. Explore processing availability and
+          limits in <a href="/pricing">our plans</a>.
+        </p>
+        <div class="hero-art" aria-label="Illustrative products and portraits">
+          <figure class="hero-tile tile-one">
             <img
-              src="/images/footwear.webp"
-              srcset="
-                /images/footwear-small.webp  640w,
-                /images/footwear.webp       1536w
-              "
-              sizes="(max-width:760px) 92vw, 52vw"
-              alt="Ivory suede sneaker with navy details on sculptural limestone and blue studio blocks"
+              src="/images/portrait.webp"
+              alt="Illustrative professional portrait in a navy blazer"
               width="1536"
               height="1024"
               fetchpriority="high"
-            /><span class="canvas-label">01 / A different point of view</span>
-          </div>
-          <figure class="hero-inset">
-            <img
-              src="/images/portrait-small.webp"
-              alt="Black creative professional in a navy blazer against a blue studio backdrop"
-              width="640"
-              height="427"
             />
-            <figcaption>People. Products. Possibilities.</figcaption>
+            <figcaption>Put your best light forward.</figcaption>
           </figure>
-          <div class="floating-note">
-            <span class="note-spark" aria-hidden="true"
-              ><svg class="star-svg" viewBox="0 0 32 32" aria-hidden="true">
-                <path
-                  d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"
-                /></svg></span
-            ><span
-              >A little light.<br /><strong>A whole new world.</strong></span
+          <figure class="hero-tile tile-two">
+            <img
+              src="/images/serum.webp"
+              alt="Illustrative amber skincare bottle and packaging in natural light"
+              width="1536"
+              height="1024"
+              fetchpriority="high"
+            />
+            <figcaption>Small details. Bigger possibilities.</figcaption>
+            <span class="hero-sticker"
+              >YOUR ORIGINAL.<br />YOUR PERSPECTIVE.</span
             >
-          </div>
-          <p class="asset-note">
-            Art-directed concept imagery. Not SONKOFLOW-generated results.
-          </p>
+          </figure>
+          <figure class="hero-tile tile-three">
+            <img
+              src="/images/apparel.webp"
+              alt="Illustrative leather bag and linen clothing arranged for a product collection"
+              width="1536"
+              height="1024"
+            />
+            <figcaption>Make a collection feel connected.</figcaption>
+          </figure>
         </div>
+        <p class="image-disclosure">
+          Art-directed illustrative imagery throughout. These are not customer
+          photographs or verified SONKOFLOW-generated results.
+        </p>
       </section>
-      <div class="category-strip">
-        <div class="wrap">
-          <span>A wider world of imagery</span
+      <div class="audience-ribbon">
+        <div class="public-wrap">
+          <span>ONE WORKSPACE. MANY POINTS OF VIEW.</span
           ><a href="#solutions"
-            >Products
-            <span aria-hidden="true"
-              ><svg
-                class="icon arrow-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
-          ><a href="#portraits"
             >People
-            <span aria-hidden="true"
+            <span
               ><svg
-                class="icon arrow-icon"
+                class="public-arrow"
                 viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
-          ><a href="#spaces"
-            >Spaces
-            <span aria-hidden="true"
-              ><svg
-                class="icon arrow-icon"
-                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
                 aria-hidden="true"
               >
                 <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
           ><a href="#product"
-            >Your workspace
-            <span aria-hidden="true"
+            >Products
+            <span
               ><svg
-                class="icon arrow-icon"
+                class="public-arrow"
                 viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
+          ><a href="#brand-studio"
+            >Brands
+            <span
+              ><svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
+          ><a href="#collections"
+            >Collections
+            <span
+              ><svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
                 aria-hidden="true"
               >
                 <path d="M6 18 18 6M6 6h12v12" /></svg></span
           ></a>
         </div>
       </div>
-      <section id="solutions" class="section wrap showcase">
-        <div class="section-heading" data-reveal>
+      <section id="solutions" class="public-section public-wrap">
+        <div class="section-top">
           <div>
-            <p class="eyebrow">Made to be seen</p>
-            <h2>Good products.<br /><em>Great presence.</em></h2>
+            <p class="public-eyebrow">START WITH WHAT MATTERS TO YOU</p>
+            <h2>Your photographs.<br />A little more possibility.</h2>
           </div>
           <p>
-            Texture. Shape. That impossible-to-ignore detail. The SONKOFLOW
-            vision puts what makes your work distinctive at the center of the
-            frame.
+            Three dedicated editing modes.<br />One original to stay true to.
           </p>
         </div>
-        <div class="showcase-grid">
-          <figure class="showcase-main" data-reveal="image">
-            <div class="image-window">
-              <img
-                src="/images/objects.webp"
-                srcset="
-                  /images/objects-small.webp  640w,
-                  /images/objects.webp       1536w
-                "
-                sizes="(max-width:760px) 92vw, 50vw"
-                alt="Steel watch on navy wool beside an amber glass bottle and fluted glassware in warm studio light"
-                width="1536"
-                height="1024"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <figcaption>
-              <span>01 / The material study</span
-              ><span>Metal. Glass. Texture.</span>
-            </figcaption>
-          </figure>
-          <figure class="showcase-side" data-reveal="image">
-            <div class="image-window">
-              <img
-                src="/images/serum.webp"
-                alt="Amber skincare serum with cream packaging in natural light"
-                width="1536"
-                height="1024"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <figcaption>
-              <span>02 / Naturally considered</span
-              ><span>Beauty & wellness</span>
-            </figcaption>
-          </figure>
+        <div
+          class="audience-tabs"
+          role="tablist"
+          aria-label="Explore enhancement modes"
+        >
+          <button
+            id="tab-product"
+            role="tab"
+            aria-controls="panel-product"
+            aria-selected="true"
+            tabindex="0"
+          >
+            For your products</button
+          ><button
+            id="tab-portrait"
+            role="tab"
+            aria-controls="panel-portrait"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            For your profession</button
+          ><button
+            id="tab-personal"
+            role="tab"
+            aria-controls="panel-personal"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            For your everyday
+          </button>
         </div>
-        <p class="collection-note">
-          A portfolio of original AI-created concepts, selected to express our
-          creative direction. These are illustrative images, not customer work
-          or processing demonstrations.
-        </p>
-      </section>
-      <section id="product" class="section workspace-section">
-        <div class="wrap workspace-composition">
-          <div class="workspace-copy" data-reveal>
-            <p class="eyebrow">
-              <span class="live-dot"></span> The photo workspace · Available now
-            </p>
-            <h2>A home for<br />your next<br /><em>collection.</em></h2>
+        <article
+          class="audience-panel"
+          id="panel-product"
+          role="tabpanel"
+          aria-labelledby="tab-product"
+        >
+          <div class="audience-picture product-picture">
+            <img
+              src="/images/footwear.webp"
+              alt="Illustrative ivory sneaker on sculptural studio blocks"
+              width="1536"
+              height="1024"
+              loading="lazy"
+            /><span class="image-tag">PRODUCT PHOTO ENHANCEMENT</span>
+          </div>
+          <div class="audience-copy">
+            <span class="section-index">01 / THE OBJECT OF YOUR ATTENTION</span>
+            <h3>Let your product<br />take the spotlight.</h3>
             <p>
-              Make space for the work that matters. Create a project, upload
-              your photographs, and keep your collection together in one private
-              workspace.
+              Shape the lighting, background and presentation around your real
+              reference. Product preservation stays central to the instructions,
+              with space for your own review.
             </p>
-            <a class="text-link" href="/app"
-              >Enter your workspace
-              <span aria-hidden="true"
+            <ul class="clean-list">
+              <li>Controlled background and framing choices</li>
+              <li>Product shape, packaging and labels prioritized</li>
+              <li>Original/result comparison and private downloads</li>
+            </ul>
+            <a class="public-button" href="/app"
+              >Explore product editing
+              <span
                 ><svg
-                  class="icon arrow-icon"
+                  class="public-arrow"
                   viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  aria-hidden="true"
+                >
+                  <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
+            ><small
+              >Generative edits can alter details. Always check the product
+              before use.</small
+            >
+          </div>
+        </article>
+        <article
+          class="audience-panel"
+          id="panel-portrait"
+          role="tabpanel"
+          aria-labelledby="tab-portrait"
+          hidden
+        >
+          <div class="audience-picture">
+            <img
+              src="/images/portrait.webp"
+              alt="Illustrative professional headshot against a softly lit blue background"
+              width="1536"
+              height="1024"
+              loading="lazy"
+            /><span class="image-tag">PROFESSIONAL PORTRAITS</span>
+          </div>
+          <div class="audience-copy">
+            <span class="section-index">02 / A NATURAL FIRST IMPRESSION</span>
+            <h3>Show up<br />as yourself.</h3>
+            <p>
+              A more considered headshot for your professional profile, CV or
+              website. Guide the lighting and background while requesting a
+              natural finish and recognizable appearance.
+            </p>
+            <ul class="clean-list">
+              <li>Portrait-specific editing instructions</li>
+              <li>Natural texture and identity preservation prioritized</li>
+              <li>Your original stays available for comparison</li>
+            </ul>
+            <a class="public-button" href="/app"
+              >Explore portrait editing
+              <span
+                ><svg
+                  class="public-arrow"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  aria-hidden="true"
+                >
+                  <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
+            ><small
+              >Review identity and detail. Editing does not verify
+              qualifications or credentials.</small
+            >
+          </div>
+        </article>
+        <article
+          class="audience-panel"
+          id="panel-personal"
+          role="tabpanel"
+          aria-labelledby="tab-personal"
+          hidden
+        >
+          <div class="audience-picture">
+            <img
+              src="/images/lifestyle.webp"
+              alt="Illustrative casual portraits of two adults in warm natural light"
+              width="1536"
+              height="1024"
+              loading="lazy"
+            /><span class="image-tag">PERSONAL PHOTO ENHANCEMENT</span>
+          </div>
+          <div class="audience-copy">
+            <span class="section-index">03 / THE MOMENTS YOU KEEP</span>
+            <h3>A familiar face.<br />A fresh perspective.</h3>
+            <p>
+              Give everyday photographs a little attention: lighting, color
+              balance and background presentation, with instructions to preserve
+              the appearance you want to keep.
+            </p>
+            <ul class="clean-list">
+              <li>Personal editing mode and optional instructions</li>
+              <li>Supported Low, Medium and High quality options</li>
+              <li>Saved history, comparison and downloads</li>
+            </ul>
+            <a class="public-button" href="/app"
+              >Explore personal editing
+              <span
+                ><svg
+                  class="public-arrow"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  aria-hidden="true"
+                >
+                  <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
+            ><small
+              >Available quality depends on your plan and service
+              configuration.</small
+            >
+          </div>
+        </article>
+      </section>
+      <section class="public-section studio-section" id="product">
+        <div class="public-wrap">
+          <div class="section-top">
+            <div>
+              <p class="public-eyebrow">MORE THAN AN EDITING MOMENT</p>
+              <h2>A connected space.<br />From first upload to final file.</h2>
+            </div>
+            <a class="public-text-link" href="/app"
+              >Meet your workspace
+              <span
+                ><svg
+                  class="public-arrow"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
                   aria-hidden="true"
                 >
                   <path d="M6 18 18 6M6 6h12v12" /></svg></span
             ></a>
-            <ul class="quiet-features">
-              <li>Projects for products, people, or personal photos</li>
-              <li>Private storage with account-scoped access</li>
-              <li>Review, download, and delete your images</li>
-            </ul>
           </div>
-          <div class="workspace-board" data-reveal="image">
-            <div class="board-top">
-              <span class="board-dot"></span
-              ><strong>Your collection, considered.</strong
-              ><span class="board-label">Workspace illustration</span>
-            </div>
-            <div class="board-title">
-              <span>Collection / 001</span>
-              <h3>A study in everyday extraordinary.</h3>
-            </div>
-            <div class="board-images">
-              <figure>
+          <div class="tool-grid">
+            <article class="tool-card tool-wide">
+              <div class="tool-image">
                 <img
-                  src="/images/footwear-small.webp"
-                  alt="Footwear concept in a sample collection"
-                  width="640"
-                  height="427"
+                  src="/images/objects.webp"
+                  alt="Illustrative collection of a watch, wool fabric, glass and an amber bottle"
+                  width="1536"
+                  height="1024"
                   loading="lazy"
-                />
-                <figcaption>Footwear study</figcaption>
-              </figure>
-              <figure>
-                <img
-                  src="/images/objects-small.webp"
-                  alt="Watch and glassware concept in the sample collection"
-                  width="640"
-                  height="427"
-                  loading="lazy"
-                />
-                <figcaption>Material details</figcaption>
-              </figure>
-              <figure>
-                <img
-                  src="/images/interior-small.webp"
-                  alt="Cream sofa in a sunlit architectural interior"
-                  width="640"
-                  height="427"
-                  loading="lazy"
-                />
-                <figcaption>Quiet spaces</figcaption>
-              </figure>
-            </div>
-            <div class="board-footer">
-              <span class="board-pill">A place for every point of view</span
-              ><span aria-hidden="true"
-                ><svg
-                  class="icon arrow-icon"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path d="M6 18 18 6M6 6h12v12" /></svg
-              ></span>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section id="spaces" class="spaces-section">
-        <div class="spaces-photo">
-          <img
-            src="/images/interior.webp"
-            srcset="
-              /images/interior-small.webp  640w,
-              /images/interior.webp       1536w
-            "
-            sizes="100vw"
-            alt="Sculptural cream boucle sofa, walnut side table, and abstract blue art in a sunlit plaster room"
-            width="1536"
-            height="1024"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div class="spaces-copy wrap">
-          <div data-reveal>
-            <p class="eyebrow">A sense of place</p>
-            <h2>Give your vision<br />room to live.</h2>
-            <p>
-              From the texture of a fabric to the feeling of a room. We’re
-              building toward image workflows that bring products into context,
-              with a careful eye for light, scale, and material.
-            </p>
-            <span class="planned-label"
-              >Lifestyle image production · In development</span
-            >
-          </div>
-          <span class="space-index" aria-hidden="true">03 / Spaces</span>
-        </div>
-      </section>
-      <section id="brand-studio" class="section wrap brand-section">
-        <div class="brand-composition" data-reveal="image">
-          <div class="brand-color">
-            <span>A consistent point of view.</span
-            ><span class="brand-asterisk" aria-hidden="true"
-              ><svg class="star-svg" viewBox="0 0 32 32" aria-hidden="true">
-                <path
-                  d="M14 1h4v10l7-7 3 3-7 7h10v4H21l7 7-3 3-7-7v10h-4V21l-7 7-3-3 7-7H1v-4h10L4 7l3-3 7 7z"
-                /></svg
-            ></span>
-          </div>
-          <img
-            class="brand-product"
-            src="/images/apparel-small.webp"
-            srcset="/images/apparel-small.webp 640w, /images/apparel.webp 1536w"
-            sizes="(max-width:760px) 60vw, 30vw"
-            alt="Cognac leather tote, ivory linen shirt, sunglasses, and navy overshirt in natural studio light"
-            width="640"
-            height="427"
-            loading="lazy"
-          />
-          <div
-            class="brand-palette"
-            role="img"
-            aria-label="Creative palette: ink, blue, stone, and amber"
-          >
-            <i></i><i></i><i></i><i></i>
-          </div>
-          <span class="brand-caption">One visual language. Every detail.</span>
-        </div>
-        <div class="brand-copy" data-reveal>
-          <p class="eyebrow">Brand Studio · Planned</p>
-          <h2>Distinctly yours.<br />Frame after frame.</h2>
-          <p>
-            Great brands have a point of view. Brand Studio is planned to bring
-            your colors, backgrounds, and preferred styles into a reusable
-            creative direction.
-          </p>
-          <p class="secondary-copy">
-            Less starting over. More of what makes you, you.
-          </p>
-          <a class="text-link" href="#availability"
-            >See what’s available
-            <span aria-hidden="true"
-              ><svg
-                class="icon arrow-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M6 18 18 6M6 6h12v12" /></svg></span
-          ></a>
-        </div>
-      </section>
-      <section id="batch" class="section batch-section">
-        <div class="wrap">
-          <div class="section-heading" data-reveal>
-            <div>
-              <p class="eyebrow">From one image to a visual world</p>
-              <h2>Think bigger.<br />Keep your flow.</h2>
-            </div>
-            <p>
-              The next chapter: collections that work together. Planned batch
-              workflows will connect your source images, creative direction, and
-              individual review.
-            </p>
-          </div>
-          <div class="batch-layout">
-            <div class="batch-mosaic" data-reveal="image">
-              <img
-                src="/images/footwear-small.webp"
-                alt="Footwear concept for a future collection workflow"
-                width="640"
-                height="427"
-                loading="lazy"
-              /><img
-                src="/images/portrait-small.webp"
-                alt="Professional portrait concept"
-                width="640"
-                height="427"
-                loading="lazy"
-              /><img
-                src="/images/objects-small.webp"
-                alt="Watch, fabric, and glassware concept"
-                width="640"
-                height="427"
-                loading="lazy"
-              />
-              <div class="mosaic-note">
-                <span aria-hidden="true"
-                  ><svg
-                    class="icon arrow-icon"
+                /><span class="image-tag">KEEP THE ORIGINAL CLOSE</span>
+              </div>
+              <div>
+                <h3>Every edit has a reference.</h3>
+                <p>
+                  Upload a real JPEG, PNG or WebP. Choose your mode and
+                  instructions. Compare the saved result with your original
+                  before deciding what to use.
+                </p>
+                <a href="/app/library"
+                  >Open your image library
+                  <svg
+                    class="public-arrow"
                     viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
                     aria-hidden="true"
                   >
                     <path d="M6 18 18 6M6 6h12v12" /></svg
-                ></span>
-                <p>A collection.<br />Not just a folder.</p>
+                ></a>
               </div>
-            </div>
-            <ol class="batch-list">
-              <li>
-                <span>01</span>
-                <div>
-                  <h3>Bring it together</h3>
-                  <p>Source photographs, grouped around a project.</p>
-                </div>
-              </li>
-              <li>
-                <span>02</span>
-                <div>
-                  <h3>Find the common thread</h3>
-                  <p>
-                    A shared creative direction, with room for individual
-                    details.
-                  </p>
-                </div>
-              </li>
-              <li>
-                <span>03</span>
-                <div>
-                  <h3>Review every frame</h3>
-                  <p>
-                    Planned individual review and selective retries before
-                    download.
-                  </p>
-                </div>
-              </li>
-            </ol>
-          </div>
-          <p class="dark-caption">
-            Batch processing, image packs, and format generation are in
-            development. The imagery above illustrates creative direction.
-          </p>
-        </div>
-      </section>
-      <section id="portraits" class="section wrap people-section">
-        <div class="section-heading" data-reveal>
-          <div>
-            <p class="eyebrow">The human perspective</p>
-            <h2>More you.<br />In every picture.</h2>
-          </div>
-          <p>
-            Character over perfection. Our portrait and personal-photo vision
-            starts with natural texture, recognizable identity, and the moments
-            worth keeping.
-          </p>
-        </div>
-        <div class="people-grid">
-          <figure class="portrait-figure" data-reveal="image">
-            <div class="image-window">
-              <img
-                src="/images/portrait.webp"
-                srcset="
-                  /images/portrait-small.webp  640w,
-                  /images/portrait.webp       1536w
-                "
-                sizes="(max-width:760px) 92vw, 50vw"
-                alt="Confident Black woman with natural curls and a navy blazer, photographed in soft studio light"
-                width="1536"
-                height="1024"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <figcaption>
-              <span>For your professional world</span
-              ><span>Portrait workflows · Planned</span>
-            </figcaption>
-          </figure>
-          <figure class="lifestyle-figure" data-reveal="image">
-            <div class="image-window">
-              <img
-                src="/images/lifestyle.webp"
-                srcset="
-                  /images/lifestyle-small.webp  640w,
-                  /images/lifestyle.webp       1536w
-                "
-                sizes="(max-width:760px) 92vw, 50vw"
-                alt="Silver-haired White woman and Black male colleague collaborating in a warmly lit creative studio"
-                width="1536"
-                height="1024"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <figcaption>
-              <span>For the people behind the work</span
-              ><span>Personal-photo workflows · Planned</span>
-            </figcaption>
-          </figure>
-        </div>
-      </section>
-      <section id="how-it-works" class="section workflow-section">
-        <div class="wrap">
-          <div class="workflow-heading" data-reveal>
-            <p class="eyebrow">A little structure. A lot of possibility.</p>
-            <h2>Your images.<br />A clearer way forward.</h2>
-            <p>
-              Start with the private photo workspace that’s available today.
-            </p>
-          </div>
-          <ol class="workflow-steps">
-            <li data-reveal>
-              <span>01 / Organize</span>
-              <h3>Make a project.</h3>
-              <p>
-                Give your next product collection, portrait session, or personal
-                album a place to begin.
-              </p>
-            </li>
-            <li data-reveal>
-              <span>02 / Upload</span>
-              <h3>Bring your images.</h3>
-              <p>
-                Upload JPEG, PNG, or WebP photographs. We normalize them to WebP
-                and remove embedded metadata.
-              </p>
-            </li>
-            <li data-reveal>
-              <span>03 / Keep creating</span>
-              <h3>Review. Download. Repeat.</h3>
-              <p>
-                Browse your photographs, download a WebP copy, or delete images
-                you no longer need.
-              </p>
-            </li>
-          </ol>
-          <a class="text-link" href="/app"
-            >Open the photo workspace
-            <span aria-hidden="true"
-              ><svg
-                class="icon arrow-icon"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
+            </article>
+            <article class="tool-card">
+              <div
+                class="mini-library"
+                aria-label="Illustration of an organized photo collection"
               >
-                <path d="M6 18 18 6M6 6h12v12" /></svg></span
-          ></a>
+                <img
+                  src="/images/apparel-small.webp"
+                  alt="Illustrative apparel collection"
+                  width="640"
+                  height="427"
+                  loading="lazy"
+                /><img
+                  src="/images/footwear-small.webp"
+                  alt="Illustrative footwear collection"
+                  width="640"
+                  height="427"
+                  loading="lazy"
+                /><img
+                  src="/images/interior-small.webp"
+                  alt="Illustrative interior photograph"
+                  width="640"
+                  height="427"
+                  loading="lazy"
+                /><img
+                  src="/images/objects-small.webp"
+                  alt="Illustrative accessories collection"
+                  width="640"
+                  height="427"
+                  loading="lazy"
+                />
+              </div>
+              <div>
+                <h3>A home for your collections.</h3>
+                <p>
+                  Projects, folders, search and saved versions keep the work
+                  connected. Move, archive or recover photographs through your
+                  private library.
+                </p>
+                <a href="/app/library"
+                  >Find your next project
+                  <svg
+                    class="public-arrow"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 18 18 6M6 6h12v12" /></svg
+                ></a>
+              </div>
+            </article>
+            <article class="tool-card review-card">
+              <div class="review-illustration">
+                <span class="review-kicker">A CONSIDERED SECOND LOOK</span
+                ><span>Lighting & presentation <i>Local checks</i></span
+                ><span>Product details <i>Your review</i></span
+                ><span>Optional AI assessment <i>Metered</i></span
+                ><strong>Your decision stays yours.</strong>
+              </div>
+              <div>
+                <h3>Quality is a conversation.</h3>
+                <p>
+                  Review objective checks and uncertain findings separately.
+                  Approve, reject or request a controlled correction. Generation
+                  never means automatic approval.
+                </p>
+                <a href="/app"
+                  >Explore your review workflow
+                  <svg
+                    class="public-arrow"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 18 18 6M6 6h12v12" /></svg
+                ></a>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
-      <section class="section wrap comparison-section">
-        <div data-reveal>
-          <p class="eyebrow">An eye for the difference</p>
-          <h2>A small shift.<br />A different feeling.</h2>
-          <p>
-            Light and color change the way an image reads. Move the divider to
-            explore two treatments of this composition.
-          </p>
-          <p class="comparison-disclosure">
-            Interactive color study: a browser grayscale effect applied to one
-            concept image. This is not an AI enhancement or a SONKOFLOW result.
-          </p>
+      <section id="collections" class="public-section public-wrap">
+        <div class="section-top">
+          <div>
+            <p class="public-eyebrow">THINK BEYOND THE SINGLE FRAME</p>
+            <h2>One product.<br />A whole set of possibilities.</h2>
+          </div>
+          <p>Plan the views you need.<br />Keep the work in one place.</p>
         </div>
-        <div data-reveal="image">
-          <div class="comparison">
+        <div class="pack-showcase">
+          <figure>
             <img
               src="/images/serum.webp"
-              alt="Full-color concept photograph of amber skincare serum"
+              alt="Illustrative skincare product scene used to explain product pack planning"
               width="1536"
               height="1024"
               loading="lazy"
             />
-            <div class="comparison-overlay">
+            <figcaption>
+              Illustrative composition. Not a generated five-view pack.
+            </figcaption>
+          </figure>
+          <div class="pack-plan">
+            <p class="public-eyebrow">YOUR PRODUCT PACK PLAN</p>
+            <div>
+              <b>01</b><span>Clean listing image</span
+              ><small>Product first</small>
+            </div>
+            <div>
+              <b>02</b><span>Lifestyle scene</span><small>Context & mood</small>
+            </div>
+            <div>
+              <b>03</b><span>Detail view</span
+              ><small>Visible details only</small>
+            </div>
+            <div>
+              <b>04</b><span>Square social image</span
+              ><small>Room to share</small>
+            </div>
+            <div>
+              <b>05</b><span>Wide promotional image</span
+              ><small>A wider canvas</small>
+            </div>
+            <p>
+              Choose supported views. Each output uses its own processing
+              allowance and needs review.
+            </p>
+            <a class="public-button" href="/app"
+              >Plan a product pack
+              <span
+                ><svg
+                  class="public-arrow"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  aria-hidden="true"
+                >
+                  <path d="M6 18 18 6M6 6h12v12" /></svg></span
+            ></a>
+          </div>
+        </div>
+        <div class="batch-callout">
+          <span class="batch-symbol" aria-hidden="true"
+            ><svg
+              class="public-arrow"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <path d="M5 3v12h15m-6-6 6 6-6 6" /></svg
+          ></span>
+          <div>
+            <h3>A few products to work through?</h3>
+            <p>
+              Bulk processing brings several source packs into one progress and
+              review workflow. Source, storage and allowance limits apply.
+            </p>
+          </div>
+          <a class="public-text-link" href="/app/batches"
+            >Explore bulk processing
+            <svg
+              class="public-arrow"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <path d="M6 18 18 6M6 6h12v12" /></svg
+          ></a>
+        </div>
+      </section>
+      <section id="brand-studio" class="brand-section public-section">
+        <div class="public-wrap brand-layout">
+          <div class="brand-copy">
+            <p class="public-eyebrow">A LOOK THAT FEELS LIKE YOU</p>
+            <h2>Less starting over.<br />More staying on brand.</h2>
+            <p>
+              Save your colors, logo assets, backgrounds and presentation
+              preferences in Brand Studio. Apply a profile and preset to
+              supported product edits and packs, then adjust a single job
+              without changing your saved identity.
+            </p>
+            <ul class="clean-list">
+              <li>Reusable brand profiles and visual presets</li>
+              <li>Recorded settings for historical projects</li>
+              <li>Direct logo placement where the composition supports it</li>
+            </ul>
+            <a class="public-button" href="/app/brands"
+              >Meet Brand Studio
+              <span
+                ><svg
+                  class="public-arrow"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.7"
+                  aria-hidden="true"
+                >
+                  <path d="M6 18 18 6M6 6h12v12" /></svg></span></a
+            ><small
+              >Brand styling does not override product fidelity. Exact colors,
+              typography and AI logo reproduction are not guaranteed.</small
+            >
+          </div>
+          <div class="brand-board">
+            <img
+              src="/images/serum.webp"
+              alt="Illustrative warm skincare composition for a visual brand direction"
+              width="1536"
+              height="1024"
+              loading="lazy"
+            />
+            <div class="brand-board-label">
               <img
-                src="/images/serum.webp"
-                alt="The same concept photograph with a browser grayscale treatment"
+                src="/brand/mark-ink.svg"
+                alt=""
+                width="46"
+                height="46"
+              /><span
+                >AN IDENTITY, CONSIDERED.<small
+                  >Visual direction study</small
+                ></span
+              >
+            </div>
+            <div class="brand-swatches">
+              <span style="--swatch: #173b36"></span
+              ><span style="--swatch: #d3c3a5"></span
+              ><span style="--swatch: #e8ddd0"></span
+              ><span style="--swatch: #a45c37"></span>
+              <p>Your palette.<br />Your perspective.</p>
+            </div>
+            <span class="board-note"
+              >Illustrative moodboard, not a saved customer profile.</span
+            >
+          </div>
+        </div>
+      </section>
+      <section class="public-section public-wrap lighting-section">
+        <div>
+          <p class="public-eyebrow">A LITTLE LIGHT CHANGES THE FEELING</p>
+          <h2>See the possibilities.<br />Keep your own eye.</h2>
+          <p>
+            Background and lighting choices shape a photograph’s mood. Explore
+            two visual treatments in this interactive illustration.
+          </p>
+          <p class="small-disclosure">
+            This lighting study uses a concept image and display filters. It is
+            not an actual before/after result or a fidelity claim.
+          </p>
+          <a class="public-text-link" href="/app"
+            >Bring your own photograph
+            <svg
+              class="public-arrow"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <path d="M6 18 18 6M6 6h12v12" /></svg
+          ></a>
+        </div>
+        <div>
+          <div class="comparison" style="--split: 50%">
+            <img
+              src="/images/interior.webp"
+              alt="Concept interior with a cool lighting treatment"
+              width="1536"
+              height="1024"
+              loading="lazy"
+            />
+            <div class="comparison-warm">
+              <img
+                src="/images/interior.webp"
+                alt="The same illustrative interior with a warm lighting treatment"
                 width="1536"
                 height="1024"
                 loading="lazy"
               />
             </div>
-            <span class="compare-label left">Grayscale</span
-            ><span class="compare-label right">Original color</span>
-            <div class="divider"><span aria-hidden="true">↔</span></div>
+            <span class="compare-label label-left">Warm study</span
+            ><span class="compare-label label-right">Cool study</span
+            ><span class="comparison-handle" aria-hidden="true"
+              ><svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M3 12h18m-6-6 6 6-6 6M9 6l-6 6 6 6" /></svg
+            ></span>
           </div>
-          <label class="slider-label" for="comparison-range"
-            ><span>Explore the color study</span
-            ><input
+          <label class="comparison-control" for="comparison-range"
+            >Explore the lighting study
+            <input
               id="comparison-range"
               type="range"
               min="0"
               max="100"
-              value="45"
-              aria-label="Grayscale coverage percentage"
+              value="50"
+              aria-label="Warm and cool lighting comparison"
           /></label>
         </div>
       </section>
-      <section id="pricing" class="section pricing-section">
-        <div class="wrap pricing-inner">
-          <div data-reveal>
-            <p class="eyebrow">Clarity comes first</p>
-            <h2>Considered images.<br />Clear expectations.</h2>
-            <p>
-              Explore Free, Starter and Pro, or choose a one-time processing pack.
-              Clear limits, private projects, and no unlimited AI promises.
-            </p>
-          </div>
-          <div class="availability-card" data-reveal>
-            <span class="availability-status"
-              ><span class="live-dot"></span> Photo workspace available</span
-            >
-            <h3>Start with<br />a little organization.</h3>
-            <p>
-              Compare enhancement modes, product packs and reusable brand settings.
-              Secure purchasing opens after merchant and provider verification.
-            </p>
-            <a class="button" href="/pricing"
-              >Explore plans
-              <span aria-hidden="true"
-                ><svg
-                  class="icon arrow-icon"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path d="M6 18 18 6M6 6h12v12" /></svg></span
+      <section id="how-it-works" class="public-section process-section">
+        <div class="public-wrap">
+          <div class="section-top">
+            <div>
+              <p class="public-eyebrow">A CLEAR PATH THROUGH THE WORK</p>
+              <h2>Start with a photo.<br />Finish with a decision.</h2>
+            </div>
+            <a class="public-button light" href="/account/signup"
+              >Create your workspace
+              <svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M6 18 18 6M6 6h12v12" /></svg
             ></a>
-            <p class="policy-note">
-              Privacy and retention policies are pending publication. Please
-              avoid sensitive photographs.
-            </p>
+          </div>
+          <div class="process-grid">
+            <article>
+              <span>01</span>
+              <h3>Bring your original.</h3>
+              <p>
+                Create a private project and upload a supported photograph. Your
+                files stay associated with your account.
+              </p>
+            </article>
+            <article>
+              <span>02</span>
+              <h3>Give it direction.</h3>
+              <p>
+                Choose a supported mode, quality and instructions. Review the
+                processing estimate and temporary reservation before starting.
+              </p>
+            </article>
+            <article>
+              <span>03</span>
+              <h3>Review. Keep. Download.</h3>
+              <p>
+                Compare the actual saved result, inspect important details and
+                download the version you choose. Revisit it in your library.
+              </p>
+            </article>
           </div>
         </div>
       </section>
-      <section id="faq" class="section wrap faq-section">
-        <div data-reveal>
-          <p class="eyebrow">Worth knowing</p>
-          <h2>A clear picture.</h2>
-          <p>Where we are today.<br />And where we’re heading.</p>
+      <section id="pricing" class="public-section public-wrap pricing-teaser">
+        <div>
+          <p class="public-eyebrow">YOUR PACE. YOUR ROOM TO CREATE.</p>
+          <h2>A single test.<br />Or your next collection.</h2>
+          <p>
+            Explore a strictly limited Free sample, recurring Starter and Pro
+            plans, or a one-time processing pack. Units reflect processing work,
+            not a fixed image count.
+          </p>
+          <a class="public-button" href="/pricing"
+            >Find your plan
+            <span
+              ><svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M6 18 18 6M6 6h12v12" /></svg></span
+          ></a>
+        </div>
+        <div class="pricing-peek">
+          <div>
+            <span>Free</span><strong>$0</strong
+            ><small>One limited sample, once activated</small>
+          </div>
+          <div>
+            <span>Starter</span><strong>$9<small>/month</small></strong
+            ><small>100 processing units per paid month</small>
+          </div>
+          <div>
+            <span>Pro</span><strong>$19<small>/month</small></strong
+            ><small>250 processing units per paid month</small>
+          </div>
+          <a href="/pricing"
+            >Compare all features, limits and one-time packs
+            <svg
+              class="public-arrow"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <path d="M6 18 18 6M6 6h12v12" /></svg
+          ></a>
+        </div>
+      </section>
+      <aside id="availability" class="public-wrap availability-note">
+        <span aria-hidden="true">i</span>
+        <p>
+          <strong>A clear view of availability.</strong> Account and
+          image-management workflows are implemented. AI processing and
+          purchases require service activation, funded provider access and
+          verified configuration. Review findings can remain uncertain; perfect
+          identity, product or label fidelity is never promised.
+        </p>
+      </aside>
+      <section id="faq" class="public-section public-wrap faq-section">
+        <div>
+          <p class="public-eyebrow">BEFORE YOUR NEXT PHOTO</p>
+          <h2>A few things<br />worth knowing.</h2>
+          <a class="public-text-link" href="/pricing#questions"
+            >More about plans & usage
+            <svg
+              class="public-arrow"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+            >
+              <path d="M6 18 18 6M6 6h12v12" /></svg
+          ></a>
         </div>
         <div class="faq-list">
           <details>
-            <summary>What can I do with SONKOFLOW today?</summary>
+            <summary>What can I do with SonkoFlow?</summary>
             <p>
-              You can create an account, organize projects, upload photographs
-              to private storage, review them, download WebP copies, and delete
-              them. AI enhancement, generation, Brand Studio, and batch
-              processing are not available yet.
+              AI enhancement has three dedicated modes: personal, professional
+              portrait and product. The workspace also supports private uploads,
+              projects, product packs, Brand Studio, bulk orchestration, quality
+              review and a searchable image library. Processing availability
+              depends on activated services and your allowance; purchasing
+              remains unavailable until merchant setup is verified.
             </p>
           </details>
           <details>
-            <summary>Which images can I upload?</summary>
+            <summary>Will every detail stay exactly the same?</summary>
             <p>
-              JPEG, PNG, and WebP images up to 10 MB and 25 megapixels, with a
-              minimum size of 64 × 64 pixels. Animated images are not supported.
-              Uploaded photographs are re-encoded as WebP with embedded metadata
-              removed. Each account can store up to 100 images and 250 MB.
+              No. Your photograph guides the edit and product-preservation
+              instructions are prioritized, but generative models can change
+              appearance, labels, colors and fine details. Review the original
+              and result before using an image. Quality checks support your
+              decision; they do not guarantee perfect fidelity.
             </p>
           </details>
           <details>
-            <summary>Are the showcase images real product results?</summary>
+            <summary>How do processing units work?</summary>
             <p>
-              No. The portfolio uses original AI-created concept imagery to show
-              our visual direction. It is not customer work or a demonstration
-              of SONKOFLOW processing. The interactive comparison is a clearly
-              labeled browser color study.
+              Quality, canvas, reference complexity, pack outputs and optional
+              AI assessment affect usage. Review your estimate and reservation
+              before generating. Uploads, library organization and downloads do
+              not use AI units. Packs and bulk jobs contain separately metered
+              outputs; requested corrections can use more units.
             </p>
           </details>
           <details>
-            <summary>Will AI editing preserve every product detail?</summary>
+            <summary>Are my images public?</summary>
             <p>
-              Exact preservation cannot be guaranteed with generative editing.
-              Future workflows will require careful review of labels, colors,
-              shape, identity, and other distinctive details. No AI editing is
-              currently offered.
+              Images are kept in private storage and served through
+              account-authorized routes. They are not published to a public
+              gallery by this application. When you request AI processing, the
+              necessary reference content is sent to the configured processing
+              provider. Read the Privacy Policy before uploading personal or
+              confidential material.
             </p>
           </details>
           <details>
-            <summary>How are my photographs stored?</summary>
+            <summary>Can I return to a previous project?</summary>
             <p>
-              Photographs are stored in a private bucket with account-scoped
-              access. You can delete your images from the workspace. The owner
-              still needs to publish privacy, retention, and provider
-              data-handling policies. Avoid sensitive photographs until those
-              policies are available.
-            </p>
-          </details>
-          <details>
-            <summary>Can I buy a plan or image credits?</summary>
-            <p>
-              No paid plans, subscriptions, or image credits are currently sold.
-              Pricing, entitlements, batch limits, and cancellation terms will
-              be published when those services are ready.
+              Yes. Projects, saved originals, outputs and recorded job settings
+              remain connected to your account. The image library supports
+              folders, search, archives and a 30-day photo recovery window.
+              Permanent cleanup depends on scheduled maintenance; deleting a
+              photo does not automatically erase associated usage or audit
+              records.
             </p>
           </details>
         </div>
       </section>
-      <section id="availability" class="final-cta">
-        <div class="wrap">
-          <div class="final-copy" data-reveal>
-            <p class="eyebrow">Make room for what’s next</p>
-            <h2>A better perspective<br />starts here.</h2>
-            <p>
-              Your photo workspace is ready.<br />Our image-production vision is
-              still taking shape.
-            </p>
-            <a class="button light" href="/app"
-              >Open your workspace
-              <span aria-hidden="true"
-                ><svg
-                  class="icon arrow-icon"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path d="M6 18 18 6M6 6h12v12" /></svg></span
-            ></a>
-          </div>
-          <div class="final-art" aria-hidden="true">
-            <img
-              src="/images/footwear-small.webp"
-              alt=""
-              width="640"
-              height="427"
-              loading="lazy"
-            /><span>Look a little<br /><em>differently.</em></span>
-          </div>
+      <section class="public-wrap final-section">
+        <div>
+          <p class="public-eyebrow">YOUR NEXT PHOTO STARTS HERE</p>
+          <h2>A fresh perspective.<br />A place to make it yours.</h2>
+          <p>Bring your original. Create a collection worth keeping.</p>
+          <a class="public-button light" href="/account/signup"
+            >Create your workspace
+            <span
+              ><svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M6 18 18 6M6 6h12v12" /></svg></span
+          ></a>
+        </div>
+        <div class="final-art">
+          <img
+            src="/images/lifestyle-small.webp"
+            alt="Illustrative lifestyle portrait collection"
+            width="640"
+            height="427"
+            loading="lazy"
+          /><img
+            src="/images/objects-small.webp"
+            alt="Illustrative product styling collection"
+            width="640"
+            height="427"
+            loading="lazy"
+          />
         </div>
       </section>
     </main>
-    <footer class="wrap">
-      <div class="footer-top">
+    <footer class="public-footer">
+      <div class="public-wrap footer-top">
         <div class="footer-brand">
-          <a class="logo" href="/">SONKOFLOW<span class="logo-dot">.</span></a>
-          <p>Every image.<br />A new perspective.</p>
+          <a href="/" aria-label="SONKOFLOW home"
+            ><img
+              class="brand-wordmark"
+              src="/brand/wordmark-white.svg"
+              alt="SonkoFlow"
+              width="222"
+              height="46"
+          /></a>
+          <p>Your original.<br />A new perspective.</p>
+          <a class="footer-workspace" href="/account/signup"
+            >Create your workspace
+            <span aria-hidden="true"
+              ><svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M6 18 18 6M6 6h12v12" /></svg></span
+          ></a>
         </div>
         <div>
-          <h3>Explore</h3>
-          <a href="#product">The workspace</a
-          ><a href="#solutions">Creative possibilities</a
-          ><a href="#brand-studio">Brand Studio</a>
+          <h2>Image tools</h2>
+          <a href="/#solutions">Personal photo enhancement</a
+          ><a href="/#solutions">Professional portraits</a
+          ><a href="/#product">Product photo enhancement</a
+          ><a href="/#collections">Product image packs</a>
         </div>
         <div>
-          <h3>Your space</h3>
-          <a href="/account/signin">Sign in</a
-          ><a href="/account/signup">Create an account</a
-          ><a href="/account/recover">Password recovery</a>
+          <h2>Your workspace</h2>
+          <a href="/app/brands">Brand Studio</a
+          ><a href="/app/batches">Bulk processing</a
+          ><a href="/app/library">Image library</a
+          ><a href="/pricing">Plans & pricing</a>
         </div>
         <div>
-          <h3>Worth knowing</h3>
-          <a href="/pricing">Pricing & availability</a
-          ><a href="#faq">Questions & answers</a
-          ><a href="#site-information">Legal & contact status</a>
+          <h2>Resources</h2>
+          <a href="/#how-it-works">How it works</a
+          ><a href="/#faq">Questions & answers</a
+          ><a href="/account/signin">Sign in</a
+          ><a href="/account/recover">Account recovery</a>
         </div>
       </div>
-      <div id="site-information" class="legal-note">
-        Before full launch, the owner needs to publish a support contact, legal
-        business identity, privacy policy, and terms of service. These are not
-        yet available. Showcase imagery is illustrative; AI image processing is
-        in development.
-      </div>
-      <div class="footer-bottom">
-        <span>© <span id="year"></span> SONKOFLOW</span
-        ><span>A considered point of view.</span
-        ><a href="#main">Back to top <span aria-hidden="true">↑</span></a>
+      <div class="public-wrap footer-bottom">
+        <p>
+          All rights reserved © 2026 SonkoFlow, a product of AaronPrime PTY
+          LTD.
+        </p>
+        <nav aria-label="Legal navigation">
+          <a href="/terms">Terms & Conditions</a
+          ><a href="/privacy">Privacy Policy</a
+          ><a href="/cookies">Cookie Policy</a
+          ><a href="/legal">Legal Information</a>
+        </nav>
       </div>
     </footer>
     <script type="module" src="/src/main.js"></script>
