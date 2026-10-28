@@ -1,4 +1,4 @@
-import { renderQuality } from "./quality-ui.js";
+import { renderQuality, qualitySummary } from "./quality-ui.js";
 const modes = {
   personal: {
     name: "Personal Photo Enhancement",
@@ -418,7 +418,7 @@ export async function projectProcessing(api, page, projectId) {
       text.append(name, status);
       if (job.mode === "product" && job.quality_state) {
         const review = document.createElement("p");
-        review.textContent = `Review: ${job.quality_report?.status?.replaceAll("_", " ") ?? job.quality_state} · Your decision: ${job.user_decision ?? "pending"}${job.quality_retry_number ? ` · Retry ${job.quality_retry_number}` : ""}`;
+        review.textContent = `Review: ${qualitySummary(job)} · Your decision: ${job.user_decision ?? "pending"}${job.quality_retry_number ? ` · Retry ${job.quality_retry_number}` : ""}`;
         text.append(review);
       }
       a.append(text);

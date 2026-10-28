@@ -205,7 +205,7 @@ export function estimateCost(
   usage: Usage | null,
   price: Record<string, unknown>,
 ): number | null {
-  if (!usage?.input_tokens_details || !usage.output_tokens_details) return null;
+  if (!usage?.input_tokens_details) return null;
   if (
     usage.input_tokens_details.text_tokens +
       usage.input_tokens_details.image_tokens !==
@@ -213,7 +213,16 @@ export function estimateCost(
     usage.input_tokens + usage.output_tokens !== usage.total_tokens
   )
     return null;
-  const out = usage.output_tokens_details;
+  const out =
+    usage.output_tokens_details ??
+    (price.output_modality === "image" &&
+    [
+      "gpt-image-2.5-sunburst-2026-09-08",
+      "gpt-image-2.5-flare-2026-09-08",
+    ].includes(String(price.model))
+      ? { text_tokens: 0, image_tokens: usage.output_tokens }
+      : null);
+  if (!out) return null;
   if (out.text_tokens + out.image_tokens !== usage.output_tokens) return null;
   const tokens = [
     usage.input_tokens_details.text_tokens,

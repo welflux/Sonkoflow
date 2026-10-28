@@ -4,6 +4,16 @@ const statuses = {
   failed: "Failed",
   unavailable: "Unavailable",
 };
+export function qualitySummary(job) {
+  if (job.quality_state === "pending") return "Queued";
+  if (job.quality_state === "running") return "Assessing";
+  if (job.quality_state === "unavailable") return "Unavailable";
+  if (job.quality_state === "completed")
+    return statuses[job.quality_report?.status] ?? "Needs Review";
+  return ["queued", "running", "persisting"].includes(job.status)
+    ? "Awaiting generation"
+    : "Not assessed";
+}
 async function intentKey(scope, value) {
   const digest = Array.from(
     new Uint8Array(
@@ -45,6 +55,11 @@ export function renderQuality(container, job, api, refresh) {
     "help",
   );
   container.append(note);
+  if (job.pack_id) {
+    const back = element("a", "Back to product pack", "text-link");
+    back.href = `/app/packs/${job.pack_id}`;
+    container.append(back);
+  }
   if (job.quality_parent_id) {
     const a = element(
       "a",
@@ -102,7 +117,9 @@ export function renderQuality(container, job, api, refresh) {
           ? "Computer-vision review signal"
           : check.method === "vision"
             ? "Probabilistic AI assessment"
-            : "Assessment availability";
+            : check.method === "customer"
+              ? "Customer review required"
+              : "Assessment availability";
     item.append(
       element(
         "p",
@@ -279,6 +296,51 @@ export function renderQuality(container, job, api, refresh) {
   submit.type = "submit";
   form.append(submit);
   container.append(form);
+  let retryCanGenerate = false;
+  let retryQuote = null,
+    retryRevision = 0;
+  if (job.pack_id) {
+    submit.disabled = true;
+    const quoteButton = element("button", "Review retry allowance");
+    quoteButton.type = "button";
+    form.insertBefore(quoteButton, submit);
+    const quoteNotice = element("p", null, "help");
+    form.insertBefore(quoteNotice, submit);
+    form.addEventListener("input", (event) => {
+      if (event.target === consent) return;
+      retryRevision++;
+      retryQuote = null;
+      retryCanGenerate = false;
+      submit.disabled = true;
+      quoteNotice.textContent =
+        "Review the updated retry allowance before generating.";
+    });
+    quoteButton.onclick = async () => {
+      const revision = retryRevision;
+      quoteButton.disabled = true;
+      try {
+        const targets = Array.from(
+          form.querySelectorAll("input[name=target]:checked"),
+        ).map((e) => e.value);
+        const quoted = await api(`/packs/outputs/${job.id}/retry-plan`, {
+          method: "POST",
+          body: JSON.stringify({ targets, instructions: text.value.trim() }),
+        });
+        if (revision !== retryRevision)
+          throw new Error(
+            "Retry requirements changed. Review the updated allowance.",
+          );
+        retryQuote = quoted.quote_fingerprint;
+        retryCanGenerate = quoted.can_generate;
+        quoteNotice.textContent = `Estimated use: ${quoted.estimated_credits} credits. Required hold: ${quoted.reserved_credits}. Available: ${quoted.allowance.available_credits}.`;
+        submit.disabled = !quoted.can_generate;
+      } catch (e) {
+        fail(e);
+      } finally {
+        quoteButton.disabled = false;
+      }
+    };
+  }
   form.onsubmit = async (event) => {
     event.preventDefault();
     submit.disabled = true;
@@ -293,6 +355,7 @@ export function renderQuality(container, job, api, refresh) {
       if (targets.includes("customer_detail") && !text.value.trim())
         throw new Error("Describe the specific product detail to correct.");
       const body = {
+        ...(job.pack_id ? { quote_fingerprint: retryQuote } : {}),
         targets,
         instructions: text.value.trim(),
         provider_consent: true,
@@ -309,7 +372,14 @@ export function renderQuality(container, job, api, refresh) {
       location.assign(`/app/edits/${result.job.id}`);
     } catch (e) {
       fail(e);
-      submit.disabled = false;
+      if (
+        job.pack_id &&
+        ["pack_quote_stale", "insufficient_credits"].includes(e.code)
+      ) {
+        retryQuote = null;
+        retryCanGenerate = false;
+      }
+      submit.disabled = !!job.pack_id && (!retryQuote || !retryCanGenerate);
     }
   };
 }

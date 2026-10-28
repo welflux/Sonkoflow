@@ -20,7 +20,8 @@
     "check:services": "node --env-file-if-exists=.env --import tsx scripts/check-services.ts",
     "postinstall": "npm run build",
     "check:processing": "node --env-file-if-exists=.env --import tsx scripts/check-processing.ts",
-    "test:live:processing": "node --env-file-if-exists=.env --import tsx --test tests/live/processing.test.ts"
+    "test:live:processing": "node --env-file-if-exists=.env --import tsx --test tests/live/processing.test.ts",
+    "test:live:packs": "node --env-file-if-exists=.env --import tsx --test tests/live/packs.test.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.12",

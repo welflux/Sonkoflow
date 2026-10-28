@@ -1,3 +1,4 @@
+import { packDirection, type PackContext } from "../packs/contracts.js";
 import { randomUUID } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { hash } from "../security.js";
@@ -22,7 +23,11 @@ export type QualityJob = {
   input_image_id: string;
   output_image_id: string;
   output_size: string;
-  settings: { product_options?: unknown; background: string };
+  settings: {
+    product_options?: unknown;
+    background: string;
+    pack_context?: PackContext;
+  };
   instructions: string;
   quality_model: string | null;
   quality_price_snapshot: Record<string, unknown>;
@@ -150,6 +155,24 @@ export class QualityWorker {
         throw new Error("integrity");
       const options = productOptions.parse(job.settings.product_options ?? {});
       result = await localAssessment(source, output, job.output_size, options);
+      if (
+        job.settings.pack_context &&
+        ["lifestyle", "detail", "wide"].includes(job.settings.pack_context.type)
+      )
+        result = report([
+          ...result.checks,
+          {
+            id: "pack_fidelity",
+            label: "Output-specific fidelity review",
+            status: "needs_review",
+            method: "customer",
+            confidence: null,
+            explanation:
+              job.settings.pack_context.type === "detail"
+                ? "This is a generated closer view, not verified detail recovery. Confirm every visible feature and do not infer unseen product details."
+                : "This creative composition changes the setting. Review product shape, labels, materials and accessories against the original; environmental elements are not included product features.",
+          },
+        ]);
       failureCode = "assessment_persistence";
       if (!(await this.checkpoint(job.id, worker, "local", { report: result })))
         return;
@@ -176,7 +199,7 @@ export class QualityWorker {
           output,
           options,
           job.settings.background,
-          `${job.instructions}\n${direction}`,
+          `${job.instructions}\n${direction}\n${job.settings.pack_context ? packDirection(job.settings.pack_context) : ""}`,
           job.id,
           controller.signal,
         );

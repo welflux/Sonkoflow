@@ -20,6 +20,7 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_SECRET_KEY) {
     for (const [rpc, version, label] of [
       ["processing_schema_version", 2026102801, "Phase 2"],
       ["product_quality_schema_version", 2026102802, "Phase 3 product quality"],
+      ["product_packs_schema_version", 2026102803, "Phase 4 product packs"],
     ] as const) {
       const result = await client.rpc(rpc);
       const ready = !result.error && result.data === version;

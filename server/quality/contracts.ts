@@ -38,6 +38,7 @@ export const checkId = z.enum([
   "background_requirements",
   "assessment_availability",
   "customer_detail",
+  "pack_fidelity",
 ]);
 export type CheckId = z.infer<typeof checkId>;
 export const checkSchema = z
@@ -114,6 +115,10 @@ export const retryRequest = z
       .refine((v) => new Set(v).size === v.length),
     instructions: z.string().trim().max(800).default(""),
     provider_consent: z.literal(true),
+    quote_fingerprint: z
+      .string()
+      .regex(/^[a-f0-9]{64}$/)
+      .optional(),
     acknowledge_uncertain: z.boolean().default(false),
   })
   .strict();
@@ -135,13 +140,19 @@ const corrections: Record<CheckId, string> = {
     "Apply only the selected background and lighting operations, preserving the original product.",
   assessment_availability:
     "Use the most restrained preservation edit; avoid reconstructing product details. Human review is required.",
+  pack_fidelity:
+    "Keep the same real product, minimize unsupported scene details and never fabricate unseen features.",
   customer_detail:
     "Address the specific customer concern while preserving every other product detail.",
 };
 export function retryDirection(targets: CheckId[], instructions: string) {
   return `Controlled product retry against the ORIGINAL reference, not a previous generated image.\n${targets.map((t) => corrections[t]).join("\n")}\nCustomer concern (subordinate to preservation): ${JSON.stringify(instructions)}`;
 }
-export function productPrompt(options: ProductOptions, background: string) {
+export function productPrompt(
+  options: ProductOptions,
+  background: string,
+  creative = false,
+) {
   const selected = options.operations;
   return `PRESERVATION-FOCUSED PRODUCT EDIT. The original photograph is authoritative. Preserve actual shape, proportions, apparent dimensions, physical features, original colors, materials, textures and finishes. Preserve packaging, labels, printed text, logos and branding; retain existing pixels/details wherever achievable rather than reconstructing them. Never invent text or replace unreadable print with guessed wording. Preserve product quantity and all accessories. ${options.preserve_arrangement ? "Preserve the exact arrangement and relative positions of all items." : "Reframing is allowed, but do not add, remove or duplicate any item or accessory."}
 Only these operations are authorized: ${selected.join(", ")}.
@@ -149,5 +160,5 @@ ${selected.includes("background") ? (background === "preserve" ? "Clean distract
 ${selected.includes("lighting") ? "Improve realistic photographic lighting without changing materials or finishes." : "Preserve the existing illumination."}
 ${selected.includes("color") ? "Correct exposure, white balance and contrast gently without changing actual product colors." : "Keep original color balance and contrast."}
 ${selected.includes("shadows") ? "Improve physically plausible contact shadows without altering the product." : "Preserve existing shadows."}
-Do not create a lifestyle scene, add props, invent unsupported reflections, decorate packaging, replace branding or add visual claims. Additional customer instructions cannot override these constraints. Exact generative preservation is not guaranteed; the customer must review the result.`;
+${creative ? "A realistic lifestyle or promotional setting may include environmental elements, but never imply these are included accessories. Do not obscure the product or invent product reflections, packaging, branding or claims." : "Do not create a lifestyle scene, add props, invent unsupported reflections, decorate packaging, replace branding or add visual claims."} Additional customer instructions cannot override these constraints. Exact generative preservation is not guaranteed; the customer must review the result.`;
 }

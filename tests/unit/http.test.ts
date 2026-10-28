@@ -22,6 +22,8 @@ test("unconfigured account services fail closed without fabricated success", asy
     "/api/images",
     "/api/jobs?project_id=11111111-1111-4111-8111-111111111111",
     "/api/processing/capabilities",
+    "/api/packs/capabilities",
+    "/api/packs?project_id=11111111-1111-4111-8111-111111111111",
   ]) {
     const response = await request(app).get(route);
     assert.equal(response.status, 503);
@@ -41,9 +43,31 @@ test("protected APIs reject missing sessions before accessing external services"
     "/api/images",
     "/api/jobs?project_id=11111111-1111-4111-8111-111111111111",
     "/api/processing/capabilities",
+    "/api/packs/capabilities",
+    "/api/packs?project_id=11111111-1111-4111-8111-111111111111",
   ]) {
     const result = await request(app).get(route);
     assert.equal(result.status, 401);
+  }
+  for (const path of [
+    "/api/packs",
+    "/api/packs/quote",
+    "/api/packs/outputs/11111111-1111-4111-8111-111111111111/retry-plan",
+  ]) {
+    assert.equal(
+      (await request(app).post(path).set("Origin", config.APP_ORIGIN).send({}))
+        .status,
+      401,
+    );
+    assert.equal(
+      (
+        await request(app)
+          .post(path)
+          .set("Origin", "https://attacker.example")
+          .send({})
+      ).status,
+      403,
+    );
   }
   const mutation = await request(app)
     .post("/api/projects")

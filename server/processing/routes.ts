@@ -1,3 +1,4 @@
+import { packJobFields } from "../packs/contracts.js";
 import type { Express, Response } from "express";
 import type { Identity } from "../services.js";
 import { z } from "zod";
@@ -13,7 +14,9 @@ import { retryRequest } from "../quality/contracts.js";
 import { ProcessingEngine } from "./engine.js";
 function present(job: Record<string, unknown>) {
   const result: Record<string, unknown> = {};
-  for (const field of `${jobFields},${qualityFields}`.split(","))
+  for (const field of `${jobFields},${qualityFields},${packJobFields}`.split(
+    ",",
+  ))
     result[field] = job[field] ?? null;
   result.message =
     typeof job.error_code === "string"
@@ -28,7 +31,9 @@ export function processingRoutes(
   who: (res: Response) => Identity,
 ) {
   const fields = async () =>
-    jobFields + ((await engine.qualityReady()) ? `,${qualityFields}` : "");
+    jobFields +
+    ((await engine.qualityReady()) ? `,${qualityFields}` : "") +
+    ((await engine.packsReady?.()) ? `,${packJobFields}` : "");
   app.get("/api/images/:id", async (req, res) => {
     const id = uuid.parse(req.params.id);
     const identity = who(res);
@@ -202,6 +207,7 @@ export function processingRoutes(
       parent,
       targets: body.targets,
       instructions: body.instructions,
+      quote_fingerprint: body.quote_fingerprint,
     });
     res
       .status(202)

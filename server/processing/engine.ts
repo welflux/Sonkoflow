@@ -1,3 +1,6 @@
+import { loadPackConfig } from "../packs/config.js";
+import { makeOutputPlan } from "../packs/plan.js";
+import { packType, type PackContext } from "../packs/contracts.js";
 import { randomUUID } from "node:crypto";
 import { QualityWorker, qualityStore } from "../quality/worker.js";
 import { qualityConfig, visionPrice } from "../quality/config.js";
@@ -47,6 +50,7 @@ export type WorkerJob = {
     preserve_appearance: true;
     product_options?: ProductOptions;
     provider_consent?: boolean;
+    pack_context?: PackContext;
   };
   quality_retry_targets?: CheckId[];
   quality_retry_instructions?: string;
@@ -377,6 +381,9 @@ export class ProcessingEngine {
   readonly missing: string[];
   readonly worker: ProcessingWorker | null;
   readonly quality;
+  readonly packConfig;
+  private packsChecked = 0;
+  private packsAvailable = false;
   readonly qualityWorker: QualityWorker;
   private qualityChecked = 0;
   private qualityAvailable = false;
@@ -390,6 +397,7 @@ export class ProcessingEngine {
     this.config = loaded.config;
     this.missing = loaded.missing;
     this.quality = qualityConfig(env);
+    this.packConfig = loadPackConfig(env);
     this.qualityWorker = new QualityWorker(
       qualityStore(admin),
       this.config ? this.quality.vision : null,
@@ -438,6 +446,46 @@ export class ProcessingEngine {
     this.qualityAvailable = !r.error && r.data === 2026102802;
     return this.qualityAvailable;
   }
+  async packsReady() {
+    if (Date.now() - this.packsChecked < 30000) return this.packsAvailable;
+    const r = await this.admin.rpc("product_packs_schema_version");
+    this.packsChecked = Date.now();
+    this.packsAvailable = !r.error && r.data === 2026102803;
+    return this.packsAvailable;
+  }
+  makePackRetryPlan(
+    parent: Record<string, any>,
+    targets: CheckId[],
+    instructions: string,
+  ) {
+    if (!this.config || !this.packConfig)
+      throw new AppError(
+        503,
+        "packs_not_configured",
+        "Pack allowance configuration is required for this retry.",
+      );
+    const context = parent.settings.pack_context;
+    const plan = makeOutputPlan(
+      packType.parse(parent.pack_output_type),
+      parent.quality,
+      {
+        scene: context.scene,
+        detail_focus: context.detail_focus,
+        instructions: parent.instructions,
+      },
+      this.config,
+      this.quality.vision,
+      this.packConfig,
+      this.quality.retryLimit,
+      retryDirection(targets, instructions),
+    );
+    return {
+      plan,
+      fingerprint: hash(
+        JSON.stringify({ parent: parent.id, plan, targets, instructions }),
+      ),
+    };
+  }
   async submit(
     input: JobInput,
     identity: Identity,
@@ -445,6 +493,7 @@ export class ProcessingEngine {
       parent: Record<string, any>;
       targets: CheckId[];
       instructions: string;
+      quote_fingerprint?: string;
     },
   ) {
     const c = this.config;
@@ -484,6 +533,31 @@ export class ProcessingEngine {
     processingDbError(error);
     if (!image || image.role !== "original" || image.status !== "ready")
       throw new AppError(404, "not_found", "Reference photograph not found.");
+    let packRetryPlan: ReturnType<typeof makeOutputPlan> | null = null;
+    if (retry?.parent.pack_id) {
+      if (
+        !this.packConfig ||
+        image.width * image.height >
+          this.packConfig.AI_PACK_TOKEN_ESTIMATES_JSON.max_source_pixels
+      )
+        throw new AppError(
+          503,
+          "pack_estimates_required",
+          "This source is outside the configured pack estimate range.",
+        );
+      const quoted = this.makePackRetryPlan(
+        retry.parent,
+        retry.targets,
+        retry.instructions,
+      );
+      if (retry.quote_fingerprint !== quoted.fingerprint)
+        throw new AppError(
+          409,
+          "pack_quote_stale",
+          "Review the retry allowance before generating.",
+        );
+      packRetryPlan = quoted.plan;
+    }
     this.worker?.start();
     const { data, error: submitError } = await this.admin.rpc(
       "submit_processing_job",
@@ -539,6 +613,15 @@ export class ProcessingEngine {
                 quality_reserved_micro_usd: Math.ceil(
                   (this.quality.vision?.AI_QUALITY_RESERVE_USD ?? 0) * 1e6,
                 ),
+              }
+            : {}),
+          ...(packRetryPlan
+            ? {
+                prompt_version: packRetryPlan.job.prompt_version,
+                reserved_micro_usd: packRetryPlan.job.reserved_micro_usd,
+                quality_reserved_micro_usd:
+                  packRetryPlan.job.quality_reserved_micro_usd,
+                pack_credit_plan: packRetryPlan.job.pack_credit_plan,
               }
             : {}),
           ...(retry

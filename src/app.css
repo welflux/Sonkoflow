@@ -1429,3 +1429,71 @@ textarea:focus-visible {
   font-weight: 600;
   margin-top: 1rem;
 }
+
+.pack-options {
+  display: grid;
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+.pack-option {
+  padding: 1rem;
+  border: 1px solid #d8dfdd;
+  border-radius: 12px;
+  background: #f7f8f4;
+}
+.pack-option .check-row {
+  margin-bottom: 0.5rem;
+}
+.pack-option p {
+  margin: 0.35rem 0;
+}
+.pack-quote {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #d8dfdd;
+}
+.pack-plan-list {
+  padding-left: 1.2rem;
+  line-height: 1.8;
+}
+.pack-credit-total {
+  font-weight: 650;
+}
+.pack-gallery {
+  display: grid;
+  gap: 1.5rem;
+}
+.pack-output {
+  padding: clamp(1rem, 3vw, 2rem);
+  min-width: 0;
+}
+.pack-output-status {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #e8eeeb;
+}
+.pack-output .result-comparison {
+  margin: 1rem 0;
+}
+.pack-output .result-image {
+  min-height: 180px;
+}
+.pack-review {
+  border-top: 1px solid #d8dfdd;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+.pack-review summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+.pack-output details .text-link {
+  display: block;
+  margin: 0.5rem 0;
+}
+.pack-output figure {
+  min-width: 0;
+}
+.pack-output img {
+  max-width: 100%;
+}

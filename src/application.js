@@ -1,3 +1,4 @@
+import { packEditor, packResult, projectPacks } from "./packs-ui.js";
 import {
   processingEditor,
   processingResult,
@@ -265,6 +266,7 @@ async function projectPage(id) {
     await projectPage(id);
   });
   const result = await api(`/images?project_id=${encodeURIComponent(id)}`);
+  void projectPacks(api, page, id);
   void projectProcessing(api, page, id).catch((error) => {
     const note = document.createElement("p");
     note.className = "notice error";
@@ -321,6 +323,11 @@ async function projectPage(id) {
         enhance.textContent = "Enhance photograph";
         enhance.className = "enhance-link";
         actions.append(enhance);
+        const pack = document.createElement("a");
+        pack.href = `/app/packs/new/${image.id}`;
+        pack.textContent = "Create image pack";
+        pack.className = "enhance-link";
+        actions.append(pack);
       }
     }
     const remove = document.createElement("button");
@@ -405,7 +412,11 @@ async function main() {
   }
   try {
     profile = (await api("/session")).profile;
-    if (/^\/app\/edit\/[a-f0-9-]{36}$/.test(location.pathname))
+    if (/^\/app\/packs\/new\/[a-f0-9-]{36}$/.test(location.pathname))
+      await packEditor(api, shell, location.pathname.split("/").pop());
+    else if (/^\/app\/packs\/[a-f0-9-]{36}$/.test(location.pathname))
+      await packResult(api, shell, location.pathname.split("/").pop());
+    else if (/^\/app\/edit\/[a-f0-9-]{36}$/.test(location.pathname))
       await processingEditor(api, shell, location.pathname.split("/").pop());
     else if (/^\/app\/edits\/[a-f0-9-]{36}$/.test(location.pathname))
       await processingResult(api, shell, location.pathname.split("/").pop());

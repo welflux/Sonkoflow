@@ -52,6 +52,9 @@ export function priceSnapshot(c: ProcessingConfig) {
     text_output: c.AI_TEXT_OUTPUT_USD_PER_MILLION,
     image_output: c.AI_IMAGE_OUTPUT_USD_PER_MILLION,
     basis: "configured_uncached_token_estimate",
+    ...(c.AI_IMAGE_MODEL.startsWith("gpt-image-2.5-")
+      ? { output_modality: "image" }
+      : {}),
   };
 }
 export function limits(c: ProcessingConfig) {

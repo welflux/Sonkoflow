@@ -1,3 +1,4 @@
+import { packRoutes } from "./packs/routes.js";
 import { ProcessingEngine } from "./processing/engine.js";
 import { processingRoutes } from "./processing/routes.js";
 import express, {
@@ -552,7 +553,10 @@ export function createApp(config: Config | null) {
     databaseError(done.error);
     res.json({ ok: true });
   });
-  if (processing) processingRoutes(app, processing, who);
+  if (processing) {
+    processingRoutes(app, processing, who);
+    packRoutes(app, processing, who, limit);
+  }
   app.use("/api", (_req, _res, next) =>
     next(new AppError(404, "not_found", "Endpoint not found.")),
   );
