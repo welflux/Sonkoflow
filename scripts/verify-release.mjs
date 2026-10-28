@@ -1,6 +1,14 @@
 import{spawnSync}from'node:child_process';
 const base=process.argv[2]||'https://sonkoflow.com';const origin=new URL(base);if(origin.protocol!=='https:'||origin.origin!==base)throw Error('Supply the exact approved HTTPS origin, without a trailing slash.');
-function get(path){const r=spawnSync('curl',['--silent','--show-error','--max-time','15','--dump-header','-','--write-out','\nRELEASE_STATUS:%{http_code}',base+path],{encoding:'utf8',maxBuffer:3*1024*1024});if(r.status!==0)return{status:0,error:'transport_unavailable',body:''};const code=Number(r.stdout.match(/RELEASE_STATUS:(\d+)\s*$/)?.[1]??0),parts=r.stdout.split(/\r?\n\r?\n/),body=parts.at(-1).replace(/\nRELEASE_STATUS:\d+\s*$/,'');let json;try{json=JSON.parse(body);}catch{}const location=[...r.stdout.matchAll(/^location:\s*(.*)\r?$/gim)].at(-1)?.[1]?.trim();return{status:code,body,json,location};}
+function get(path){
+  const r=spawnSync('curl',['--silent','--show-error','--max-time','15','--write-out','\nRELEASE_STATUS:%{http_code}\nRELEASE_REDIRECT:%{redirect_url}',base+path],{encoding:'utf8',maxBuffer:3*1024*1024});
+  if(r.status!==0)return{status:0,error:'transport_unavailable',body:''};
+  const meta=r.stdout.match(/\nRELEASE_STATUS:(\d+)\nRELEASE_REDIRECT:([^\n]*)$/);
+  const status=Number(meta?.[1]??0),body=meta?r.stdout.slice(0,meta.index):r.stdout;
+  let json;try{json=JSON.parse(body);}catch{}
+  let location=meta?.[2];if(location){const target=new URL(location,base);if(target.origin===base)location=target.pathname+target.search;}
+  return{status,body,json,location};
+}
 const checks=[];function record(name,ok,detail){checks.push({name,ok,...detail});}
 const home=get('/');record('new_homepage',home.status===200&&home.body.includes('/brand/wordmark-ink.svg')&&home.body.includes('Made for'),{status:home.status});
 const health=get('/api/health');record('backend_health',health.status===200&&health.json?.status==='ok',{status:health.status});
