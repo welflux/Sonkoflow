@@ -1,4 +1,12 @@
 import { randomUUID } from "node:crypto";
+import { QualityWorker, qualityStore } from "../quality/worker.js";
+import { qualityConfig, visionPrice } from "../quality/config.js";
+import {
+  productOptions,
+  retryDirection,
+  type ProductOptions,
+  type CheckId,
+} from "../quality/contracts.js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { AppError, hash } from "../security.js";
 import type { Identity } from "../services.js";
@@ -10,6 +18,7 @@ import {
 } from "./config.js";
 import {
   PROMPT_VERSION,
+  PRODUCT_PROMPT_VERSION,
   fingerprint,
   outputSize,
   processingDbError,
@@ -36,7 +45,11 @@ export type WorkerJob = {
     background: JobInput["background"];
     framing: JobInput["framing"];
     preserve_appearance: true;
+    product_options?: ProductOptions;
+    provider_consent?: boolean;
   };
+  quality_retry_targets?: CheckId[];
+  quality_retry_instructions?: string;
   model: ProcessingConfig["AI_IMAGE_MODEL"];
   output_size: string;
   result_image_id: string;
@@ -201,7 +214,7 @@ export class ProcessingWorker {
         await this.recover(job, worker);
         return;
       }
-      const input: JobInput = {
+      const input: JobInput & { controlled_retry?: string } = {
         project_id: job.project_id,
         input_image_id: job.input_image_id,
         submission_key: job.submission_key,
@@ -211,6 +224,12 @@ export class ProcessingWorker {
         ...job.settings,
         acknowledge_uncertain: false,
         provider_consent: true,
+        controlled_retry: job.quality_retry_targets?.length
+          ? retryDirection(
+              job.quality_retry_targets,
+              job.quality_retry_instructions ?? "",
+            )
+          : undefined,
       };
       const source = await this.store.image(job.input_image_id, job.user_id);
       if (
@@ -357,6 +376,10 @@ export class ProcessingEngine {
   readonly config: ProcessingConfig | null;
   readonly missing: string[];
   readonly worker: ProcessingWorker | null;
+  readonly quality;
+  readonly qualityWorker: QualityWorker;
+  private qualityChecked = 0;
+  private qualityAvailable = false;
   private schemaChecked = 0;
   private schemaAvailable = false;
   constructor(
@@ -366,6 +389,11 @@ export class ProcessingEngine {
     const loaded = loadProcessingConfig(env);
     this.config = loaded.config;
     this.missing = loaded.missing;
+    this.quality = qualityConfig(env);
+    this.qualityWorker = new QualityWorker(
+      qualityStore(admin),
+      this.config ? this.quality.vision : null,
+    );
     this.worker = this.config
       ? new ProcessingWorker(supabaseJobStore(admin), this.config)
       : null;
@@ -379,6 +407,7 @@ export class ProcessingEngine {
   }
   async capabilities() {
     const history = await this.schemaReady();
+    const qualityReady = await this.qualityReady();
     return {
       enabled: !!this.config && history,
       history_available: history,
@@ -397,9 +426,27 @@ export class ProcessingEngine {
       default_quality: this.config?.AI_MAX_QUALITY ?? "high",
       sizes: ["1024x1024", "1536x1024", "1024x1536"],
       daily_limit: this.config?.AI_USER_DAILY_LIMIT ?? null,
+      product_quality_available: qualityReady,
+      product_retry_limit: this.quality.retryLimit,
+      vision_assessment: !!this.config && !!this.quality.vision,
     };
   }
-  async submit(input: JobInput, identity: Identity) {
+  async qualityReady() {
+    if (Date.now() - this.qualityChecked < 30000) return this.qualityAvailable;
+    const r = await this.admin.rpc("product_quality_schema_version");
+    this.qualityChecked = Date.now();
+    this.qualityAvailable = !r.error && r.data === 2026102802;
+    return this.qualityAvailable;
+  }
+  async submit(
+    input: JobInput,
+    identity: Identity,
+    retry?: {
+      parent: Record<string, any>;
+      targets: CheckId[];
+      instructions: string;
+    },
+  ) {
     const c = this.config;
     if (!c)
       throw new AppError(
@@ -412,6 +459,12 @@ export class ProcessingEngine {
         503,
         "processing_migration_required",
         "The Phase 2 database migration has not been verified.",
+      );
+    if (input.mode === "product" && !(await this.qualityReady()))
+      throw new AppError(
+        503,
+        "quality_migration_required",
+        "The product quality migration must be verified before product editing. Personal and portrait editing remain available.",
       );
     if (
       ["low", "medium", "high"].indexOf(input.quality) >
@@ -438,18 +491,63 @@ export class ProcessingEngine {
         p: {
           ...input,
           user_id: identity.userId,
-          settings: {
-            background: input.background,
-            framing: input.framing,
-            preserve_appearance: true,
-            provider_consent: true,
-          },
+          settings: retry
+            ? retry.parent.settings
+            : {
+                background: input.background,
+                framing: input.framing,
+                preserve_appearance: true,
+                provider_consent: true,
+                ...(input.mode === "product"
+                  ? {
+                      product_options: productOptions.parse(
+                        input.product_options ?? {},
+                      ),
+                    }
+                  : {}),
+              },
           model: c.AI_IMAGE_MODEL,
           output_size: outputSize(input, image.width, image.height),
-          prompt_version: PROMPT_VERSION,
-          request_fingerprint: fingerprint(input),
+          prompt_version:
+            input.mode === "product" ? PRODUCT_PROMPT_VERSION : PROMPT_VERSION,
+          request_fingerprint: retry
+            ? hash(
+                JSON.stringify({
+                  input,
+                  parent: retry.parent.id,
+                  targets: retry.targets,
+                  instructions: retry.instructions,
+                }),
+              )
+            : fingerprint(input),
           price_snapshot: priceSnapshot(c),
-          reserved_micro_usd: Math.ceil(c.AI_OPERATION_RESERVE_USD * 1e6),
+          reserved_micro_usd: Math.ceil(
+            (c.AI_OPERATION_RESERVE_USD +
+              (input.mode === "product"
+                ? (this.quality.vision?.AI_QUALITY_RESERVE_USD ?? 0)
+                : 0)) *
+              1e6,
+          ),
+          quality_retry_limit: this.quality.retryLimit,
+          ...(input.mode === "product"
+            ? {
+                quality_model:
+                  this.quality.vision?.AI_QUALITY_VISION_MODEL ?? null,
+                quality_price_snapshot: this.quality.vision
+                  ? visionPrice(this.quality.vision)
+                  : null,
+                quality_reserved_micro_usd: Math.ceil(
+                  (this.quality.vision?.AI_QUALITY_RESERVE_USD ?? 0) * 1e6,
+                ),
+              }
+            : {}),
+          ...(retry
+            ? {
+                quality_parent_id: retry.parent.id,
+                quality_retry_targets: retry.targets,
+                quality_retry_instructions: retry.instructions,
+              }
+            : {}),
         },
         limits: limits(c),
       },
@@ -457,12 +555,15 @@ export class ProcessingEngine {
     processingDbError(submitError);
     this.worker?.start();
     this.worker?.wake();
+    if (input.mode === "product") this.qualityWorker.start();
     return data as WorkerJob;
   }
   async start() {
     if (this.worker && (await this.schemaReady())) this.worker.start();
+    if (await this.qualityReady()) this.qualityWorker.start();
   }
   async stop() {
     await this.worker?.stop();
+    await this.qualityWorker.stop();
   }
 }

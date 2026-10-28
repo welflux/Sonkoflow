@@ -534,7 +534,7 @@ export function createApp(config: Config | null) {
       .eq("id", id)
       .eq("user_id", identity.userId);
     if (marked.error?.message?.includes("processing_image_busy"))
-      throw new AppError(409, "image_busy", "Wait for the active edit before deleting this photograph.");
+      throw new AppError(409, "image_busy", "Wait for the active edit or quality assessment before deleting this photograph.");
     databaseError(marked.error);
     const removed = await svc!.admin.storage
       .from("photos")

@@ -16,7 +16,13 @@ const config: Config = {
 };
 test("unconfigured account services fail closed without fabricated success", async () => {
   const app = createApp(null);
-  for (const route of ["/api/session", "/api/projects", "/api/images", "/api/jobs?project_id=11111111-1111-4111-8111-111111111111", "/api/processing/capabilities"]) {
+  for (const route of [
+    "/api/session",
+    "/api/projects",
+    "/api/images",
+    "/api/jobs?project_id=11111111-1111-4111-8111-111111111111",
+    "/api/processing/capabilities",
+  ]) {
     const response = await request(app).get(route);
     assert.equal(response.status, 503);
     assert.equal(response.body.error.code, "not_configured");
@@ -29,7 +35,13 @@ test("unconfigured account services fail closed without fabricated success", asy
 });
 test("protected APIs reject missing sessions before accessing external services", async () => {
   const app = createApp(config);
-  for (const route of ["/api/session", "/api/projects", "/api/images", "/api/jobs?project_id=11111111-1111-4111-8111-111111111111", "/api/processing/capabilities"]) {
+  for (const route of [
+    "/api/session",
+    "/api/projects",
+    "/api/images",
+    "/api/jobs?project_id=11111111-1111-4111-8111-111111111111",
+    "/api/processing/capabilities",
+  ]) {
     const result = await request(app).get(route);
     assert.equal(result.status, 401);
   }
@@ -38,6 +50,22 @@ test("protected APIs reject missing sessions before accessing external services"
     .set("Origin", config.APP_ORIGIN)
     .send({ name: "Unauthorized", audience: "individual" });
   assert.equal(mutation.status, 401);
+  for (const action of ["decision", "quality-retry"]) {
+    const denied = await request(app)
+      .post(`/api/jobs/11111111-1111-4111-8111-111111111111/${action}`)
+      .set("Origin", config.APP_ORIGIN)
+      .send({});
+    assert.equal(denied.status, 401);
+    assert.equal(
+      (
+        await request(app)
+          .post(`/api/jobs/11111111-1111-4111-8111-111111111111/${action}`)
+          .set("Origin", "https://attacker.example")
+          .send({})
+      ).status,
+      403,
+    );
+  }
 });
 test("mutations reject missing/foreign origins, including login CSRF", async () => {
   const app = createApp(config);

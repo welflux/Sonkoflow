@@ -1,3 +1,4 @@
+import { renderQuality } from "./quality-ui.js";
 const modes = {
   personal: {
     name: "Personal Photo Enhancement",
@@ -33,7 +34,7 @@ function notice(el, text, error = false) {
 export async function processingEditor(api, shell, imageId) {
   const page = shell("projects");
   page.innerHTML =
-    '<a class="breadcrumb" id="project-link">← Back to project</a><div class="page-heading"><div><p class="eyebrow">A new perspective</p><h1>Make your next edit.</h1><p>One reference photograph. A direction that fits.</p></div></div><div id="page-notice" class="notice" role="status"></div><div class="editor-layout"><figure class="reference-panel"><img id="reference-photo" alt="Your uploaded reference photograph"><figcaption><strong id="reference-name"></strong><span>Uploaded reference · normalized WebP</span></figcaption></figure><section class="panel editor-controls"><h2>Choose your direction</h2><form id="edit-form"><label>Enhancement mode<select name="mode" aria-label="Enhancement mode"><option value="personal">Personal Photo Enhancement</option><option value="portrait">Professional Portraits</option><option value="product">Product Photo Enhancement</option></select></label><p id="mode-description" class="mode-description"></p><div class="inline-row"><label>Output quality<select name="quality" aria-label="Output quality"></select></label><label>Canvas<select name="framing" aria-label="Canvas"><option value="match">Closest match to reference</option><option value="square">Square · 1024 × 1024</option><option value="landscape">Landscape · 1536 × 1024</option><option value="portrait">Portrait · 1024 × 1536</option></select></label></div><p class="help">The closest supported canvas may extend the background. Images are not stretched. Generation cannot recover missing detail.</p><label>Background<select name="background" aria-label="Background"><option value="preserve">Preserve the original</option><option value="clean">Clean neutral setting</option><option value="studio">Professional studio</option></select></label><label>Optional editing instructions<textarea name="instructions" maxlength="1500" rows="4" placeholder="e.g. Soften harsh shadows and keep the warm natural colors."></textarea></label><label class="check-row"><input name="preserve_appearance" type="checkbox" required checked><span id="preserve-label">Keep recognizable identity and original appearance.</span></label><label class="check-row"><input name="provider_consent" type="checkbox" required><span>I have permission to edit this photograph and send it to OpenAI for processing. I will review the result before use.</span></label><label class="check-row" id="uncertain-ack" hidden><input name="acknowledge_uncertain" type="checkbox"><span>I understand a previous interrupted request may have incurred a charge, and this new edit can incur another.</span></label><p class="help" id="processing-limits"></p><div class="notice" id="edit-notice" role="status"></div><button type="submit" disabled>Generate edited photograph</button></form></section></div>';
+    '<a class="breadcrumb" id="project-link">← Back to project</a><div class="page-heading"><div><p class="eyebrow">A new perspective</p><h1>Make your next edit.</h1><p>One reference photograph. A direction that fits.</p></div></div><div id="page-notice" class="notice" role="status"></div><div class="editor-layout"><figure class="reference-panel"><img id="reference-photo" alt="Your uploaded reference photograph"><figcaption><strong id="reference-name"></strong><span>Uploaded reference · normalized WebP</span></figcaption></figure><section class="panel editor-controls"><h2>Choose your direction</h2><form id="edit-form"><label>Enhancement mode<select name="mode" aria-label="Enhancement mode"><option value="personal">Personal Photo Enhancement</option><option value="portrait">Professional Portraits</option><option value="product">Product Photo Enhancement</option></select></label><p id="mode-description" class="mode-description"></p><div class="inline-row"><label>Output quality<select name="quality" aria-label="Output quality"></select></label><label>Canvas<select name="framing" aria-label="Canvas"><option value="match">Closest match to reference</option><option value="square">Square · 1024 × 1024</option><option value="landscape">Landscape · 1536 × 1024</option><option value="portrait">Portrait · 1024 × 1536</option></select></label></div><p class="help">The closest supported canvas may extend the background. Images are not stretched. Generation cannot recover missing detail.</p><label>Background<select name="background" aria-label="Background"><option value="preserve">Preserve the original</option><option value="clean">Clean neutral setting</option><option value="studio">Professional studio</option></select></label><fieldset id="product-controls" hidden><legend>Preservation-focused product editing</legend><p class="help">Keep the actual product, packaging, print, logos, quantity and accessories. These edits use neutral photographic backgrounds; creative lifestyle scenes are outside this workflow.</p><label class="check-row"><input type="checkbox" name="product-operation" value="background" checked><span>Background cleanup or neutral replacement</span></label><label class="check-row"><input type="checkbox" name="product-operation" value="lighting" checked><span>Lighting improvement</span></label><label class="check-row"><input type="checkbox" name="product-operation" value="color" checked><span>Color balance and contrast correction</span></label><label class="check-row"><input type="checkbox" name="product-operation" value="shadows" checked><span>Realistic shadow enhancement</span></label><label class="check-row"><input type="checkbox" name="preserve_arrangement" checked><span>Keep the exact item arrangement</span></label><label class="check-row"><input type="checkbox" name="comparison-region"><span>Focus local comparisons on a product region</span></label><div id="product-region" hidden><p class="help">Optional region in percentages of the original image. The same region is compared in the result; reframing may trigger a review warning. This does not isolate or mask the product for editing.</p><div class="inline-row"><label>Left (%)<input name="region-left" type="number" min="0" max="95" value="10"></label><label>Top (%)<input name="region-top" type="number" min="0" max="95" value="10"></label></div><div class="inline-row"><label>Width (%)<input name="region-width" type="number" min="5" max="100" value="80"></label><label>Height (%)<input name="region-height" type="number" min="5" max="100" value="80"></label></div></div><p class="help" id="product-assessment-note"></p></fieldset><label>Optional editing instructions<textarea name="instructions" maxlength="1500" rows="4" placeholder="e.g. Soften harsh shadows and keep the warm natural colors."></textarea></label><label class="check-row"><input name="preserve_appearance" type="checkbox" required checked><span id="preserve-label">Keep recognizable identity and original appearance.</span></label><label class="check-row"><input name="provider_consent" type="checkbox" required><span>I have permission to edit this photograph and send it to OpenAI for processing. I will review the result before use.</span></label><label class="check-row" id="uncertain-ack" hidden><input name="acknowledge_uncertain" type="checkbox"><span>I understand a previous interrupted request may have incurred a charge, and this new edit can incur another.</span></label><p class="help" id="processing-limits"></p><div class="notice" id="edit-notice" role="status"></div><button type="submit" disabled>Generate edited photograph</button></form></section></div>';
   const { image } = await api(`/images/${imageId}`);
   if (image.role !== "original" || image.status !== "ready")
     throw new Error("Choose a ready uploaded reference photograph.");
@@ -50,6 +51,28 @@ export async function processingEditor(api, shell, imageId) {
     const mode = modes[select.value];
     page.querySelector("#mode-description").textContent = mode.copy;
     form.elements.background.value = mode.background;
+    page.querySelector("#product-controls").hidden = select.value !== "product";
+    form.elements.background.disabled =
+      select.value === "product" &&
+      !form.querySelector("input[value=background]").checked;
+    if (form.elements.background.disabled)
+      form.elements.background.value = "preserve";
+    submit.disabled =
+      !capabilities.enabled ||
+      (select.value === "product" &&
+        capabilities.product_quality_available === false);
+    page.querySelector("#product-assessment-note").textContent =
+      capabilities.vision_assessment
+        ? "Local checks and an additional, metered AI vision assessment will run. Review findings before approving."
+        : "Local checks will run. Detailed labels, packaging, visibility and instruction compliance require your review; optional AI vision assessment is disabled.";
+    if (capabilities.enabled)
+      notice(
+        page.querySelector("#edit-notice"),
+        select.value === "product" &&
+          capabilities.product_quality_available === false
+          ? "Product editing requires the product-quality database migration. Other enhancement modes remain available."
+          : "",
+      );
     page.querySelector("#preserve-label").textContent =
       select.value === "product"
         ? "Prioritize the real product’s shape, colors, labels, and logos."
@@ -63,6 +86,19 @@ export async function processingEditor(api, shell, imageId) {
         : "personal";
   setMode();
   select.addEventListener("change", setMode);
+  form
+    .querySelector("input[value=background]")
+    .addEventListener("change", () => {
+      form.elements.background.disabled =
+        select.value === "product" &&
+        !form.querySelector("input[value=background]").checked;
+      if (form.elements.background.disabled)
+        form.elements.background.value = "preserve";
+    });
+  form.elements["comparison-region"].addEventListener("change", () => {
+    page.querySelector("#product-region").hidden =
+      !form.elements["comparison-region"].checked;
+  });
   for (const quality of capabilities.qualities ?? []) {
     const option = document.createElement("option");
     option.value = quality;
@@ -86,7 +122,9 @@ export async function processingEditor(api, shell, imageId) {
   }
   page.querySelector("#processing-limits").textContent =
     `Up to ${capabilities.daily_limit} edits per account per UTC day, within the configured shared budget. Each submission can consume provider usage. Results are saved as WebP.`;
-  submit.disabled = false;
+  submit.disabled =
+    select.value === "product" &&
+    capabilities.product_quality_available === false;
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (submit.disabled) return;
@@ -103,11 +141,25 @@ export async function processingEditor(api, shell, imageId) {
         instructions: values.instructions,
         quality: values.quality,
         framing: values.framing,
-        background: values.background,
+        background: values.background ?? "preserve",
         preserve_appearance: values.preserve_appearance === "on",
         provider_consent: values.provider_consent === "on",
         acknowledge_uncertain: values.acknowledge_uncertain === "on",
       };
+      if (select.value === "product") {
+        body.product_options = {
+          operations: new FormData(form).getAll("product-operation"),
+          preserve_arrangement: form.elements.preserve_arrangement.checked,
+        };
+        if (form.elements["comparison-region"].checked) {
+          body.product_options.region = Object.fromEntries(
+            ["left", "top", "width", "height"].map((key) => [
+              key,
+              Number(form.elements[`region-${key}`].value) / 100,
+            ]),
+          );
+        }
+      }
       // Keep a request identifier across a lost HTTP response or browser refresh.
       // Only a digest, never the photograph/instructions/session token, is kept here.
       const digest = Array.from(
@@ -159,7 +211,7 @@ export async function processingEditor(api, shell, imageId) {
 export async function processingResult(api, shell, id) {
   const page = shell("projects");
   page.innerHTML =
-    '<a class="breadcrumb" id="result-project">← Back to project</a><div class="page-heading"><div><p class="eyebrow">Your saved edit</p><h1 id="edit-title">Your photograph, considered.</h1></div><span class="job-status" id="job-status" role="status"></span></div><div id="page-notice" class="notice" role="status"></div><div class="result-comparison"><figure><div id="original-slot" class="result-image"></div><figcaption>Uploaded reference</figcaption></figure><figure><div id="output-slot" class="result-image output-slot"></div><figcaption>OpenAI-edited photograph</figcaption></figure></div><div class="result-actions" id="result-actions"></div><p class="help result-review">Review identity, labels, logos, colors, and fine details before publishing. Generative editing can alter details; perfect fidelity is not guaranteed.</p><details class="job-details"><summary>Edit details & usage</summary><div id="job-details"></div></details>';
+    '<a class="breadcrumb" id="result-project">← Back to project</a><div class="page-heading"><div><p class="eyebrow">Your saved edit</p><h1 id="edit-title">Your photograph, considered.</h1></div><span class="job-status" id="job-status" role="status"></span></div><div id="page-notice" class="notice" role="status"></div><div class="result-comparison"><figure><div id="original-slot" class="result-image"></div><figcaption>Uploaded reference</figcaption></figure><figure><div id="output-slot" class="result-image output-slot"></div><figcaption>OpenAI-edited photograph</figcaption></figure></div><div class="result-actions" id="result-actions"></div><p class="help result-review">Review identity, labels, logos, colors, and fine details before publishing. Generative editing can alter details; perfect fidelity is not guaranteed.</p><section class="product-quality panel" id="product-quality" hidden></section><details class="job-details"><summary>Edit details & usage</summary><div id="job-details"></div></details>';
   let stopped = false;
   let timer;
   window.addEventListener(
@@ -276,6 +328,7 @@ export async function processingResult(api, shell, id) {
         a.textContent = "Create another edit";
         actions.append(a);
       }
+      renderQuality(page.querySelector("#product-quality"), job, api, refresh);
       const details = page.querySelector("#job-details");
       details.replaceChildren();
       const row = (label, value) => {
@@ -300,8 +353,24 @@ export async function processingResult(api, shell, id) {
           ? "Not available; an unknown outcome must not be treated as free."
           : `$${(job.cost_estimate_micro_usd / 1e6).toFixed(6)} USD using configured uncached-token rates. Provider billing is authoritative.`,
       );
+      if (job.quality_provider_usage)
+        row(
+          "Assessment token usage",
+          `${job.quality_provider_usage.input_tokens} input · ${job.quality_provider_usage.output_tokens} output`,
+        );
+      if (job.mode === "product" && job.quality_state)
+        row(
+          "Assessment cost",
+          job.quality_cost_micro_usd == null
+            ? "No reliable provider cost estimate available. Local checks have no provider API charge."
+            : `$${(job.quality_cost_micro_usd / 1e6).toFixed(6)} USD estimated; included in the total when both costs are known.`,
+        );
       clearTimeout(timer);
-      if (active.has(job.status)) timer = setTimeout(refresh, 3000);
+      if (
+        active.has(job.status) ||
+        ["pending", "running"].includes(job.quality_state)
+      )
+        timer = setTimeout(refresh, 3000);
     } catch (error) {
       notice(page.querySelector("#page-notice"), error.message, true);
       if (!stopped && error.status !== 401) timer = setTimeout(refresh, 10000);
@@ -347,6 +416,11 @@ export async function projectProcessing(api, page, projectId) {
       const status = document.createElement("p");
       status.textContent = `${labels[job.status] ?? job.status} · ${new Date(job.created_at).toLocaleDateString()}`;
       text.append(name, status);
+      if (job.mode === "product" && job.quality_state) {
+        const review = document.createElement("p");
+        review.textContent = `Review: ${job.quality_report?.status?.replaceAll("_", " ") ?? job.quality_state} · Your decision: ${job.user_decision ?? "pending"}${job.quality_retry_number ? ` · Retry ${job.quality_retry_number}` : ""}`;
+        text.append(review);
+      }
       a.append(text);
       list.append(a);
     }

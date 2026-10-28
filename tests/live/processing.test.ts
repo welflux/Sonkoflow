@@ -50,6 +50,10 @@ test(
           .send({ email, password });
         assert.equal(signed.status, 200, "Test sign-in must succeed.");
       }
+      assert(
+        await app.locals.processing.qualityReady(),
+        "Phase 3 product-quality migration must be verified before the product live test.",
+      );
       const project = await agents[0]
         .post("/api/projects")
         .set("Origin", config.APP_ORIGIN)
@@ -153,9 +157,138 @@ test(
           .select("units,provider_usage,cost_estimate_micro_usd")
           .eq("job_id", saved.id)
           .eq("operation", "processing")
+          .eq("idempotency_key", `processing:${saved.id}`)
           .single();
         assert(!usage.error);
         assert.equal(usage.data.units, 1);
+        if (mode === "product") {
+          const deadline = Date.now() + 180_000;
+          while (
+            ["pending", "running"].includes(saved.quality_state) &&
+            Date.now() < deadline
+          ) {
+            await new Promise((resolve) => setTimeout(resolve, 2500));
+            saved = (await agents[0].get(`/api/jobs/${saved.id}`)).body.job;
+          }
+          assert(
+            ["completed", "unavailable"].includes(saved.quality_state),
+            "Product assessment must reach an honest terminal state.",
+          );
+          assert(
+            saved.quality_report?.checks.some(
+              (c: any) => c.id === "integrity" && c.status === "passed",
+            ),
+            "Real saved files must pass local integrity checks.",
+          );
+          assert.equal(
+            saved.user_decision,
+            "pending",
+            "No automated approval is allowed.",
+          );
+          if (app.locals.processing.quality.vision)
+            assert(
+              saved.quality_report.checks.some(
+                (c: any) => c.method === "vision",
+              ),
+              "Enabled vision assessment must return actual provider findings; an unavailable assessment is not a live vision pass.",
+            );
+          const key = randomUUID();
+          assert.equal(
+            (
+              await agents[1]
+                .post(`/api/jobs/${saved.id}/decision`)
+                .set("Origin", config.APP_ORIGIN)
+                .send({
+                  decision: "approved",
+                  request_key: key,
+                  expected_revision: 0,
+                  reviewed: true,
+                })
+            ).status,
+            404,
+          );
+          assert.equal(
+            (
+              await agents[0]
+                .post(`/api/jobs/${saved.id}/decision`)
+                .set("Origin", config.APP_ORIGIN)
+                .send({
+                  decision: "rejected",
+                  request_key: key,
+                  expected_revision: 0,
+                  reviewed: true,
+                })
+            ).status,
+            200,
+          );
+          assert.equal(
+            (await agents[0].get(`/api/jobs/${saved.id}`)).body.job
+              .user_decision,
+            "rejected",
+          );
+          if (process.env.RUN_LIVE_PRODUCT_RETRY === "1") {
+            const body = {
+              submission_key: randomUUID(),
+              targets: ["customer_detail"],
+              instructions:
+                "Keep the original label placement and item arrangement exactly, using only a restrained lighting correction.",
+              provider_consent: true,
+            };
+            const retried = await agents[0]
+              .post(`/api/jobs/${saved.id}/quality-retry`)
+              .set("Origin", config.APP_ORIGIN)
+              .send(body);
+            assert.equal(retried.status, 202);
+            jobs.push(retried.body.job.id);
+            const duplicate = await agents[0]
+              .post(`/api/jobs/${saved.id}/quality-retry`)
+              .set("Origin", config.APP_ORIGIN)
+              .send(body);
+            assert.equal(duplicate.body.job.id, retried.body.job.id);
+            let child = retried.body.job;
+            const until =
+              Date.now() + (processing.config.AI_TIMEOUT_SECONDS + 650) * 1000;
+            while (
+              (["queued", "running", "persisting"].includes(child.status) ||
+                ["pending", "running"].includes(child.quality_state)) &&
+              Date.now() < until
+            ) {
+              await new Promise((resolve) => setTimeout(resolve, 2500));
+              child = (await agents[0].get(`/api/jobs/${child.id}`)).body.job;
+            }
+            assert.equal(child.status, "completed");
+            assert.equal(child.quality_parent_id, saved.id);
+            assert.equal(child.input_image_id, inputId);
+            assert.equal(child.quality_retry_number, 1);
+            assert.equal(
+              (
+                await agents[0].get(
+                  `/api/images/${child.output_image_id}/content?download=1`,
+                )
+              ).status,
+              200,
+            );
+            assert.equal(
+              (
+                await agents[0]
+                  .post(`/api/jobs/${child.id}/decision`)
+                  .set("Origin", config.APP_ORIGIN)
+                  .send({
+                    decision: "approved",
+                    request_key: randomUUID(),
+                    expected_revision: 0,
+                    reviewed: true,
+                  })
+              ).status,
+              200,
+            );
+            assert.equal(
+              (await agents[0].get(`/api/jobs/${child.id}`)).body.job
+                .user_decision,
+              "approved",
+            );
+          }
+        }
         console.log(
           JSON.stringify({
             check: "real_reference_edit",
@@ -174,7 +307,17 @@ test(
           .select("id")
           .eq("user_id", id)
           .in("status", ["queued", "running", "persisting"]);
-        if (active.error || active.data?.length) {
+        const reviewing = await svc.admin
+          .from("processing_jobs")
+          .select("id")
+          .eq("user_id", id)
+          .in("quality_state", ["pending", "running"]);
+        if (
+          active.error ||
+          active.data?.length ||
+          reviewing.error ||
+          reviewing.data?.length
+        ) {
           console.log(
             JSON.stringify({
               check: "cleanup_pending",

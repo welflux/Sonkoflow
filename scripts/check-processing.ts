@@ -17,12 +17,17 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_SECRET_KEY) {
     },
   );
   try {
-    const result = await client.rpc("processing_schema_version");
-    const ready = !result.error && result.data === 2026102801;
-    console.log(
-      `Phase 2 schema: ${ready ? "passed (read only)" : "BLOCKED — migration not verified"} (HTTP ${result.status}; code ${result.error?.code ?? "none"})`,
-    );
-    if (!ready) blocked = true;
+    for (const [rpc, version, label] of [
+      ["processing_schema_version", 2026102801, "Phase 2"],
+      ["product_quality_schema_version", 2026102802, "Phase 3 product quality"],
+    ] as const) {
+      const result = await client.rpc(rpc);
+      const ready = !result.error && result.data === version;
+      console.log(
+        `${label} schema: ${ready ? "passed (read only)" : "BLOCKED — migration not verified"} (HTTP ${result.status}; code ${result.error?.code ?? "none"})`,
+      );
+      if (!ready) blocked = true;
+    }
   } catch {
     console.log("Phase 2 schema: BLOCKED — connection unavailable");
     blocked = true;

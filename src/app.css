@@ -1346,3 +1346,86 @@ textarea:focus-visible {
     aspect-ratio: 1.1;
   }
 }
+
+/* Product preservation and customer quality review */
+#product-controls {
+  border: 1px solid var(--border, #d9d8d1);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1.25rem 0;
+  min-width: 0;
+}
+#product-controls legend,
+.quality-retry-form legend {
+  font-weight: 600;
+  padding: 0 0.4rem;
+}
+.product-quality {
+  margin: 1.5rem 0;
+  padding: clamp(1rem, 3vw, 2rem);
+}
+.quality-status {
+  font-size: 1.15rem;
+  font-weight: 600;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  background: #faf0d8;
+  color: #714b16;
+}
+.quality-status[data-state="passed"] {
+  background: #e7f0e9;
+  color: #254e36;
+}
+.quality-status[data-state="failed"] {
+  background: #fae6e0;
+  color: #863723;
+}
+.quality-checks {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+  display: grid;
+  gap: 0.75rem;
+}
+.quality-checks li {
+  border: 1px solid #deded6;
+  border-left: 3px solid #b69155;
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-wrap: anywhere;
+}
+.quality-checks li[data-state="passed"] {
+  border-left-color: #5b8064;
+}
+.quality-checks li[data-state="failed"] {
+  border-left-color: #ad5543;
+}
+.quality-checks h3 {
+  font-size: 1rem;
+  margin: 0 0 0.35rem;
+}
+.quality-checks p {
+  margin: 0.4rem 0;
+}
+.quality-decisions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin: 1rem 0;
+}
+.quality-retry-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+  max-width: 700px;
+}
+.quality-retry-form fieldset {
+  border: 1px solid #deded6;
+  padding: 1rem;
+  border-radius: 8px;
+  min-width: 0;
+}
+.product-quality .customer-decision {
+  font-weight: 600;
+  margin-top: 1rem;
+}
