@@ -13,15 +13,24 @@ export function batchRoutes(
 ) {
   const service = new BatchService(engine);
   let archives = 0;
-  app.get("/api/batches/capabilities", async (_q, r) =>
-    r.json({
-      available: await service.ready(),
-      max_images: service.config.AI_BATCH_MAX_IMAGES,
+  app.get("/api/batches/capabilities", async (_q, r) => {
+    const tier = engine.billing
+      ? (await engine.billing.account(who(r))).plan
+      : null;
+    const planMax =
+      tier === "pro" ? 5 : tier === "starter" ? 3 : tier ? 0 : 100;
+    return r.json({
+      available: (await service.ready()) && planMax > 0,
+      reason:
+        planMax === 0
+          ? "Bulk generation requires an active Starter or Pro subscription."
+          : null,
+      max_images: Math.min(service.config.AI_BATCH_MAX_IMAGES, planMax),
       max_bytes: service.config.AI_BATCH_MAX_BYTES,
       file_bytes: service.config.AI_BATCH_FILE_BYTES,
       formats: service.config.AI_BATCH_FORMATS,
-    }),
-  );
+    });
+  });
   app.post("/api/batches/quote", async (q, r) => {
     await limit(q, "batch-quote", 20);
     r.json(await service.quote(q.body, who(r)));

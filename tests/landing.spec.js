@@ -31,6 +31,7 @@ test("navigation, artwork, disclosures, and layout", async ({
         [
           "/",
           "/app",
+          "/pricing",
           "/account/signin",
           "/account/signup",
           "/account/recover",

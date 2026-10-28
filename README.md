@@ -46,3 +46,7 @@ Portrait sections use abstract typographic illustrations pending approved portra
 ## Before public launch
 
 Supply approved portrait and personal photography, support contact, legal business identity, privacy policy, and terms. No contact details, legal documents, pricing, free trial, customer endorsements, or integrations have been invented. Real application routes should replace pre-launch disclosures only as their functionality becomes available. Hostinger plan compatibility and deployment are not verified by this task. No analytics, cookies, forms, or image uploads are included.
+
+## Commercial pricing review
+
+The dedicated `/pricing` page and account purchase/onboarding flow are documented in [the pricing and PayPal runbook](docs/pricing-and-paypal.md), with the [cost audit and plan rationale](docs/pricing-implementation-audit.md). Starter $9/month, Pro $19/month, optional yearly billing and separate one-time packs use the existing metered wallet. Checkout remains disabled until reviewed database activation, funded provider calibration and real PayPal configuration/testing. This supersedes earlier pre-launch pricing placeholders; it does not authorize production publication.

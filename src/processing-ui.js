@@ -88,7 +88,7 @@ export async function processingEditor(api, shell, imageId) {
   const touched = new Set();
   for (const field of ["background", "framing"])
     form.elements[field].addEventListener("change", () => touched.add(field));
-  const brand = await brandPicker(
+  const brand = ["free","payg"].includes(capabilities.billing_plan)?{value:()=>undefined}:await brandPicker(
     api,
     page.querySelector("#product-controls"),
     {
@@ -144,6 +144,7 @@ export async function processingEditor(api, shell, imageId) {
     form.elements.quality.append(option);
   }
   form.elements.quality.value = capabilities.default_quality;
+  if(capabilities.billing_plan==="free"){form.elements.framing.value="square";form.elements.framing.disabled=true;}
   if (new URLSearchParams(location.search).has("review"))
     page.querySelector("#uncertain-ack").hidden = false;
   if (!capabilities.enabled) {
@@ -173,7 +174,7 @@ export async function processingEditor(api, shell, imageId) {
         mode: values.mode,
         instructions: values.instructions,
         quality: values.quality,
-        framing: values.framing,
+        framing: values.framing ?? (capabilities.billing_plan==="free"?"square":"match"),
         background: values.background ?? "preserve",
         preserve_appearance: values.preserve_appearance === "on",
         provider_consent: values.provider_consent === "on",
@@ -222,6 +223,7 @@ export async function processingEditor(api, shell, imageId) {
       } catch {
         /* The server still enforces submission and active-job limits. */
       }
+      if(capabilities.billing_metered){const quote=await api('/billing/quote',{method:'POST',body:JSON.stringify({...body,submission_key:submission})});if(!confirm(`Estimated ${quote.estimated_units} units; reserve ${quote.reserved_units} units from your ${quote.available_units} available units. Actual reported usage settles the hold. Continue?`)){submit.disabled=false;submit.textContent='Generate edited photograph';form.removeAttribute('aria-busy');return;}}
       const result = await api("/jobs", {
         method: "POST",
         body: JSON.stringify({ ...body, submission_key: submission }),

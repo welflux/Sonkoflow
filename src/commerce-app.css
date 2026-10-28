@@ -1,0 +1,98 @@
+.commerce-layout {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 0;
+  max-width: 1050px;
+  margin-top: 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.commerce-visual {
+  background: var(--sky);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.commerce-visual > p:first-child {
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+.commerce-visual img {
+  width: 100%;
+  aspect-ratio: 1.4;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.commerce-visual small {
+  font-size: 10px;
+}
+.commerce-order.panel {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  padding: 40px;
+}
+.commerce-total {
+  font-size: 48px;
+  display: block;
+  margin: 22px 0;
+  letter-spacing: -2px;
+}
+.commerce-order #checkout-summary > p {
+  margin: 15px 0;
+}
+.commerce-order .result-actions {
+  margin: 25px 0;
+}
+.commerce-layout button,
+.commerce-layout .button {
+  border-radius: 8px;
+}
+.commerce-balance {
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  margin: 22px 0 !important;
+}
+.commerce-welcome {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 24px;
+}
+.commerce-welcome aside {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.commerce-welcome h2 {
+  font-size: 26px;
+}
+.commerce-welcome p {
+  line-height: 1.8;
+}
+.commerce-welcome .eyebrow {
+  margin-top: 10px;
+}
+@media (max-width: 750px) {
+  .commerce-layout,
+  .commerce-welcome {
+    grid-template-columns: 1fr;
+  }
+  .commerce-visual,
+  .commerce-order.panel {
+    padding: 26px;
+  }
+  .commerce-visual img {
+    display: none;
+  }
+  .commerce-total {
+    font-size: 40px;
+  }
+  .commerce-balance {
+    font-size: 29px;
+  }
+}

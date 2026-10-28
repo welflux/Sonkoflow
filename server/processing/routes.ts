@@ -53,7 +53,7 @@ export function processingRoutes(
     res.json({ image: { ...data, audience: project.data?.audience } });
   });
   app.get("/api/processing/capabilities", async (_req, res) =>
-    res.json(await engine.capabilities()),
+    res.json(await engine.capabilities(who(res))),
   );
   app.post("/api/jobs", async (req, res) => {
     const job = await engine.submit(jobInput.parse(req.body), who(res));

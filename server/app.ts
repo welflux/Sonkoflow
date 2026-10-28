@@ -1,3 +1,4 @@
+import {catalogRoutes,webhookRoute,intentRoutes,billingRoutes,billingNext,rememberIntent} from './billing/routes.js';
 import {libraryRoutes,libraryError} from "./library/routes.js";
 import sharp from "sharp";
 import {batchConfig} from "./batches/service.js";
@@ -62,6 +63,7 @@ export function createApp(config: Config | null) {
   );
   app.use(cookieParser());
   app.use(express.json({ limit: "16kb", type: "application/json" }));
+  catalogRoutes(app,processing);webhookRoute(app,processing,limit);
   app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
   app.use("/api", (_req, res, next) => {
     res.set("Cache-Control", "no-store");
@@ -136,9 +138,11 @@ export function createApp(config: Config | null) {
       path: "/",
       maxAge: 7 * 86400000,
     });
+  intentRoutes(app,processing,config,limit);
   app.post("/api/auth/signup", async (req, res) => {
     await limit(req, "signup", 10);
     const input = credentials.parse(req.body);
+    await rememberIntent(processing,req,input.email,config!.RATE_LIMIT_KEY);
     const { error } = await svc!
       .anonymous()
       .auth.signUp({
@@ -171,7 +175,7 @@ export function createApp(config: Config | null) {
         "Email or password is incorrect, or your email is not yet verified.",
       );
     setCookie(res, await svc!.newSession(data.session));
-    res.json({ ok: true });
+    res.json({ ok: true,next:await billingNext(processing,req,data.user.id,data.user.email!,config!.RATE_LIMIT_KEY) });
   });
   app.post("/api/auth/recover", async (req, res) => {
     await limit(req, "recover", 5, 3600);
@@ -222,7 +226,7 @@ export function createApp(config: Config | null) {
         type === "recovery" ? "recovery" : "account",
       ),
     );
-    res.json({ recovery: type === "recovery" });
+    res.json({ recovery: type === "recovery",next:type==='recovery'?'/account/reset':await billingNext(processing,req,data.user!.id,data.user!.email!,config!.RATE_LIMIT_KEY) });
   });
   app.use("/api", async (req, _res, next) => {
     if (/^[a-f0-9]{64}$/.test(req.cookies[cookieName] ?? ""))
@@ -245,6 +249,7 @@ export function createApp(config: Config | null) {
       .delete()
       .eq("id", who(res).id);
     databaseError(error);
+    res.clearCookie("sonkoflow_checkout", {path:"/",httpOnly:true,secure,sameSite:"lax"});
     res.clearCookie(cookieName, {
       path: "/",
       httpOnly: true,
@@ -271,6 +276,7 @@ export function createApp(config: Config | null) {
       .delete()
       .eq("user_id", id.userId);
     databaseError(revoked.error);
+    res.clearCookie("sonkoflow_checkout", {path:"/",httpOnly:true,secure,sameSite:"lax"});
     res.clearCookie(cookieName, {
       path: "/",
       httpOnly: true,
@@ -291,6 +297,7 @@ export function createApp(config: Config | null) {
       .delete()
       .eq("user_id", id.userId);
     databaseError(result.error);
+    res.clearCookie("sonkoflow_checkout", {path:"/",httpOnly:true,secure,sameSite:"lax"});
     res.clearCookie(cookieName, {
       path: "/",
       httpOnly: true,
@@ -575,10 +582,12 @@ export function createApp(config: Config | null) {
     brandRoutes(app, processing, who, limit);
     batchRoutes(app, processing, who, limit);
     libraryRoutes(app, processing, who, limit);
+    billingRoutes(app,processing,config!,who,limit);
   }
   app.use("/api", (_req, _res, next) =>
     next(new AppError(404, "not_found", "Endpoint not found.")),
   );
+  app.get("/pricing",(_q,r)=>r.sendFile(path.resolve("dist/pricing.html")));
   app.get(["/account", "/account/{*path}"], (_req, res) => {
     res.set("Cache-Control", "no-store");
     res.sendFile(path.resolve("dist/app.html"));

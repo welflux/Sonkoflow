@@ -22,18 +22,39 @@ export function packRoutes(
   const service = new PackService(engine);
   app.get("/api/packs/capabilities", async (_req, res) => {
     const history = await engine.packsReady();
+    const tier = engine.billing
+      ? (await engine.billing.account(who(res))).plan
+      : null;
+    const maxQuality = ["starter", "payg"].includes(tier)
+      ? "medium"
+      : engine.config?.AI_MAX_QUALITY;
     res.json({
-      enabled: history && !!engine.config && !!engine.packConfig,
+      enabled:
+        history && !!engine.config && !!engine.packConfig && tier !== "free",
+      reason:
+        tier === "free"
+          ? "Product packs require a paid allowance. Compare plans to continue."
+          : null,
       history_available: history,
       outputs: outputSpecs,
       max_outputs: engine.packConfig?.AI_PACK_MAX_OUTPUTS ?? 0,
       qualities: engine.config
         ? ["low", "medium", "high"].slice(
             0,
-            ["low", "medium", "high"].indexOf(engine.config.AI_MAX_QUALITY) + 1,
+            Math.min(
+              ["low", "medium", "high"].indexOf(engine.config.AI_MAX_QUALITY),
+              ["low", "medium", "high"].indexOf(maxQuality ?? "high"),
+            ) + 1,
           )
         : [],
-      default_quality: engine.config?.AI_MAX_QUALITY ?? "high",
+      default_quality: ["low", "medium", "high"][
+        Math.min(
+          ["low", "medium", "high"].indexOf(
+            engine.config?.AI_MAX_QUALITY ?? "high",
+          ),
+          ["low", "medium", "high"].indexOf(maxQuality ?? "high"),
+        )
+      ],
     });
   });
   app.post("/api/packs/quote", async (req, res) =>

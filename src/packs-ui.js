@@ -140,7 +140,7 @@ export async function packEditor(api, shell, imageId) {
   if (!cap.enabled) {
     notify(
       page.querySelector("#pack-form-notice"),
-      "Image packs are unavailable until the owner configures pack estimates, allowance and database support. Your original is retained.",
+      cap.reason??"Image packs are unavailable until the owner configures pack estimates, allowance and database support. Your original is retained.",
     );
     return;
   }

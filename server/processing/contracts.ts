@@ -1,3 +1,4 @@
+import {billingError} from '../billing/service.js';
 import {
   brandSelection,
   brandDirection,
@@ -133,6 +134,7 @@ export function processingDbError(
   error: { message?: string; code?: string } | null,
 ) {
   if (!error) return;
+  if(error.message?.includes("billing_"))billingError(error);
   packDbError(error);
   const code = error.message ?? "";
   const known: Record<string, [number, string]> = {

@@ -1,3 +1,5 @@
+import {BillingService} from '../billing/service.js';
+import {meterPlan} from '../billing/meter.js';
 import { BrandService } from "../brand/service.js";
 import { compositeBrand } from "../brand/assets.js";
 import type { BrandSnapshot } from "../brand/contracts.js";
@@ -430,6 +432,7 @@ export class ProcessingWorker {
   }
 }
 export class ProcessingEngine {
+  readonly billing:BillingService|null;
   readonly config: ProcessingConfig | null;
   readonly missing: string[];
   readonly worker: ProcessingWorker | null;
@@ -446,6 +449,7 @@ export class ProcessingEngine {
     readonly admin: SupabaseClient,
     env: NodeJS.ProcessEnv = process.env,
   ) {
+    this.billing=env.BILLING_ENABLED==="1"?new BillingService(admin,env):null;
     const loaded = loadProcessingConfig(env);
     this.config = loaded.config;
     this.missing = loaded.missing;
@@ -466,10 +470,14 @@ export class ProcessingEngine {
     this.schemaAvailable = !result.error && result.data === 2026102801;
     return this.schemaAvailable;
   }
-  async capabilities() {
+  async capabilities(identity?:Identity) {
     const history = await this.schemaReady();
     const qualityReady = await this.qualityReady();
+    const billing=this.billing&&identity?await this.billing.account(identity):null;
+    const desired=billing?.plan==="free"?"low":["starter","payg"].includes(billing?.plan)?"medium":this.config?.AI_MAX_QUALITY;
+    const ceiling=["low","medium","high"][Math.min(["low","medium","high"].indexOf(desired??"high"),["low","medium","high"].indexOf(this.config?.AI_MAX_QUALITY??"high"))];
     return {
+      billing_metered:!!this.billing,billing_plan:billing?.plan??null,
       enabled: !!this.config && history,
       history_available: history,
       reason: !history
@@ -480,16 +488,16 @@ export class ProcessingEngine {
       qualities: this.config
         ? (["low", "medium", "high"] as const).slice(
             0,
-            ["low", "medium", "high"].indexOf(this.config.AI_MAX_QUALITY) + 1,
+            Math.min(["low", "medium", "high"].indexOf(this.config.AI_MAX_QUALITY),["low","medium","high"].indexOf(ceiling??"high")) + 1,
           )
         : [],
       model: this.config?.AI_IMAGE_MODEL ?? null,
-      default_quality: this.config?.AI_MAX_QUALITY ?? "high",
+      default_quality:ceiling??this.config?.AI_MAX_QUALITY??"high",
       sizes: ["1024x1024", "1536x1024", "1024x1536"],
       daily_limit: this.config?.AI_USER_DAILY_LIMIT ?? null,
       product_quality_available: qualityReady,
-      product_retry_limit: this.quality.retryLimit,
-      vision_assessment: !!this.config && !!this.quality.vision,
+      product_retry_limit: billing?.plan==="free"?0:this.quality.retryLimit,
+      vision_assessment: billing?.plan!=="free" && !!this.config && !!this.quality.vision,
     };
   }
   async qualityReady() {
@@ -653,6 +661,7 @@ export class ProcessingEngine {
         );
       packRetryPlan = quoted.plan;
     }
+    const metered=await meterPlan(this,input,image,identity,brand,retry?retryDirection(retry.targets,retry.instructions):'');
     this.worker?.start();
     const { data, error: submitError } = await this.admin.rpc(
       "submit_processing_job",
@@ -714,6 +723,7 @@ export class ProcessingEngine {
                 ),
               }
             : {}),
+          ...(metered&&!packRetryPlan?{reserved_micro_usd:metered.reserved_micro_usd,quality_reserved_micro_usd:metered.quality_reserved_micro_usd,pack_credit_plan:metered.plan,quality_model:metered.vision?.AI_QUALITY_VISION_MODEL??null,quality_price_snapshot:metered.vision?visionPrice(metered.vision):null,quality_retry_limit:metered.tier==='free'?0:this.quality.retryLimit}:{}),
           ...(packRetryPlan
             ? {
                 prompt_version: packRetryPlan.job.prompt_version,

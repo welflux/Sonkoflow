@@ -93,7 +93,7 @@ export async function batchesPage(api, shell, project) {
     form.querySelector("button").disabled = true;
     note(
       notice,
-      "Bulk processing requires the Phase 6 migration and configured allowance estimates.",
+      cap.reason??"Bulk processing requires the Phase 6 migration and configured allowance estimates.",
     );
     return;
   }
