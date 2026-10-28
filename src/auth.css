@@ -29,7 +29,7 @@
   position: relative;
 }
 .auth-eyebrow {
-  font-size: 9px;
+  font-size: 14px;
   font-weight: 750;
   letter-spacing: 1.7px;
   line-height: 1.6;
@@ -47,7 +47,7 @@
   color: #446854;
 }
 .auth-visual-copy > p:last-child {
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.85;
   margin-top: 22px;
   color: #526357;
@@ -93,7 +93,7 @@
   width: 30px;
 }
 .auth-note > span {
-  font-size: 8px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.7px;
   line-height: 1.7;
@@ -122,7 +122,7 @@
   background: #af6e48;
 }
 .auth-disclosure {
-  font-size: 8px;
+  font-size: 14px;
   line-height: 1.8;
   max-width: 350px;
   margin-top: 15px;
@@ -136,18 +136,18 @@
   background: #fffdf9;
 }
 .auth-form-inner {
-  max-width: 405px;
+  max-width: 460px;
   width: 100%;
 }
 .auth-back {
   display: inline-block;
-  font-size: 10px;
+  font-size: 14px;
   text-decoration: none;
   margin-bottom: 35px;
   color: var(--muted);
 }
 .auth-form-panel .auth-eyebrow {
-  font-size: 8px;
+  font-size: 14px;
   margin-bottom: 13px;
 }
 .auth-form-panel h2 {
@@ -157,7 +157,7 @@
   font-weight: 650;
 }
 .auth-subtitle {
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.85;
   margin: 17px 0 26px;
 }
@@ -169,7 +169,7 @@
   border-radius: 7px;
   gap: 14px;
   width: 100%;
-  font-size: 12px;
+  font-size: 16px;
   min-height: 48px;
   margin-bottom: 22px;
 }
@@ -189,7 +189,7 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  font-size: 9px;
+  font-size: 14px;
   color: var(--muted);
   margin-bottom: 22px;
 }
@@ -206,7 +206,7 @@
   gap: 18px;
 }
 .auth-page #account-form label {
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 650;
   gap: 9px;
   display: flex;
@@ -221,7 +221,7 @@
   border: 1px solid #cbd4d2;
   border-radius: 7px;
   padding: 12px 14px;
-  font-size: 13px;
+  font-size: 16px;
   color: var(--ink);
 }
 .auth-page #account-form input:focus {
@@ -233,7 +233,7 @@
   margin-top: -9px;
 }
 .auth-page #account-form .auth-password-field input {
-  padding-right: 66px;
+  padding-right: 82px;
 }
 .auth-page .password-toggle {
   position: absolute;
@@ -246,17 +246,17 @@
   background: transparent;
   border: 0;
   color: var(--sky-dark);
-  font-size: 10px;
+  font-size: 14px;
   border-radius: 4px;
   transform: none;
 }
 .auth-help {
-  font-size: 9px;
+  font-size: 14px;
   margin-top: -8px;
   line-height: 1.7;
 }
 .auth-forgot {
-  font-size: 10px;
+  font-size: 14px;
   align-self: flex-end;
   text-decoration: none;
   margin-top: -5px;
@@ -266,14 +266,14 @@
   border-radius: 7px;
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: 16px;
   min-height: 49px;
   padding-inline: 18px;
 }
 .auth-page .notice {
   padding: 0;
   margin: 0;
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.8;
   background: none;
   border: 0;
@@ -298,7 +298,7 @@
   color: #315538;
 }
 .auth-provider-notice {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.8;
   margin-top: 12px;
   color: #923c28;
@@ -307,7 +307,7 @@
   display: none;
 }
 .auth-switch {
-  font-size: 11px;
+  font-size: 15px;
   text-align: center;
   margin-top: 25px;
 }
@@ -333,12 +333,12 @@
   margin-top: 2px;
 }
 .auth-security p {
-  font-size: 9px;
+  font-size: 14px;
   line-height: 1.8;
   color: #637168;
 }
 .auth-legal {
-  font-size: 9px;
+  font-size: 14px;
   line-height: 1.9;
   margin-top: 17px;
 }
@@ -351,7 +351,7 @@
   margin-top: 20px;
 }
 .auth-page .account-links a {
-  font-size: 9px;
+  font-size: 14px;
   color: var(--muted);
 }
 .auth-footer {
@@ -364,7 +364,7 @@
 }
 .auth-footer p,
 .auth-footer a {
-  font-size: 9px;
+  font-size: 14px;
   line-height: 1.7;
   color: var(--muted);
 }
@@ -409,7 +409,7 @@
     font-size: 32px;
   }
   .auth-subtitle {
-    font-size: 12px;
+    font-size: 16px;
   }
   .auth-form-inner {
     max-width: 420px;
@@ -422,10 +422,10 @@
   }
   .auth-footer p,
   .auth-footer a {
-    font-size: 8px;
+    font-size: 14px;
   }
   .auth-switch {
-    font-size: 11px;
+    font-size: 15px;
   }
   .auth-page .app-header .brand-wordmark {
     width: 153px;

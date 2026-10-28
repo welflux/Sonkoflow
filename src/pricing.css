@@ -48,7 +48,7 @@ body {
 .price-nav nav a,
 .nav-signin {
   text-decoration: none;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
 }
 .nav-signin {
@@ -56,7 +56,7 @@ body {
   padding-left: 30px;
 }
 .price-eyebrow {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 2px;
   color: var(--sky-dark);
@@ -111,7 +111,7 @@ p {
   color: white;
   text-decoration: none;
   border: 1px solid var(--ink);
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 650;
   cursor: pointer;
   transition: background 0.2s;
@@ -133,7 +133,7 @@ p {
   border-color: var(--paper);
 }
 .hero-note {
-  font-size: 11px;
+  font-size: 15px;
   margin-top: 22px;
 }
 .hero-art {
@@ -159,7 +159,7 @@ p {
   border-radius: 12px;
 }
 .hero-art figcaption {
-  font-size: 9px;
+  font-size: 14px;
   margin-top: 12px;
   max-width: 68%;
   color: var(--muted);
@@ -171,7 +171,7 @@ p {
   background: var(--paper);
   padding: 15px 18px;
   border: 1px solid var(--border);
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 650;
   line-height: 1.5;
 }
@@ -203,7 +203,7 @@ p {
   border-radius: 5px;
   background: transparent;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 16px;
   cursor: pointer;
 }
 .billing-toggle button[aria-pressed="true"] {
@@ -211,14 +211,14 @@ p {
   color: white;
 }
 .billing-toggle span {
-  font-size: 10px;
+  font-size: 14px;
 }
 .currency-note {
-  font-size: 11px;
+  font-size: 15px;
   margin-top: 12px;
 }
 .pricing-status {
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.6;
   padding: 12px 16px;
   margin: 20px 0;
@@ -259,12 +259,12 @@ p {
   background: var(--sky-dark);
   color: white;
   text-align: center;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 600;
   padding: 6px;
 }
 .plan-description {
-  font-size: 12px;
+  font-size: 16px;
   margin: 12px 0 24px;
   min-height: 36px;
 }
@@ -282,15 +282,15 @@ p {
   line-height: 1.2;
 }
 .plan-price span {
-  font-size: 12px;
+  font-size: 16px;
 }
 .billing-caption {
-  font-size: 11px;
+  font-size: 15px;
   min-height: 36px;
 }
 .allowance {
   font-weight: 650;
-  font-size: 13px;
+  font-size: 16px;
   color: var(--ink);
   margin: 18px 0;
 }
@@ -305,7 +305,7 @@ p {
   margin: 0;
 }
 .plan-card li {
-  font-size: 12px;
+  font-size: 16px;
   padding: 7px 0 7px 21px;
   position: relative;
 }
@@ -317,7 +317,7 @@ p {
   font-weight: 700;
 }
 .card-note {
-  font-size: 10px;
+  font-size: 14px;
   border-top: 1px solid var(--border);
   padding-top: 20px;
   margin-top: auto;
@@ -335,10 +335,10 @@ p {
 }
 .once-layout > div > p:not(.price-eyebrow) {
   margin-top: 20px;
-  font-size: 14px;
+  font-size: 16px;
 }
 .once-layout .small-copy {
-  font-size: 11px;
+  font-size: 15px;
 }
 .once-cards {
   display: grid;
@@ -352,7 +352,7 @@ p {
   border-radius: 10px;
 }
 .once-card .price-eyebrow {
-  font-size: 9px;
+  font-size: 14px;
   letter-spacing: 1px;
   margin-bottom: 16px;
 }
@@ -367,11 +367,11 @@ p {
   margin: 16px 0 10px;
 }
 .once-card p:not(.once-price):not(.price-eyebrow) {
-  font-size: 11px;
+  font-size: 15px;
   margin-bottom: 24px;
 }
 .once-card .price-button {
-  font-size: 11px;
+  font-size: 15px;
   width: 100%;
   padding-inline: 10px;
 }
@@ -380,7 +380,7 @@ p {
   padding-bottom: 70px;
 }
 .compare-section .section-heading > p {
-  font-size: 14px;
+  font-size: 16px;
 }
 .comparison-scroll {
   overflow: auto;
@@ -388,13 +388,13 @@ p {
 table {
   border-collapse: collapse;
   width: 100%;
-  font-size: 12px;
+  font-size: 16px;
   min-width: 650px;
 }
 caption {
   text-align: left;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 15px;
   padding: 15px 0 25px;
 }
 th,
@@ -426,7 +426,7 @@ td:nth-child(3) {
   gap: 80px;
 }
 .usage-section > div > p:not(.price-eyebrow) {
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 24px;
 }
 .usage-grid {
@@ -435,7 +435,7 @@ td:nth-child(3) {
   gap: 30px;
 }
 .usage-grid article > span {
-  font-size: 11px;
+  font-size: 15px;
   color: var(--sky-dark);
 }
 .usage-grid h3 {
@@ -444,7 +444,7 @@ td:nth-child(3) {
   margin: 12px 0;
 }
 .usage-grid p {
-  font-size: 12px;
+  font-size: 16px;
 }
 .faq-section {
   display: grid;
@@ -456,7 +456,7 @@ td:nth-child(3) {
   border-bottom: 1px solid var(--border);
 }
 .price-faq summary {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   padding: 20px 34px 20px 0;
   cursor: pointer;
@@ -477,7 +477,7 @@ td:nth-child(3) {
   content: "−";
 }
 .price-faq details p {
-  font-size: 12px;
+  font-size: 16px;
   padding-bottom: 22px;
   line-height: 1.85;
 }
@@ -497,7 +497,7 @@ td:nth-child(3) {
 .price-final p:not(.price-eyebrow) {
   color: #c6dbe5;
   margin-top: 22px;
-  font-size: 14px;
+  font-size: 16px;
 }
 .price-footer {
   padding-top: 58px;
@@ -508,17 +508,17 @@ td:nth-child(3) {
   flex-wrap: wrap;
 }
 .price-footer > p {
-  font-size: 11px;
+  font-size: 15px;
 }
 .price-footer nav {
   margin-left: auto;
   display: flex;
   gap: 20px;
-  font-size: 11px;
+  font-size: 15px;
 }
 .price-footer small {
   width: 100%;
-  font-size: 10px;
+  font-size: 14px;
   color: var(--muted);
   padding-top: 22px;
   border-top: 1px solid var(--border);
@@ -567,12 +567,12 @@ td:nth-child(3) {
   font-size: 38px;
 }
 .order-visual > p:not(.price-eyebrow) {
-  font-size: 14px;
+  font-size: 16px;
   color: var(--ink);
   margin: 16px 0 24px;
 }
 .order-visual li {
-  font-size: 12px;
+  font-size: 16px;
   padding: 8px 0;
   border-bottom: 1px solid #142f3e22;
 }
@@ -588,7 +588,7 @@ td:nth-child(3) {
   border-radius: 10px;
 }
 .order-visual small {
-  font-size: 9px;
+  font-size: 14px;
   margin-top: 10px;
 }
 .order-selection {
@@ -618,7 +618,7 @@ td:nth-child(3) {
   border-radius: 5px;
   background: none;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 600;
 }
 .order-plan-tabs button[aria-pressed="true"] {
@@ -633,7 +633,7 @@ td:nth-child(3) {
   border: 1px solid var(--border);
   border-radius: 8px;
   margin-bottom: 12px;
-  font-size: 12px;
+  font-size: 16px;
   cursor: pointer;
 }
 .period-option:has(input:checked) {
@@ -654,7 +654,7 @@ td:nth-child(3) {
   align-items: center;
 }
 .order-summary > span {
-  font-size: 12px;
+  font-size: 16px;
 }
 .order-summary > strong {
   font-size: 30px;
@@ -662,10 +662,10 @@ td:nth-child(3) {
 }
 .order-summary > p {
   grid-column: 1/-1;
-  font-size: 12px;
+  font-size: 16px;
 }
 .small-copy {
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.8;
 }
 .order-selection > .price-button {
@@ -674,7 +674,7 @@ td:nth-child(3) {
 }
 .existing-account {
   text-align: center;
-  font-size: 12px;
+  font-size: 16px;
   margin: 18px 0;
 }
 .order-selection .price-eyebrow {
@@ -757,7 +757,7 @@ summary:focus-visible {
     font-size: 43px;
   }
   .hero-copy {
-    font-size: 15px;
+    font-size: 17px;
   }
   .hero-art {
     padding-left: 15px;
@@ -851,10 +851,10 @@ summary:focus-visible {
   }
   .order-visual > p:not(.price-eyebrow) {
     margin-bottom: 0;
-    font-size: 12px;
+    font-size: 16px;
   }
   .order-visual .price-eyebrow {
-    font-size: 9px;
+    font-size: 14px;
     margin-bottom: 10px;
   }
   .order-selection {
@@ -877,7 +877,7 @@ summary:focus-visible {
     max-height: 94vh;
   }
   .period-option {
-    font-size: 11px;
+    font-size: 15px;
     padding: 15px;
   }
   .period-option:has(input:checked) {

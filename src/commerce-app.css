@@ -16,7 +16,7 @@
   gap: 20px;
 }
 .commerce-visual > p:first-child {
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: 2px;
   font-weight: 700;
 }
@@ -28,7 +28,7 @@
   margin-top: 10px;
 }
 .commerce-visual small {
-  font-size: 10px;
+  font-size: 14px;
 }
 .commerce-order.panel {
   margin: 0;

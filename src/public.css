@@ -33,7 +33,7 @@
 .public-header nav a,
 .public-header nav summary,
 .public-header-actions > a:first-child {
-  font-size: 12px;
+  font-size: 16px;
   font-weight: 650;
   text-decoration: none;
   white-space: nowrap;
@@ -60,7 +60,7 @@
   padding: 15px 24px;
   border-radius: 8px;
   text-decoration: none;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1.4;
   transition:
@@ -73,7 +73,7 @@
 }
 .public-button.small {
   min-height: 43px;
-  font-size: 11px;
+  font-size: 15px;
   padding: 12px 17px;
   gap: 18px;
 }
@@ -83,7 +83,7 @@
   border-color: #fffdf9;
 }
 .public-text-link {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 650;
   text-decoration: none;
   display: inline-flex;
@@ -100,7 +100,7 @@
   justify-content: center;
 }
 .public-eyebrow {
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 750;
   letter-spacing: 1.9px;
   color: var(--sky-dark);
@@ -159,14 +159,14 @@
   margin-top: 25px;
 }
 .footer-workspace {
-  font-size: 12px;
+  font-size: 16px;
   text-decoration: none;
   display: inline-flex;
   gap: 24px;
   margin-top: 24px;
 }
 .footer-top h2 {
-  font-size: 12px;
+  font-size: 16px;
   letter-spacing: 0;
   line-height: 1.5;
   color: #fff;
@@ -174,7 +174,7 @@
   font-weight: 700;
 }
 .footer-top > div:not(:first-child) > a {
-  font-size: 11px;
+  font-size: 15px;
   line-height: 1.6;
   text-decoration: none;
   color: #c2d1d9;
@@ -194,7 +194,7 @@
   justify-content: space-between;
 }
 .footer-bottom p {
-  font-size: 10px;
+  font-size: 14px;
   line-height: 1.7;
   color: #b5c8d2;
 }
@@ -204,7 +204,7 @@
   flex-wrap: wrap;
 }
 .footer-bottom a {
-  font-size: 10px;
+  font-size: 14px;
   color: #d5e0e5;
   text-decoration: none;
 }
@@ -254,7 +254,7 @@
     margin-left: auto;
   }
   .public-header-actions > a:first-child {
-    font-size: 11px;
+    font-size: 15px;
   }
   .menu-toggle {
     display: inline-flex;
@@ -265,7 +265,7 @@
     color: var(--ink);
     border: 0;
     padding: 10px 0;
-    font-size: 11px;
+    font-size: 15px;
     font-weight: 700;
   }
   .public-header nav {
@@ -287,7 +287,7 @@
   }
   .public-header nav a,
   .public-header nav summary {
-    font-size: 14px;
+    font-size: 16px;
   }
   .nav-resources > div {
     position: static;
@@ -330,7 +330,7 @@
     min-height: 50px;
   }
   .public-eyebrow {
-    font-size: 9px;
+    font-size: 14px;
     letter-spacing: 1.5px;
   }
 }
