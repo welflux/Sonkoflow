@@ -41,3 +41,9 @@ The managed workspace's enforced outbound policy excludes `sonkoflow.com`. An ad
 5. If runtime or regression verification fails, use an explicit code revert/redeployment to the recorded main baseline while retaining additive database changes and customer data. Do not reset the database or erase live records as a rollback shortcut.
 
 Publication is pending the external migration/access gates; this report is an audit result and release preparation, not a claim of a completed deployment.
+
+## Hosted migration verification after owner execution
+
+The owner executed the exact guarded bundle through Supabase SQL Editor. Independent read-only API checks then returned HTTP 200 for all seven version functions: processing `2026102801`, product quality `2026102802`, product packs `2026102803`, brand `2026102804`, batches `2026102805`, library `2026102806`, and commerce `2026102807`. The private `photos` bucket remains private with WebP uploads, and `billing_settings.enabled` is `false`. The migration gate is cleared; do not rerun the bundle. No payment or image-generation call was made during verification.
+
+The owner has authorized publishing the audited source to production main. The separate managed-environment network draft still needs publication to permit custom-domain smoke checks. Git publication alone does not establish that Hostinger built or served this release. The hosting environment and deferred provider/merchant tests remain subject to the checks above.

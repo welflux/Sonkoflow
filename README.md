@@ -45,7 +45,7 @@ Portrait sections use abstract typographic illustrations pending approved portra
 
 ## Before public launch
 
-Verify the publisher and support details, complete the legal documents, review concept artwork, and finish provider/payment activation before commercial publication. The public site does not invent endorsements, statistics, certifications or contact details. Account, upload and checkout-selection features now use essential cookies and the existing private application; no analytics or advertising trackers are implemented. Legal policy content is deliberately deferred by the owner. Production publication remains on hold.
+Verify the publisher and support details, complete the legal documents, review concept artwork, and finish provider/payment activation before commercial publication. The public site does not invent endorsements, statistics, certifications or contact details. Account, upload and checkout-selection features now use essential cookies and the existing private application; no analytics or advertising trackers are implemented. Legal policy content is deliberately deferred by the owner. The owner has authorized publishing the audited source; see the [release audit](docs/release-audit-20261028.md) for migration evidence and outstanding activation and live verification gates.
 
 ## Commercial pricing review
 
