@@ -88,15 +88,17 @@ test("Library grid/list, filters, selection, move, trash and recovery use persis
   const s = await fixture(page);
   await page.goto("/app/library");
   await expect(
-    page.getByRole("heading", { name: "Image library." }),
+    page.getByRole("heading", { name: "Image library" }),
   ).toBeVisible();
   await page.screenshot({
     path: `/tmp/phase7-library-${test.info().project.name}.png`,
   });
+  await page.getByRole("button", { name: "Grid view" }).click();
+  await expect(page.locator("#library-results")).toHaveClass("library-grid");
   await page.getByRole("button", { name: "List view" }).click();
   await expect(page.locator("#library-results")).toHaveClass("library-list");
   if (!(await page.locator(".library-filter-panel").evaluate((n) => n.open)))
-    await page.getByText("Search & filters", { exact: true }).click();
+    await page.getByText("Advanced filters", { exact: true }).click();
   await page.getByLabel("Search images or projects").fill("linen");
   await page
     .getByRole("button", { name: "Search library", exact: true })
@@ -104,22 +106,25 @@ test("Library grid/list, filters, selection, move, trash and recovery use persis
   await expect.poll(() => s.queries.at(-1)).toContain("search=linen");
   await page.getByLabel("Select Linen.webp").check();
   await expect(page.locator("#library-count")).toHaveText("1 selected");
+  await page.getByRole("button", { name: "Batch actions (1)" }).click();
   await page
     .getByRole("button", { name: "Move selected", exact: true })
     .click();
   await expect.poll(() => s.actions.length).toBe(1);
   expect(s.actions[0]).toMatchObject({ action: "move", value: null });
   await page.getByLabel("Select Linen.webp").check();
+  await page.getByRole("button", { name: "Batch actions (1)" }).click();
   page.once("dialog", (d) => d.accept());
   await page
     .getByRole("button", { name: "Trash selected", exact: true })
     .click();
   await expect(page.locator(".library-card")).toHaveCount(0);
-  await page.getByLabel("Recovery bin", { exact: true }).check();
+  await page.getByRole("tab", { name: "Recovery bin", exact: true }).click();
   await page
     .getByRole("button", { name: "Search library", exact: true })
     .click();
   await page.getByLabel("Select Linen.webp").check();
+  await page.getByRole("button", { name: "Batch actions (1)" }).click();
   await page
     .getByRole("button", { name: "Restore selected", exact: true })
     .click();
@@ -134,13 +139,19 @@ test("Preview loads full image on demand and preserves version, pack and batch n
     "src",
     `/api/library/${image}/thumbnail`,
   );
-  await expect(page.locator(`a[href="/app/packs/${pack}"]`)).toBeVisible();
-  await expect(page.locator(`a[href="/app/batches/${batch}"]`)).toBeVisible();
-  await page.getByRole("button", { name: "Preview & versions" }).click();
-  await expect(page.locator("dialog")).toBeVisible();
+  await page
+    .getByRole("button", { name: "Preview Linen.webp", exact: true })
+    .click();
+  await expect(
+    page.locator(`#library-metadata a[href="/app/packs/${pack}"]`),
+  ).toBeVisible();
+  await expect(
+    page.locator(`#library-metadata a[href="/app/batches/${batch}"]`),
+  ).toBeVisible();
+  await expect(page.locator("#library-dialog")).toBeVisible();
   await expect(page.locator(`a[href="/app/edits/${job}"]`)).toBeVisible();
   await page.getByRole("button", { name: "Close preview" }).click();
-  await expect(page.locator("dialog")).not.toBeVisible();
+  await expect(page.locator("#library-dialog")).not.toBeVisible();
   await expect(page.locator("body")).toHaveJSProperty(
     "scrollWidth",
     await page.evaluate(() => innerWidth),
