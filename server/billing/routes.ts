@@ -1,3 +1,4 @@
+import { billingOverview } from "./overview.js";
 import { BrandService } from "../brand/service.js";
 import type { Express, Request, Response } from "express";
 import type { Config } from "../config.js";
@@ -144,6 +145,9 @@ export function billingRoutes(
   limit: (q: Request, b: string, n?: number, s?: number) => Promise<void>,
 ) {
   const svc = new BillingService(engine.admin);
+  app.get("/api/billing/overview", async (_q, r) =>
+    r.json(await billingOverview(engine.admin, who(r), await svc.ready())),
+  );
   app.get("/api/billing/account", async (_q, r) =>
     r.json(await svc.account(who(r))),
   );

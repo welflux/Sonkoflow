@@ -1,3 +1,4 @@
+import { billingOverviewPage } from "./billing-overview-ui.js";
 import "./commerce-app.css";
 function el(t, text, cls) {
   const n = document.createElement(t);
@@ -178,109 +179,7 @@ export async function checkoutPage(api, shell) {
   }
 }
 export async function billingPage(api, shell) {
-  const page = shell("billing");
-  page.innerHTML =
-    '<div class="page-heading"><div><p class="eyebrow">YOUR ROOM TO CREATE</p><h1>Plan & usage.</h1><p>A single balance for edits, packs and bulk outputs.</p></div><a class="button" href="/pricing">Explore allowances</a></div><div id="billing-notice" class="notice" role="status"></div><section class="panel" id="billing-balance"></section><section class="panel"><h2>Subscription</h2><div id="billing-subscriptions"></div></section><section class="panel"><h2>Verified payments</h2><div id="billing-receipts"></div></section><p class="help">Units are prepaid processing allowance, not a fixed image count or cash balance. Reservations reduce available units while work runs. Paid features last through the verified billing period; your stored projects and granted units remain after cancellation, within account limits. No automatic usage top-ups.</p>';
-  try {
-    const data = await api("/billing/account"),
-      a = data.account,
-      available = a.balance_credits - a.reserved_credits;
-    page
-      .querySelector("#billing-balance")
-      .append(
-        el(
-          "h2",
-          data.plan === "payg"
-            ? "Pay as you go"
-            : data.plan[0].toUpperCase() + data.plan.slice(1),
-        ),
-        el(
-          "p",
-          `${available.toLocaleString()} available units`,
-          "commerce-balance",
-        ),
-        el(
-          "p",
-          `${a.reserved_credits} reserved · ${a.balance_credits} remaining before reservations`,
-        ),
-      );
-    if (available < 0)
-      page.querySelector("#billing-notice").textContent =
-        "Your balance has a deficit after metered usage or a payment adjustment. New processing is paused until it is resolved.";
-    else if (available < 20)
-      page.querySelector("#billing-notice").textContent =
-        "Your available allowance is running low. Review each operation estimate or choose a one-time pack.";
-    const receiptList = page.querySelector("#billing-receipts");
-    for (const receipt of data.receipts ?? []) {
-      const item = el("article");
-      item.append(
-        el(
-          "h3",
-          `${receipt.units} processing units · ${money(receipt.amount_cents)}`,
-        ),
-        el(
-          "p",
-          `${new Date(receipt.created_at).toLocaleString()} · ${receipt.payment_id}`,
-        ),
-      );
-      if (receipt.refunded_cents)
-        item.append(
-          el(
-            "p",
-            `${money(receipt.refunded_cents)} refunded; corresponding units removed.`,
-          ),
-        );
-      receiptList.append(item);
-    }
-    if (!data.receipts?.length)
-      receiptList.append(el("p", "No verified payments yet."));
-    const container = page.querySelector("#billing-subscriptions");
-    if (!data.subscriptions.length)
-      container.append(el("p", "No verified subscription."));
-    for (const sub of data.subscriptions) {
-      const card = el("article");
-      card.append(
-        el("h3", sub.plan === "pro" ? "Pro" : "Starter"),
-        el(
-          "p",
-          `${sub.state} · paid-through ${new Date(sub.paid_until).toLocaleString()}`,
-        ),
-      );
-      if (["active", "suspended", "failed"].includes(sub.state))
-        card.append(
-          button("Cancel future renewal", async (e) => {
-            if (
-              !confirm(
-                "Stop future subscription renewals? Your verified paid period and previously granted units are retained.",
-              )
-            )
-              return;
-            e.currentTarget.disabled = true;
-            try {
-              await api(`/billing/subscriptions/${sub.provider_id}/cancel`, {
-                method: "POST",
-                body: "{}",
-              });
-              await billingPage(api, shell);
-            } catch (err) {
-              page.querySelector("#billing-notice").textContent = err.message;
-              e.currentTarget.disabled = false;
-            }
-          }),
-        );
-      container.append(card);
-    }
-  } catch (e) {
-    page.querySelector("#billing-notice").textContent = e.message;
-    page
-      .querySelector("#billing-balance")
-      .append(
-        el(
-          "p",
-          "Your existing projects remain available. No payment or allowance activation is claimed until billing can be verified.",
-        ),
-      );
-  }
+  return billingOverviewPage(api, shell);
 }
 export async function welcomePage(api, shell) {
   const page = shell("projects");

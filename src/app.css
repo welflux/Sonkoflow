@@ -1935,3 +1935,20 @@ textarea:focus-visible {
   flex-wrap: wrap;
   width: 100%;
 }
+
+/* Compact hierarchy across private workspace screens. */
+.workspace-content h1,
+.workspace-content .page-heading h1,
+.workspace-content .account-page .account-heading h1 {
+  font-size: 30px !important;
+  line-height: 38px !important;
+  letter-spacing: -0.9px !important;
+}
+.workspace-content h2 { font-size: 22px !important; line-height: 30px !important; letter-spacing: -0.5px !important; }
+.workspace-content h3 { font-size: 18px !important; line-height: 26px !important; letter-spacing: -0.3px !important; }
+@media (max-width: 600px) {
+  .workspace-content h1,
+  .workspace-content .page-heading h1,
+  .workspace-content .account-page .account-heading h1 { font-size: 28px !important; line-height: 36px !important; }
+  .workspace-content h2 { font-size: 20px !important; line-height: 28px !important; }
+}

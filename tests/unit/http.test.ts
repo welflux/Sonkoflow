@@ -19,6 +19,7 @@ test("unconfigured account services fail closed without fabricated success", asy
   for (const route of [
     "/api/session",
     "/api/account",
+    "/api/billing/overview",
     "/api/projects",
     "/api/images",
     "/api/jobs?project_id=11111111-1111-4111-8111-111111111111",
@@ -41,6 +42,7 @@ test("protected APIs reject missing sessions before accessing external services"
   for (const route of [
     "/api/session",
     "/api/account",
+    "/api/billing/overview",
     "/api/projects",
     "/api/images",
     "/api/jobs?project_id=11111111-1111-4111-8111-111111111111",

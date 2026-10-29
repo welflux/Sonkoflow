@@ -240,7 +240,7 @@ for (const width of [320, 768, 1024]) {
     await page.setViewportSize({ width, height: 900 });
     await workspaceFixture(page, { empty: true });
     await page.goto('/app');
-    await expect(page.locator('.workspace-content h1')).toHaveCSS('font-size', width <= 600 ? '36px' : '44px');
+    await expect(page.locator('.workspace-content h1')).toHaveCSS('font-size', width <= 600 ? '28px' : '30px');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
     const nav = page.getByRole('navigation', { name: 'Workspace' });
     const navBox = await nav.boundingBox();
@@ -248,7 +248,7 @@ for (const width of [320, 768, 1024]) {
     const profile = nav.getByRole('link', { name: 'Account profile' });
     await profile.scrollIntoViewIfNeeded();
     await profile.click();
-    await expect(page.locator('.workspace-content h1')).toHaveCSS('font-size', width <= 760 ? '28px' : '34px');
+    await expect(page.locator('.workspace-content h1')).toHaveCSS('font-size', width <= 600 ? '28px' : '30px');
     await expect(page.getByLabel('Display name')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
     await page.getByLabel('Display name').fill('Mobile and tablet owner');

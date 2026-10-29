@@ -227,9 +227,12 @@ test("a return query cannot unlock paid status; verified payment history renders
   await expect(page.locator("#checkout-notice")).toContainText(
     "has not been activated",
   );
-  await page.route("**/api/billing/account", (route) =>
+  await page.route("**/api/billing/overview", (route) =>
     route.fulfill({
       json: {
+        purchasing_enabled:true, allowance_recorded:true,
+        usage:{storage_bytes:1000,images:1,projects:1,completed_edits:1,bulk_requests:0,brand_profiles:0},
+        limits:{storage_bytes:262144000,images:100,projects:100},
         plan: "payg",
         account: { balance_credits: 70, reserved_credits: 10 },
         subscriptions: [],
