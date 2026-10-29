@@ -1,13 +1,14 @@
+@import "./typography.css";
 @font-face {
-  font-family: Manrope;
-  src: url("/fonts/manrope-latin.woff2") format("woff2");
-  font-weight: 200 800;
+  font-family: Inter;
+  src: url("/fonts/inter-variable.woff2") format("woff2");
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 :root {
   --ink: #142f3e;
-  --muted: #51636b;
+  --muted: #6b7280;
   --sky: #b8ddec;
   --sky-dark: #245e78;
   --sky-light: #e8f2f5;
@@ -17,7 +18,7 @@
   --border: #d9e0df;
   --radius: 16px;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-  font-family: Manrope, Arial, sans-serif;
+  font-family: Inter, Helvetica, Arial, sans-serif;
   color: var(--ink);
   background: var(--paper);
   font-synthesis: none;

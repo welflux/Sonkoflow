@@ -13,7 +13,7 @@ button,
   align-items: center;
   justify-content: center;
   gap: 10px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   font-weight: 650;
   text-decoration: none;
   line-height: 1.5;
@@ -52,7 +52,7 @@ button:hover {
   border-bottom: 1px solid var(--border);
 }
 .foundation-tag {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   color: var(--muted);
   padding-left: 25px;
   border-left: 1px solid var(--border);
@@ -89,12 +89,12 @@ h3 {
   align-items: center;
 }
 .account-intro .eyebrow {
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .account-intro > p:not(.eyebrow) {
   margin-top: 25px;
   max-width: 450px;
-  font-size: 17px;
+  font-size: var(--text-body-size);
 }
 .account-art {
   margin-top: 35px;
@@ -123,14 +123,14 @@ h3 {
   position: absolute;
   bottom: 45px;
   left: -12px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   background: var(--sun);
   padding: 13px 17px;
   transform: rotate(-3deg);
   font-weight: 600;
 }
 .account-intro .account-scope {
-  font-size: 15px !important;
+  font-size: var(--text-body-size) !important;
   max-width: 340px !important;
   margin-top: 20px !important;
 }
@@ -145,7 +145,7 @@ h3 {
 }
 .panel > p {
   margin-bottom: 25px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .account-layout > .panel {
   padding: 40px;
@@ -168,7 +168,7 @@ label {
   display: flex;
   flex-direction: column;
   gap: 9px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   font-weight: 600;
   line-height: 1.5;
 }
@@ -209,7 +209,7 @@ input[type="password"] {
   margin-top: 27px;
   padding-top: 25px;
   border-top: 1px solid var(--border);
-  font-size: 16px;
+  font-size: var(--text-body-size);
   line-height: 1.6;
 }
 .account-links a {
@@ -225,7 +225,7 @@ input[type="password"] {
 .notice {
   margin-block: 15px;
   padding: 15px 18px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   line-height: 1.6;
   overflow-wrap: anywhere;
   border-radius: 6px;
@@ -243,7 +243,7 @@ input[type="password"] {
 }
 .help {
   color: var(--muted);
-  font-size: 16px;
+  font-size: var(--text-body-size);
   font-weight: 400;
   line-height: 1.8;
 }
@@ -264,7 +264,7 @@ form > .help {
   gap: 9px;
 }
 .sidebar > p {
-  font-size: 15px;
+  font-size: var(--text-body-size);
   letter-spacing: 1px;
   text-transform: uppercase;
   margin: 0 16px 20px;
@@ -273,7 +273,7 @@ form > .help {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   font-weight: 550;
   text-decoration: none;
   padding: 13px 16px;
@@ -298,11 +298,11 @@ form > .help {
   margin-bottom: 18px;
 }
 .sidebar-note p {
-  font-size: 17px;
+  font-size: var(--text-body-size);
   line-height: 1.55;
 }
 .sidebar-note small {
-  font-size: 15px;
+  font-size: var(--text-body-size);
   line-height: 1.5;
   display: block;
   margin-top: 15px;
@@ -322,18 +322,18 @@ form > .help {
   margin-bottom: 35px;
 }
 .page-heading .eyebrow {
-  font-size: 15px;
+  font-size: var(--text-body-size);
   margin: 0 0 14px;
 }
 .page-heading p {
   margin-top: 15px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .page-heading h1 {
   overflow-wrap: anywhere;
 }
 .page-heading > .danger {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   padding: 10px 17px;
   flex-shrink: 0;
 }
@@ -371,7 +371,7 @@ form > button {
   font-size: 25px;
 }
 .empty p {
-  font-size: 17px;
+  font-size: var(--text-body-size);
   margin-top: 13px;
 }
 .empty-art {
@@ -447,7 +447,7 @@ form > button {
   color: #8c644e;
 }
 .project-card .tag {
-  font-size: 15px;
+  font-size: var(--text-body-size);
   letter-spacing: 0.5px;
   color: var(--sky-dark);
   margin-bottom: 10px;
@@ -470,7 +470,7 @@ form > button {
   text-decoration: underline;
 }
 .project-card p {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   margin-top: 15px;
 }
 .toolbar {
@@ -482,7 +482,7 @@ form > button {
 }
 .breadcrumb {
   display: inline-block;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   margin-bottom: 28px;
   color: var(--sky-dark);
   text-decoration: none;
@@ -506,7 +506,7 @@ form > button {
   font-size: 23px;
 }
 .upload-heading p {
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .dropzone {
   position: relative;
@@ -543,11 +543,11 @@ form > button {
   cursor: pointer;
 }
 .dropzone strong {
-  font-size: 17px;
+  font-size: var(--text-body-size);
   font-weight: 600;
 }
 .dropzone > span:not(.upload-symbol) {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   font-weight: 400;
 }
 .upload-symbol {
@@ -582,11 +582,11 @@ form > button {
   min-width: 0;
 }
 .upload-preview strong {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   overflow-wrap: anywhere;
 }
 .upload-preview p {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   margin-top: 5px;
 }
 .image-card {
@@ -615,7 +615,7 @@ form > button {
   position: absolute;
   bottom: 12px;
   left: 12px;
-  font-size: 15px;
+  font-size: var(--text-body-size);
   padding: 7px 10px;
   border-radius: 30px;
   background: var(--paper);
@@ -645,17 +645,17 @@ form > button {
   padding: 20px;
 }
 .image-info h3 {
-  font-size: 17px;
+  font-size: var(--text-body-size);
   line-height: 1.5;
   overflow-wrap: anywhere;
 }
 .image-info > p {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   margin-top: 7px;
 }
 .image-status {
   display: inline-block;
-  font-size: 15px;
+  font-size: var(--text-body-size);
   line-height: 1.6;
   color: #39674f;
   background: #e5ece5;
@@ -673,11 +673,11 @@ form > button {
   border-top: 1px solid var(--border);
 }
 .image-actions a {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   color: var(--sky-dark);
 }
 .image-actions button {
-  font-size: 15px;
+  font-size: var(--text-body-size);
   padding: 6px 12px;
   min-height: 35px;
 }
@@ -686,7 +686,7 @@ form > button {
 }
 .profile-form > .help {
   margin: 25px 0 0;
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .profile-form form {
   max-width: 500px;
@@ -694,7 +694,7 @@ form > button {
 .loading {
   padding: 100px 30px;
   text-align: center;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   animation: loading-in 0.6s ease-out;
 }
 .account-config {
@@ -708,7 +708,7 @@ form > button {
   margin-top: 20px;
 }
 .account-config > a {
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .image-dialog {
   width: min(1000px, calc(100% - 40px));
@@ -738,7 +738,7 @@ form > button {
 }
 .dialog-toolbar button {
   flex-shrink: 0;
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .dialog-photo {
   width: 100%;
@@ -754,10 +754,10 @@ form > button {
   justify-content: space-between;
 }
 .dialog-footer p {
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .dialog-footer .button {
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .image-dialog[open] {
   animation: dialog-in 0.2s var(--ease);
@@ -804,7 +804,7 @@ form[aria-busy="true"] .dropzone {
     padding: 30px 14px;
   }
   .sidebar > a {
-    font-size: 16px;
+    font-size: var(--text-body-size);
     padding: 13px 12px;
     gap: 9px;
   }
@@ -850,7 +850,7 @@ form[aria-busy="true"] .dropzone {
     letter-spacing: -2px;
   }
   .account-intro > p:not(.eyebrow) {
-    font-size: 16px;
+    font-size: var(--text-body-size);
     margin-top: 18px;
   }
   .account-art,
@@ -858,7 +858,7 @@ form[aria-busy="true"] .dropzone {
     display: none;
   }
   .account-intro .eyebrow {
-    font-size: 15px;
+    font-size: var(--text-body-size);
     margin-bottom: 15px;
   }
   .account-layout > .panel h2 {
@@ -883,7 +883,7 @@ form[aria-busy="true"] .dropzone {
   }
   .sidebar > a {
     padding: 11px 12px;
-    font-size: 16px;
+    font-size: var(--text-body-size);
   }
   .sidebar > a .icon {
     width: 18px;
@@ -898,7 +898,7 @@ form[aria-busy="true"] .dropzone {
     gap: 20px;
   }
   .foundation-tag {
-    font-size: 14px;
+    font-size: var(--text-body-size);
     padding-left: 20px;
   }
   .app-header .logo {
@@ -908,12 +908,12 @@ form[aria-busy="true"] .dropzone {
     width: 24px;
   }
   .app-header #signout {
-    font-size: 16px;
+    font-size: var(--text-body-size);
     padding: 10px 17px;
     min-height: 43px;
   }
   .page-heading p {
-    font-size: 17px;
+    font-size: var(--text-body-size);
   }
   .panel {
     padding: 28px;
@@ -926,10 +926,10 @@ form[aria-busy="true"] .dropzone {
     gap: 12px;
   }
   .dialog-toolbar h2 {
-    font-size: 16px;
+    font-size: var(--text-body-size);
   }
   .dialog-toolbar button {
-    font-size: 15px;
+    font-size: var(--text-body-size);
     padding: 8px 12px;
     min-height: 40px;
   }
@@ -964,7 +964,7 @@ form[aria-busy="true"] .dropzone {
     font-size: 27px;
   }
   .account-links {
-    font-size: 16px;
+    font-size: var(--text-body-size);
   }
   .workspace-content {
     padding: 30px 20px 45px;
@@ -974,7 +974,7 @@ form[aria-busy="true"] .dropzone {
     gap: 3px;
   }
   .sidebar > a {
-    font-size: 15px;
+    font-size: var(--text-body-size);
     padding: 11px 9px;
     gap: 7px;
     white-space: nowrap;
@@ -987,7 +987,7 @@ form[aria-busy="true"] .dropzone {
     font-size: 36px;
   }
   .page-heading .eyebrow {
-    font-size: 14px;
+    font-size: var(--text-body-size);
   }
   .page-heading {
     gap: 20px;
@@ -1025,11 +1025,11 @@ form[aria-busy="true"] .dropzone {
     min-height: 210px;
   }
   .dropzone strong {
-    font-size: 17px;
+    font-size: var(--text-body-size);
     max-width: 230px;
   }
   .dropzone > span:not(.upload-symbol) {
-    font-size: 15px;
+    font-size: var(--text-body-size);
   }
   .upload-preview {
     gap: 12px;
@@ -1040,10 +1040,10 @@ form[aria-busy="true"] .dropzone {
     height: 60px;
   }
   .upload-preview strong {
-    font-size: 16px;
+    font-size: var(--text-body-size);
   }
   .help {
-    font-size: 15px;
+    font-size: var(--text-body-size);
   }
   .image-card img {
     aspect-ratio: 1.25;
@@ -1059,7 +1059,7 @@ form[aria-busy="true"] .dropzone {
     font-size: 22px;
   }
   .empty p {
-    font-size: 16px;
+    font-size: var(--text-body-size);
   }
   .section-title {
     font-size: 21px;
@@ -1116,11 +1116,11 @@ textarea:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   overflow-wrap: anywhere;
 }
 .reference-panel figcaption > span {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   color: var(--muted);
 }
 .editor-controls {
@@ -1132,7 +1132,7 @@ textarea:focus-visible {
   margin-bottom: 25px;
 }
 .editor-controls .mode-description {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   line-height: 1.8;
   border-left: 2px solid var(--sky);
   padding-left: 14px;
@@ -1145,7 +1145,7 @@ textarea:focus-visible {
   flex-direction: row;
   align-items: start;
   gap: 12px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   font-weight: 400;
   line-height: 1.75;
 }
@@ -1180,14 +1180,14 @@ textarea:focus-visible {
   object-fit: contain;
 }
 .result-image > p {
-  font-size: 17px;
+  font-size: var(--text-body-size);
   line-height: 1.8;
   padding: 30px;
   text-align: center;
   max-width: 360px;
 }
 .result-comparison figcaption {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   padding: 16px 2px;
 }
 .output-slot {
@@ -1202,7 +1202,7 @@ textarea:focus-visible {
   margin-top: 20px;
 }
 .result-review {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   margin-top: 25px;
 }
 .job-status {
@@ -1210,7 +1210,7 @@ textarea:focus-visible {
   padding: 9px 14px;
   border: 1px solid var(--border);
   border-radius: 30px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   background: var(--paper);
 }
 .job-status[data-state="completed"] {
@@ -1229,11 +1229,11 @@ textarea:focus-visible {
 }
 .job-details summary {
   cursor: pointer;
-  font-size: 16px;
+  font-size: var(--text-body-size);
   font-weight: 650;
 }
 .job-details p {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   line-height: 1.8;
   margin-top: 13px;
   overflow-wrap: anywhere;
@@ -1248,7 +1248,7 @@ textarea:focus-visible {
   font-size: 22px;
 }
 .processing-history .section-title p {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   margin-top: 10px;
 }
 .job-history-list {
@@ -1277,10 +1277,10 @@ textarea:focus-visible {
   background: #e0e8e8;
 }
 .job-history-card strong {
-  font-size: 17px;
+  font-size: var(--text-body-size);
 }
 .job-history-card p {
-  font-size: 16px;
+  font-size: var(--text-body-size);
   margin-top: 7px;
 }
 .load-more {
@@ -1295,7 +1295,7 @@ textarea:focus-visible {
   font-weight: 650;
 }
 .editor-controls button {
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 @media (max-width: 1100px) {
   .editor-layout {
@@ -1336,7 +1336,7 @@ textarea:focus-visible {
     height: 70px;
   }
   .job-history-card strong {
-    font-size: 16px;
+    font-size: var(--text-body-size);
   }
   .result-actions {
     gap: 16px;
@@ -1562,7 +1562,7 @@ textarea:focus-visible {
   padding: 30px 14px;
   background: #ffffffc9;
   text-align: center;
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .brand-space-tight .brand-preview-subject {
   width: 80%;
@@ -1597,7 +1597,7 @@ textarea:focus-visible {
 }
 .brand-palette span {
   padding: 4px;
-  font-size: 16px;
+  font-size: var(--text-body-size);
 }
 .brand-library,
 .brand-presets {

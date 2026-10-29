@@ -159,3 +159,30 @@ test('narrow phone and tablet layouts keep navigation and content within the vie
     await expect(page.getByRole('button', { name: /Menu/ })).toHaveAttribute('aria-expanded', 'false');
   }
 });
+
+test('shared Inter typography follows the desktop, tablet and mobile scale', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => document.fonts.ready);
+  const width = page.viewportSize().width;
+  await expect(page.locator('body')).toHaveCSS('font-family', /Inter/);
+  await expect(page.locator('body')).toHaveCSS('color', 'rgb(107, 114, 128)');
+  await expect(page.locator('.hero-intro')).toHaveCSS('font-size', width <= 600 ? '14px' : '15px');
+  await expect(page.locator('.hero-intro')).toHaveCSS('line-height', '24px');
+  await expect(page.locator('.hero-intro')).toHaveCSS('font-weight', '500');
+  await expect(page.locator('h1').first()).toHaveCSS('font-size', width <= 600 ? '36px' : width <= 1100 ? '44px' : '56px');
+  await expect(page.locator('h2').first()).toHaveCSS('font-size', width <= 600 ? '28px' : width <= 1100 ? '34px' : '40px');
+  await expect(page.locator('h3').first()).toHaveCSS('font-size', width <= 600 ? '24px' : width <= 1100 ? '26px' : '30px');
+  await expect(page.locator('h1').first()).toHaveCSS('color', 'rgb(20, 22, 27)');
+  await expect(page.locator('.footer-bottom p')).toHaveCSS('font-size', '14px');
+  expect(await page.evaluate(() => document.fonts.check('500 15px Inter'))).toBeTruthy();
+});
+
+test('highlighted heading words keep their content and respect reduced motion', async ({ page }) => {
+  await page.goto('/');
+  const words = page.locator('h1 em').first();
+  const text = await words.textContent();
+  await expect(words).toHaveCSS('animation-name', 'heading-tone-flow');
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await expect(words).toHaveCSS('animation-name', 'none');
+  await expect(words).toHaveText(text);
+});

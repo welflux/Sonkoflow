@@ -1,0 +1,142 @@
+/* Shared text specification. Explicit typography overrides leave artwork,
+   component geometry, surfaces and interactions in their existing stylesheets. */
+:root {
+  --text-body-size: 15px;
+  --text-h1-size: 56px;
+  --text-h2-size: 40px;
+  --text-h3-size: 30px;
+  --text-h1-leading: 52px;
+  --text-h2-leading: 52px;
+  --text-h3-leading: 52px;
+  --text-heading-tracking: -2px;
+}
+body,
+button,
+input,
+select,
+textarea {
+  font-family: Inter, Helvetica, Arial, sans-serif !important;
+  font-style: normal;
+}
+body {
+  color: #6b7280;
+  font-size: var(--text-body-size) !important;
+  font-weight: 500;
+  line-height: 24px;
+  margin: 0;
+}
+:where(p:not(.plan-price):not(.pack-units):not(.once-price):not(.commerce-balance):not(.commerce-total):not(.auth-provider-notice):not(.notice)) {
+  color: #6b7280 !important;
+}
+:where(p:not(.plan-price):not(.pack-units):not(.once-price):not(.commerce-balance):not(.commerce-total)),
+li,
+label,
+input,
+select,
+textarea,
+td,
+th,
+summary,
+.notice,
+.mode-description,
+figcaption,
+button:not(.dialog-close),
+.button,
+.public-button,
+.price-button {
+  font-size: var(--text-body-size) !important;
+  font-weight: 500 !important;
+  line-height: 24px !important;
+  font-style: normal;
+}
+h1,
+h2,
+h3 {
+  font-family: Inter, Helvetica, Arial, sans-serif !important;
+  color: #14161b !important;
+  font-style: normal !important;
+  font-weight: 700 !important;
+  letter-spacing: var(--text-heading-tracking) !important;
+}
+h1 { font-size: var(--text-h1-size) !important; line-height: var(--text-h1-leading) !important; }
+h2 { font-size: var(--text-h2-size) !important; line-height: var(--text-h2-leading) !important; }
+h3 { font-size: var(--text-h3-size) !important; line-height: var(--text-h3-leading) !important; }
+/* Preserve readable text on the existing dark panels and footer. */
+:is(.process-section, .public-footer, .price-final, .once-card-featured) :is(h1, h2, h3) {
+  color: #f7faf7 !important;
+}
+:is(.process-section, .public-footer, .price-final, .once-card-featured) p {
+  color: #d2e0dc !important;
+}
+small,
+.help,
+.auth-help,
+.auth-security p,
+.auth-disclosure,
+.card-note,
+.small-copy,
+.eyebrow,
+.public-eyebrow,
+.price-eyebrow,
+.auth-eyebrow,
+.pack-badge,
+label {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  line-height: 24px !important;
+}
+nav a,
+nav summary,
+header :is(a, button, summary),
+.foundation-tag,
+.sidebar > a,
+.public-header-actions > a,
+.menu-toggle,
+.auth-back,
+footer,
+footer :is(p, a, h2, h3, small),
+.public-footer :is(p, a, h2, h3, small),
+.price-footer :is(p, a),
+.footer-bottom :is(p, a) {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  letter-spacing: normal !important;
+  line-height: 24px !important;
+}
+@media (max-width: 1100px) {
+  :root {
+    --text-h1-size: 44px;
+    --text-h2-size: 34px;
+    --text-h3-size: 26px;
+    --text-h1-leading: 48px;
+    --text-h2-leading: 42px;
+    --text-h3-leading: 36px;
+    --text-heading-tracking: -1.2px;
+  }
+}
+@media (max-width: 600px) {
+  :root {
+    --text-body-size: 14px;
+    --text-h1-size: 36px;
+    --text-h2-size: 28px;
+    --text-h3-size: 24px;
+    --text-h1-leading: 40px;
+    --text-h2-leading: 36px;
+    --text-h3-leading: 32px;
+    --text-heading-tracking: -0.8px;
+  }
+}
+
+/* Existing highlighted words stay fixed; only their readable color shifts. */
+:is(h1, h2, h3) em {
+  font-style: normal;
+  font-weight: inherit;
+  animation: heading-tone-flow 8s ease-in-out infinite;
+}
+@keyframes heading-tone-flow {
+  0%, 100% { color: #2d6c86; }
+  50% { color: #446854; }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(h1, h2, h3) em { animation: none !important; }
+}
