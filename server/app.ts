@@ -1,3 +1,10 @@
+import {
+  authMutationPaths,
+  authRequestCookie,
+  authRequestHeader,
+  issueAuthRequestToken,
+  validAuthRequestProof,
+} from "./auth/request-proof.js";
 import { accountRoutes } from "./account/routes.js";
 import { GoogleAuth } from "./auth/google.js";
 import {
@@ -93,15 +100,59 @@ export function createApp(config: Config | null) {
       );
     next();
   });
-  app.use("/api", (req, _res, next) => {
-    if (
-      !["GET", "HEAD", "OPTIONS"].includes(req.method) &&
-      req.get("origin") !== config!.APP_ORIGIN
-    )
-      return next(
-        new AppError(403, "invalid_origin", "Request origin is not allowed."),
+  app.get("/api/public/auth-request", (req, res) => {
+    const site = req.get("sec-fetch-site");
+    if (site && !["same-origin", "none"].includes(site))
+      throw new AppError(
+        403,
+        "invalid_origin",
+        "Request origin is not allowed.",
       );
-    next();
+    const token = issueAuthRequestToken(
+      config!,
+      req.cookies[authRequestCookie(config!)],
+    );
+    res.cookie(authRequestCookie(config!), token, {
+      httpOnly: true,
+      secure,
+      sameSite: "strict",
+      path: "/",
+      maxAge: 600000,
+    });
+    res.set("Cache-Control", "no-store").json({ token });
+  });
+  app.use("/api", (req, res, next) => {
+    if (["GET", "HEAD", "OPTIONS"].includes(req.method)) return next();
+    const origin = req.get("origin");
+    if (origin === config!.APP_ORIGIN) return next();
+    const site = req.get("sec-fetch-site");
+    if (
+      req.method === "POST" &&
+      authMutationPaths.has(req.path) &&
+      (!origin || origin === "null") &&
+      (!site || ["same-origin", "none"].includes(site)) &&
+      validAuthRequestProof(
+        req.get(authRequestHeader),
+        req.cookies[authRequestCookie(config!)],
+        config!,
+      )
+    )
+      return next();
+    if (authMutationPaths.has(req.path))
+      console.warn(
+        JSON.stringify({
+          event: "auth_origin_rejected",
+          requestId: res.locals.requestId,
+          originState: !origin
+            ? "missing"
+            : origin === "null"
+              ? "opaque"
+              : "foreign",
+        }),
+      );
+    return next(
+      new AppError(403, "invalid_origin", "Request origin is not allowed."),
+    );
   });
   async function limit(req: Request, bucket: string, max = 60, seconds = 900) {
     const { data, error } = await svc!.admin.rpc("take_rate_limit", {

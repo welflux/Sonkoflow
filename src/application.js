@@ -1,3 +1,4 @@
+import { accountFetch } from "./auth-request.js";
 import { profilePage as renderProfilePage } from "./profile-ui.js";
 import { accountPage as renderAccountPage } from "./auth-ui.js";
 import { checkoutPage, billingPage, welcomePage } from "./billing-ui.js";
@@ -34,7 +35,7 @@ function releasePreview() {
 }
 window.addEventListener("pagehide", releasePreview);
 async function api(path, options = {}) {
-  const response = await fetch(`/api${path}`, {
+  const response = await accountFetch(`/api${path}`, {
     ...options,
     headers: {
       ...(options.body instanceof FormData
