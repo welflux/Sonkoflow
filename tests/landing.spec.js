@@ -146,3 +146,16 @@ test("enhancement audiences support keyboard tabs and disclose illustrative cont
     "All rights reserved © 2026 SonkoFlow, a product of AaronPrime PTY LTD.",
   );
 });
+
+test('narrow phone and tablet layouts keep navigation and content within the viewport', async ({ page }) => {
+  for (const width of [320, 768]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    await page.evaluate(() => document.fonts.ready);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+    await page.getByRole('button', { name: /Menu/ }).click();
+    await expect(page.locator('#navigation').getByRole('link', { name: 'Pricing', exact: true })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.getByRole('button', { name: /Menu/ })).toHaveAttribute('aria-expanded', 'false');
+  }
+});

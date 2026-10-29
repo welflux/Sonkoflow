@@ -234,3 +234,25 @@ test("profile save and account screens use the shared design system", async ({
     ),
   ).toBeTruthy();
 });
+
+for (const width of [320, 768, 1024]) {
+  test(`dashboard remains readable and navigable at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await workspaceFixture(page, { empty: true });
+    await page.goto('/app');
+    await expect(page.locator('.workspace-content h1')).toHaveCSS('font-size', '28px');
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+    const nav = page.getByRole('navigation', { name: 'Workspace' });
+    const navBox = await nav.boundingBox();
+    expect(navBox.height).toBeLessThan(110);
+    const profile = nav.getByRole('link', { name: 'Account profile' });
+    await profile.scrollIntoViewIfNeeded();
+    await profile.click();
+    await expect(page.locator('.workspace-content h1')).toHaveCSS('font-size', '28px');
+    await expect(page.getByLabel('Display name')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+    await page.getByLabel('Display name').fill('Mobile and tablet owner');
+    await page.getByRole('button', { name: 'Save profile' }).click();
+    await expect(page.getByRole('status')).toContainText('Your profile has been saved');
+  });
+}

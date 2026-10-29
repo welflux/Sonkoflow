@@ -30,6 +30,6 @@ document.addEventListener("click", (e) => {
   for (const d of document.querySelectorAll(".nav-resources[open]"))
     if (!d.contains(e.target)) d.open = false;
 });
-window.matchMedia("(min-width:761px)").addEventListener("change", (e) => {
+window.matchMedia("(min-width:961px)").addEventListener("change", (e) => {
   if (e.matches) closeMenu();
 });

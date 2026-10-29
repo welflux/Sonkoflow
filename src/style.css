@@ -457,9 +457,12 @@ p {
 }
 .brand-layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 100px;
   align-items: center;
+}
+.brand-layout > * {
+  min-width: 0;
 }
 .brand-copy > p:not(.public-eyebrow) {
   font-size: 16px;
@@ -511,6 +514,7 @@ p {
 }
 .brand-swatches {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   align-items: center;
   padding-top: 20px;
@@ -1066,7 +1070,7 @@ p {
     margin-left: 0;
   }
   .brand-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 42px;
   }
   .brand-copy > p:not(.public-eyebrow) {
