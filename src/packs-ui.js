@@ -100,7 +100,7 @@ export async function packEditor(api, shell, imageId) {
     for (const q of cap.qualities ?? []) {
       const option = el(
         "option",
-        q === "high" ? "High" : q === "medium" ? "Medium" : "Low",
+        q === "high" ? "Signature" : q === "medium" ? "Studio" : "Essential",
       );
       option.value = q;
       quality.append(option);
@@ -192,7 +192,7 @@ export async function packEditor(api, shell, imageId) {
         list.append(
           el(
             "li",
-            `${o.name} · ${o.size.replace("x", " × ")} · ${o.quality} quality · estimated ${o.estimated_credits} credits; hold ${o.reserved_credits}`,
+            `${o.name} · ${o.size.replace("x", " × ")} · ${({low:"Essential",medium:"Studio",high:"Signature"})[o.quality] ?? o.quality} processing · estimated ${o.estimated_credits} credits; hold ${o.reserved_credits}`,
           ),
         );
       quoteBox.append(list);

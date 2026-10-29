@@ -54,7 +54,7 @@ export const offers = {
     plan: "starter",
     kind: "subscription",
     interval: "year",
-    cents: 9000,
+    cents: 8640,
     units: 1200,
   },
   pro_monthly: {
@@ -68,7 +68,7 @@ export const offers = {
     plan: "pro",
     kind: "subscription",
     interval: "year",
-    cents: 19000,
+    cents: 18240,
     units: 3000,
   },
   small_pack: {

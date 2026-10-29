@@ -143,10 +143,10 @@ export async function processingEditor(api, shell, imageId) {
     option.value = quality;
     option.textContent =
       quality === "high"
-        ? "High · finest finish"
+        ? "Signature · detail-focused"
         : quality === "medium"
-          ? "Medium · balanced"
-          : "Low · economical";
+          ? "Studio · balanced"
+          : "Essential · efficient";
     form.elements.quality.append(option);
   }
   if (qualities.length) {

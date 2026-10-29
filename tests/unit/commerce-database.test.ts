@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { PGlite } from "@electric-sql/pglite";
 import { readFile, readdir } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
+import { offers } from "../../server/billing/catalog.js";
 import { brandSettings } from "../../server/brand/contracts.js";
 const db = new PGlite(),
   owner = "11111111-1111-4111-8111-111111111111",
@@ -354,7 +355,7 @@ test("Checkout intent is owner/email bound and annual payments grant exactly twe
   await event(id, "paid", {
     provider_id: id,
     payment_id: "annual",
-    amount_cents: 9000,
+    amount_cents: 8640,
     paid_until: new Date(Date.now() + 365 * 86400000).toISOString(),
   });
   assert.equal((await account()).account.balance_credits, 1220);
@@ -412,4 +413,16 @@ test("Commercial activation cannot silently convert legacy balances or accept an
       .rows[0].ok,
     true,
   );
+});
+
+
+test("database annual prices match the server catalog and exact 20 percent discount", async () => {
+  for (const plan of ["starter", "pro"] as const) {
+    const annual = offers[`${plan}_annual`], monthly = offers[`${plan}_monthly`];
+    assert.equal(annual.cents, monthly.cents * 12 * 0.8);
+    assert.equal(annual.units, monthly.units * 12);
+    const row = (await db.query<{cents:number;units:number}>("select cents,units from public.billing_offers where id=$1", [`${plan}_annual`])).rows[0];
+    assert.equal(row.cents, annual.cents);
+    assert.equal(row.units, annual.units);
+  }
 });

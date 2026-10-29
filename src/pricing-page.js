@@ -10,14 +10,14 @@ function el(tag, text, cls) {
 const features = {
   free: [
     "Personal, portrait & product editing",
-    "One Low-quality square sample",
+    "One square sample · Essential processing",
     "Original/result comparison & downloads",
     "3 projects · 10 images · 25 MB",
     "No product packs or bulk generation",
   ],
   starter: [
     "All three enhancement modes",
-    "Low & Medium quality",
+    "Essential & Studio processing",
     "Multi-view product packs",
     "Brand Studio & saved presets",
     "Bulk requests up to 3 sources",
@@ -25,7 +25,7 @@ const features = {
   ],
   pro: [
     "Everything in Starter",
-    "High-quality output option",
+    "Signature processing option",
     "Larger processing allowance",
     "Bulk requests up to 5 sources",
     "Independent review & controlled retries",
@@ -33,7 +33,7 @@ const features = {
   ],
   payg: [
     "All three core enhancement modes",
-    "Low & Medium quality",
+    "Essential & Studio processing",
     "Product packs use the same units",
     "No recurring payment",
     "No bulk or Brand Studio generation",
@@ -146,21 +146,22 @@ function render() {
   for (const key of ["small_pack", "studio_pack"]) {
     const o = data.offers[key],
       card = el("article", null, "once-card");
-    card.append(
-      el(
-        "p",
-        key === "small_pack" ? "A small project" : "A little more room",
-        "price-eyebrow",
-      ),
-      el("h3", `${o.units} processing units`),
-      el("p", `${money(o.cents)} · pay once`, "once-price"),
-      el("p", "No renewal. No expiry while your account exists."),
-    );
-    const b = el("button", "Choose one-time pack", "price-button secondary");
+    card.classList.toggle("once-card-featured", key === "studio_pack");
+    const top = el("div", null, "once-card-top");
+    top.append(el("span", key === "small_pack" ? "ESSENTIALS PACK" : "STUDIO PACK", "price-eyebrow"), el("span", key === "small_pack" ? "No subscription" : "25% lower unit price", "pack-badge"));
+    const units = el("p", null, "pack-units");
+    units.append(el("strong", String(o.units)), el("span", "processing units"));
+    const price = el("p", null, "once-price");
+    price.append(el("strong", money(o.cents)), el("span", "one payment"));
+    card.append(top, el("h3", key === "small_pack" ? "For the next few edits." : "For your next collection."), units, price,
+      list(["All three enhancement modes", "Essential & Studio processing", "Product packs, metered per output"]),
+      el("p", "No renewal. Units stay available while your account exists.", "pack-retention"));
+    const b = el("button", "Choose one-time pack", `price-button ${key === "studio_pack" ? "light" : "secondary"}`);
     b.onclick = () => select(key);
     card.append(b);
     once.append(card);
   }
+  once.append(el("p", "Processing units are a usage allowance, not a fixed image count. Review the estimate before each generation.", "pack-explainer"));
   const rows = [
     [
       "Processing allowance",
@@ -168,7 +169,7 @@ function render() {
       "100 units / monthly payment",
       "250 units / monthly payment",
     ],
-    ["AI quality", "Low · square canvas", "Low & Medium", "Low, Medium & High"],
+    ["Processing settings", "Essential · square canvas", "Essential & Studio", "Essential, Studio & Signature"],
     ["Personal / portrait / product", "Included", "Included", "Included"],
     [
       "Multi-view product packs",
@@ -200,7 +201,7 @@ function render() {
     });
     tbody.append(tr);
   }
-  document.querySelector("#billing-toggle").hidden = !data.annual_supported;
+  document.querySelector("#billing-toggle").hidden = false;
   document.querySelector("#pricing-status").textContent =
     data.reason ??
     "Choose a plan, review its terms, then approve securely at PayPal. Your allowance activates only after payment verification.";
@@ -232,9 +233,7 @@ function drawOrder() {
   const periods = document.querySelector("#order-periods");
   periods.replaceChildren();
   if (o.kind === "subscription") {
-    for (const choice of data.annual_supported
-      ? ["month", "year"]
-      : ["month"]) {
+    for (const choice of ["month", "year"]) {
       const offer =
           data.offers[`${o.plan}_${choice === "year" ? "annual" : "monthly"}`],
         label = el("label", null, "period-option"),
@@ -275,9 +274,12 @@ function drawOrder() {
       ? `Renews ${o.interval === "year" ? "yearly" : "monthly"} until cancelled. Unused units remain in your prepaid balance. No automatic usage top-ups.`
       : o.kind === "one_time"
         ? "One payment. No automatic renewal. Units remain available while your account exists."
-        : "Verified email required. One Low-quality square edit within the sample budget, once activated. No payment card.";
+        : "Verified email required. One Essential square edit within the sample budget, once activated. No payment card.";
+  const annualPending = o.interval === "year" && !data.annual_supported;
+  document.querySelector("#continue-order").disabled = annualPending;
+  document.querySelector(".existing-account").setAttribute("aria-disabled", String(annualPending));
   document.querySelector("#order-status").textContent =
-    data.reason ??
+    (annualPending ? "Annual pricing is available to review. Annual checkout is awaiting merchant configuration; no payment can be taken yet." : data.reason) ??
     "You will review the final order while signed in before leaving for PayPal.";
 }
 for (const b of document.querySelectorAll("[data-period]"))
@@ -302,6 +304,7 @@ dialog.addEventListener("click", (e) => {
 });
 async function continueSelection(e, signingIn = false) {
   e.preventDefault();
+  if (data.offers[selected].interval === "year" && !data.annual_supported) return;
   const b = e.currentTarget;
   b.disabled = true;
   try {

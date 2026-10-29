@@ -8,7 +8,8 @@ test("pricing cards, real activation notice, illustrations and keyboard dialog w
   await expect(page).toHaveTitle(/Pricing.*SONKOFLOW/);
   await expect(page.locator(".plan-card")).toHaveCount(3);
   await expect(page.locator("#once-cards article")).toHaveCount(2);
-  await expect(page.locator("#billing-toggle")).toBeHidden();
+  await expect(page.locator("#billing-toggle")).toBeVisible();
+  await expect(page.locator("#billing-toggle")).toContainText("Save 20%");
   await expect(page.locator("#pricing-status")).toContainText("awaiting");
   await expect(page.locator(".plan-card").nth(1)).toContainText("$9");
   await expect(page.locator(".plan-card").nth(2)).toContainText("$19");
@@ -85,13 +86,13 @@ test("annual selection shows the exact up-front price and units; authenticated c
   await page.goto("/pricing");
   await page.getByRole("button", { name: /Yearly/ }).click();
   await expect(page.locator(".plan-card").nth(1)).toContainText(
-    "$90 billed yearly",
+    "$86.40 billed yearly",
   );
   await page
     .getByRole("button", { name: "Choose Starter", exact: true })
     .click();
   await expect(page.locator("#order-summary")).toContainText("1,200");
-  await expect(page.locator("#order-summary")).toContainText("$90");
+  await expect(page.locator("#order-summary")).toContainText("$86.40");
   await page.locator("#continue-order").click();
   await expect.poll(() => selected).toEqual({ offer_id: "starter_annual" });
   await expect(page).toHaveURL(/\/app\/checkout/);
@@ -252,4 +253,18 @@ test("a return query cannot unlock paid status; verified payment history renders
     "50 processing units",
   );
   await expect(page.locator("#billing-receipts")).toContainText("CAPTURE-TEST");
+});
+
+
+test("annual prices stay visible while unconfigured checkout remains disabled", async ({ page }) => {
+  await page.goto('/pricing');
+  await page.getByRole('button', { name: /Yearly/ }).click();
+  await expect(page.locator('.plan-card').nth(1)).toContainText('$86.40 billed yearly');
+  await expect(page.locator('.plan-card').nth(2)).toContainText('$182.40 billed yearly');
+  await expect(page.locator('.plan-card').nth(1)).toContainText('Essential & Studio');
+  await expect(page.locator('.plan-card').nth(2)).toContainText('Signature');
+  await page.getByRole('button', { name: 'Choose Pro', exact: true }).click();
+  await expect(page.locator('#order-summary')).toContainText('$182.40');
+  await expect(page.locator('#continue-order')).toBeDisabled();
+  await expect(page.locator('#order-status')).toContainText('awaiting merchant configuration');
 });
