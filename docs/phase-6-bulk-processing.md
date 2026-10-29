@@ -35,3 +35,13 @@ Production uses real Supabase records and the existing actual OpenAI adapter. Mo
 Bulk upload policy also exposes `AI_BATCH_FILE_BYTES` (64 KiB–10 MiB) and `AI_BATCH_FORMATS` (a subset of JPEG/PNG/WebP). The bulk UI marks uploads for this policy on the existing authenticated upload endpoint, which checks original bytes and the decoded format, not a claimed filename. Existing ready originals always retain the foundational validation guarantees. Normalized source bytes govern aggregate batch admission.
 
 Executed local checks: 111 unit/database/HTTP tests passed, 64 desktop/mobile browser tests passed, and production build passed. Focused reruns are not counted twice. No funded OpenAI batch or hosted throughput test was performed.
+
+## Bulk workspace presentation refresh
+
+The bulk staging page now separates setup, a local thumbnail queue and the verified allowance review into three desktop panes, with responsive stacking and a collapsible setup section on phones. Multi-file selection, native folder selection and folder drops feed the same bounded queue. Browser-decoded dimensions and per-file warnings supplement the unchanged server validation. Files can be excluded individually or by selection; clearing staging never deletes a persisted original.
+
+The five existing output types can be selected individually or together, preserving their supported square/landscape canvases and the existing Brand Studio picker. Upload/review and final provider-consent confirmation remain separate. Configuration is frozen during requests; uncertain upload and batch acknowledgements retain their existing stable IDs. Changing generation choices discards the visible quote and consent. No upload limit, account entitlement, model, worker, pricing, reservation or authentication policy was changed.
+
+History uses the existing paginated list and owner-checked detail endpoints. Detail reads are bounded to two concurrent requests; later pages wait for their summaries. Status, saved output counts, quality and approval-dependent ZIP links come from actual saved records. Reuse setup copies name/project/output quality/types/instructions, resets brand selection and requires new source selection and another quote; it does not automatically rerun or generate anything. Failed history reads are explicit and retryable.
+
+Higher server-reported capacity can be displayed without a UI rewrite, but the deployed per-file, batch, plan, storage and generation limits still apply. ZIP import, new image angles/aspect ratios, client rotation, GPU duration estimates, express queues and infrastructure expansion are not introduced by this presentation change.

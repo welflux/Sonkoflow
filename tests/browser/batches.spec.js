@@ -106,15 +106,17 @@ test("Multiple uploads can be reviewed and removed before a genuine allowance co
 }) => {
   const s = await fixture(page);
   await page.goto("/app/batches");
+  if (page.viewportSize().width <= 600)
+    await page.getByText("Batch setup", { exact: true }).click();
   await page.getByLabel("Batch name").fill("Spring");
   const buffer = await readFile("public/images/footwear-small.webp");
-  await page.locator("input[type=file]").setInputFiles([
+  await page.locator("input[name=files]").setInputFiles([
     { name: "one.webp", mimeType: "image/webp", buffer },
     { name: "two.webp", mimeType: "image/webp", buffer },
   ]);
   await expect(page.locator(".batch-file-row")).toHaveCount(2);
   await page
-    .getByRole("button", { name: "Remove", exact: true })
+    .getByRole("button", { name: /^Remove .*\.webp$/ })
     .last()
     .click();
   await page
