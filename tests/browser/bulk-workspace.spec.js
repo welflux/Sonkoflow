@@ -216,6 +216,33 @@ test("three functional zones use branded controls and remain inside the viewport
   ).toBeVisible();
   await expect(page.locator("#batch-limit")).toContainText("5 sources / 50 MB");
   await expect(review(page)).toBeDisabled();
+  await expect(page.locator(".bulk-actionbar")).toHaveCount(0);
+  await expect(page.locator(".bulk-allowance #batch-review")).toBeVisible();
+  await expect(page.locator("#batch-dropzone")).toHaveCSS(
+    "border-top-style",
+    "dashed",
+  );
+  await expect(page.locator("#batch-dropzone")).toHaveCSS(
+    "border-top-width",
+    "2px",
+  );
+  await expect(page.locator('.sidebar a[aria-current="page"]')).toHaveCSS(
+    "border-radius",
+    "6px",
+  );
+  const toolbar = await page.locator(".bulk-queue-toolbar").boundingBox();
+  const dropzone = await page.locator("#batch-dropzone").boundingBox();
+  expect(toolbar.y + toolbar.height).toBeLessThanOrEqual(dropzone.y);
+  for (const selector of [
+    "h1",
+    "#batch-stage-heading",
+    "#batch-allowance-heading",
+    "#batch-history-heading",
+    ".bulk-output-fieldset > legend",
+  ])
+    expect((await page.locator(selector).textContent()).trim()).not.toMatch(
+      /\.$/,
+    );
   await expect(review(page)).toHaveCSS("background-color", "rgb(20, 47, 62)");
   await expect(page.locator(".bulk-allowance")).toHaveCSS(
     "border-top-color",
@@ -234,6 +261,25 @@ test("three functional zones use branded controls and remain inside the viewport
     );
     expect(boxes[0].x + boxes[0].width).toBeLessThan(boxes[1].x);
     expect(boxes[1].x + boxes[1].width).toBeLessThan(boxes[2].x);
+    const headers = await Promise.all(
+      [
+        ".bulk-setup > summary",
+        ".bulk-stage > .bulk-panel-heading",
+        ".bulk-allowance > .bulk-panel-heading",
+      ].map((selector) => page.locator(selector).boundingBox()),
+    );
+    expect(
+      Math.max(...headers.map((box) => box.y)) -
+        Math.min(...headers.map((box) => box.y)),
+    ).toBeLessThan(1);
+    expect(new Set(headers.map((box) => box.height)).size).toBe(1);
+    const nav = await page.locator(".sidebar").boundingBox(),
+      active = await page
+        .locator('.sidebar a[aria-current="page"]')
+        .boundingBox();
+    expect(nav.x + nav.width - active.x - active.width).toBeGreaterThanOrEqual(
+      8,
+    );
   }
   expect(state.uploads).toHaveLength(0);
   expect(state.creates).toHaveLength(0);
@@ -247,6 +293,8 @@ test("queue thumbnails report decoded dimensions, safely exclude individual file
   await nameBatch(page);
   await stage(page, [file("one.webp"), file("two.webp")]);
   await expect(page.locator(".bulk-file-card")).toHaveCount(2);
+  await expect(page.locator("#batch-dropzone .bulk-file-card")).toHaveCount(2);
+  await expect(page.locator("#batch-empty")).toBeHidden();
   await expect(page.locator(".bulk-file-card img")).toHaveCount(2);
   await expect(page.locator(".bulk-file-meta").first()).toContainText(
     /\d+ × \d+ px/,
