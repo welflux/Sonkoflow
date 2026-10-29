@@ -1168,3 +1168,9 @@ p {
     margin-top: 30px;
   }
 }
+
+/* Independent translation preserves the original photographs and rotations. */
+.hero-tile { translate: 0 var(--hero-scroll-y, 0px); }
+@media (prefers-reduced-motion: reduce) {
+  .hero-tile { translate: none !important; }
+}

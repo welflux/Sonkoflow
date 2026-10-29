@@ -128,12 +128,17 @@ footer :is(p, a, h2, h3, small),
 }
 
 /* Only the hero phrase types; its full width remains reserved throughout. */
+.landing-hero h1 em {
+  font-style: italic !important;
+  font-weight: 400 !important;
+}
 .landing-hero h1 em.hero-typewriter {
   display: inline-block;
   position: relative;
   white-space: nowrap;
   color: #2d6c86;
-  font-style: normal;
+  font-style: italic;
+  font-weight: 400;
 }
 .typewriter-reserve { visibility: hidden; }
 .typewriter-ink { position: absolute; left: 0; top: 0; }
@@ -150,4 +155,20 @@ footer :is(p, a, h2, h3, small),
 @keyframes typing-caret { 50% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   .hero-typewriter .typewriter-ink::after { display: none !important; animation: none !important; }
+}
+
+/* Square action controls throughout public pages and the workspace. */
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+.button,
+.public-button,
+.price-button,
+.footer-workspace,
+.sidebar > a,
+.billing-toggle,
+.order-plan-tabs,
+.period-option {
+  border-radius: 0 !important;
 }

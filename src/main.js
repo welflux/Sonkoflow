@@ -1,3 +1,4 @@
+import { startHeroScrollMotion } from "./hero-motion.js";
 import { startHeroTypewriter } from "./typewriter.js";
 import "./public.js";
 const slider = document.querySelector("#comparison-range");
@@ -31,3 +32,5 @@ for (const tab of tabs) {
 }
 
 startHeroTypewriter();
+
+startHeroScrollMotion();

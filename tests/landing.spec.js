@@ -186,7 +186,7 @@ test('hero phrase types repeatedly without layout shift and respects reduced mot
   await expect(page.getByRole('heading', {level:1})).toHaveAccessibleName('Every image. Made for what’s next.');
   const before = await word.boundingBox();
   await expect.poll(() => ink.textContent()).toBe(phrase);
-  await expect.poll(() => ink.textContent(), {timeout:8000}).toBe('');
+  await expect.poll(() => ink.textContent(), {timeout:8000, intervals:[100]}).toBe('');
   await expect.poll(async () => (await ink.textContent()).length).toBeGreaterThan(0);
   const after = await word.boundingBox();
   expect(Math.abs(before.width-after.width)).toBeLessThan(1);
@@ -195,4 +195,29 @@ test('hero phrase types repeatedly without layout shift and respects reduced mot
   await expect(ink).toHaveText(phrase);
   await expect(word).toHaveCSS('color', 'rgb(45, 108, 134)');
   await expect(page.locator('h1')).toHaveCSS('color', 'rgb(20, 22, 27)');
+});
+
+test('hero images move on scroll without replacing photos or rotations', async ({ page }) => {
+  await page.goto('/');
+  const tile = page.locator('.tile-one');
+  const sources = await page.locator('.hero-tile img').evaluateAll(images => images.map(image => image.getAttribute('src')));
+  const before = await tile.evaluate(el => ({translate:getComputedStyle(el).translate,rotation:getComputedStyle(el).transform}));
+  await page.evaluate(() => window.scrollTo({top:320, behavior:'instant'}));
+  await expect.poll(() => tile.evaluate(el => getComputedStyle(el).translate)).not.toBe(before.translate);
+  expect(await tile.evaluate(el => getComputedStyle(el).transform)).toBe(before.rotation);
+  expect(await page.locator('.hero-tile img').evaluateAll(images => images.map(image => image.getAttribute('src')))).toEqual(sources);
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await expect(tile).toHaveCSS('translate', 'none');
+});
+
+test('hero typing is italic and regular weight with square buttons and outlined sign-in', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.locator('h1 em')).toHaveCSS('font-style', 'italic');
+  await expect(page.locator('h1 em')).toHaveCSS('font-weight', '400');
+  const signIn = page.locator('.public-header-actions > a').first();
+  await expect(signIn).toHaveCSS('border-top-style', 'solid');
+  await expect(signIn).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  for(const control of await page.locator('button, .public-button, .public-header-actions > a').all()) {
+    await expect(control).toHaveCSS('border-top-left-radius', '0px');
+  }
 });

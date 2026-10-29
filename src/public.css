@@ -369,3 +369,22 @@
     display: none;
   }
 }
+
+.public-header-actions > a:first-child {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 12px 20px;
+  border: 1px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+}
+.public-header-actions > a:first-child:hover { background: #142f3e08; }
+@media (max-width: 600px) {
+  .public-header-inner { gap: 6px; }
+  .public-header-actions { gap: 0; }
+  .public-header-actions > a:first-child { min-height: 44px; padding: 8px; }
+}
+.public-header-actions > .public-button { min-height: 52px; }
