@@ -141,3 +141,38 @@ test("legal destinations display the requested titles without pretending final p
     ).toBeTruthy();
   }
 });
+
+test('a recovery email opens the new-password form and verifies the link only when saving', async ({ page }) => {
+  const calls = [];
+  await page.route('**/api/auth/confirm', route => {
+    calls.push({path:'confirm',body:route.request().postDataJSON()});
+    return route.fulfill({json:{recovery:true,next:'/account/reset'}});
+  });
+  await page.route('**/api/auth/password', route => {
+    calls.push({path:'password',body:route.request().postDataJSON()});
+    return route.fulfill({json:{ok:true}});
+  });
+  const token = 'a'.repeat(64);
+  await page.goto(`/account/confirm#token_hash=${token}&type=recovery`);
+  await expect(page.getByRole('heading', {name:'Choose a new password'})).toBeVisible();
+  await expect(page).toHaveURL(/\/account\/confirm$/);
+  expect(calls).toEqual([]);
+  await page.getByLabel('Password', {exact:true}).fill('a-new-private-passphrase');
+  await page.getByRole('button', {name:'Save password'}).click();
+  await expect(page).toHaveURL(/\/account\/signin$/);
+  expect(calls).toEqual([
+    {path:'confirm',body:{token_hash:token,type:'recovery'}},
+    {path:'password',body:{password:'a-new-private-passphrase'}}
+  ]);
+});
+
+test('an expired recovery link cannot submit a password change', async ({ page }) => {
+  let changed = false;
+  await page.route('**/api/auth/confirm', route => route.fulfill({status:400,json:{error:{message:'This recovery link has expired. Request a new one.'}}}));
+  await page.route('**/api/auth/password', route => {changed=true;return route.fulfill({json:{ok:true}});});
+  await page.goto(`/account/confirm#token_hash=${'b'.repeat(64)}&type=recovery`);
+  await page.getByLabel('Password', {exact:true}).fill('a-new-private-passphrase');
+  await page.getByRole('button', {name:'Save password'}).click();
+  await expect(page.getByRole('alert')).toContainText('expired');
+  expect(changed).toBe(false);
+});
