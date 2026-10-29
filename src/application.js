@@ -1,3 +1,4 @@
+import { profilePage as renderProfilePage } from "./profile-ui.js";
 import { accountPage as renderAccountPage } from "./auth-ui.js";
 import { checkoutPage, billingPage, welcomePage } from "./billing-ui.js";
 import { libraryPage } from "./library-ui.js";
@@ -346,19 +347,7 @@ function openImagePreview(image, trigger) {
   dialog.showModal();
 }
 async function profilePage() {
-  const page = shell("profile");
-  page.innerHTML =
-    '<div class="page-heading"><div><p class="eyebrow">YOUR PERSPECTIVE</p><h1>Account profile</h1><p>Choose the workflow that best fits your photographs.</p></div></div><div id="page-notice" class="notice"></div><section class="panel profile-form"><form><label>Display name<input name="display_name" maxlength="100" autocomplete="name"></label><label>Primary workflow<select name="audience"><option value="ecommerce">E-commerce products</option><option value="professional">Professional imagery</option><option value="individual">Personal photographs</option></select></label><div class="notice"></div><button type="submit">Save profile</button></form><p class="help">To change your password, sign out and request a password recovery email.</p></section>';
-  page.querySelector("input").value = profile.display_name;
-  page.querySelector("select").value = profile.audience;
-  bindForm(page.querySelector("form"), async (data, notice) => {
-    const result = await api("/profile", {
-      method: "PATCH",
-      body: JSON.stringify(Object.fromEntries(data)),
-    });
-    profile = result.profile;
-    message(notice, "Your profile has been saved.");
-  });
+  await renderProfilePage({api, shell, profile, onProfile: value => { profile=value; }, message});
 }
 async function main() {
   if (

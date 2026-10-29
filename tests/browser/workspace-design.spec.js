@@ -248,7 +248,7 @@ for (const width of [320, 768, 1024]) {
     const profile = nav.getByRole('link', { name: 'Account profile' });
     await profile.scrollIntoViewIfNeeded();
     await profile.click();
-    await expect(page.locator('.workspace-content h1')).toHaveCSS('font-size', width <= 600 ? '36px' : '44px');
+    await expect(page.locator('.workspace-content h1')).toHaveCSS('font-size', width <= 760 ? '28px' : '34px');
     await expect(page.getByLabel('Display name')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
     await page.getByLabel('Display name').fill('Mobile and tablet owner');

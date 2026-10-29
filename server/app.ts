@@ -1,3 +1,4 @@
+import { accountRoutes } from "./account/routes.js";
 import { GoogleAuth } from "./auth/google.js";
 import {
   catalogRoutes,
@@ -405,6 +406,7 @@ export function createApp(config: Config | null) {
     databaseError(error);
     res.json({ profile: data });
   });
+  if (svc) accountRoutes(app, svc, who, limit);
   app.get("/api/projects", async (_req, res) => {
     const gallery = await svc!.admin.rpc("library_schema_version");
     let query = who(res)

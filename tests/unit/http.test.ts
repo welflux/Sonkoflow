@@ -18,6 +18,7 @@ test("unconfigured account services fail closed without fabricated success", asy
   const app = createApp(null);
   for (const route of [
     "/api/session",
+    "/api/account",
     "/api/projects",
     "/api/images",
     "/api/jobs?project_id=11111111-1111-4111-8111-111111111111",
@@ -39,6 +40,7 @@ test("protected APIs reject missing sessions before accessing external services"
   const app = createApp(config);
   for (const route of [
     "/api/session",
+    "/api/account",
     "/api/projects",
     "/api/images",
     "/api/jobs?project_id=11111111-1111-4111-8111-111111111111",
@@ -68,6 +70,10 @@ test("protected APIs reject missing sessions before accessing external services"
       ).status,
       403,
     );
+  }
+  for (const [method, route] of [["patch","/api/account/details"],["post","/api/account/sessions/revoke-others"]] as const) {
+    assert.equal((await request(app)[method](route).set("Origin",config.APP_ORIGIN).send({})).status,401);
+    assert.equal((await request(app)[method](route).set("Origin","https://attacker.example").send({})).status,403);
   }
   const mutation = await request(app)
     .post("/api/projects")
