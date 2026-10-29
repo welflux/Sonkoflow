@@ -11,22 +11,22 @@ export const brandSettings = z
     primary_color: z
       .string()
       .regex(/^#[0-9a-fA-F]{6}$/)
-      .default("#243F37"),
+      .default("#142F3E"),
     secondary_color: z
       .string()
       .regex(/^#[0-9a-fA-F]{6}$/)
-      .default("#F3F1EB"),
+      .default("#F7F6F2"),
     accent_color: z
       .string()
       .regex(/^#[0-9a-fA-F]{6}$/)
-      .default("#D5A66D"),
+      .default("#F4B979"),
     background_style: z
       .enum(["preserve", "neutral", "solid", "studio"])
       .default("neutral"),
     background_color: z
       .string()
       .regex(/^#[0-9a-fA-F]{6}$/)
-      .default("#F3F1EB"),
+      .default("#F7F6F2"),
     theme: z
       .enum(["restrained", "warm", "cool", "editorial", "natural"])
       .default("restrained"),

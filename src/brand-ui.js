@@ -5,15 +5,15 @@ import {
   assetQueue,
 } from "./studio-workspace.js";
 const fields = {
-  primary_color: ["Primary color", "color", "#243F37"],
-  secondary_color: ["Secondary color / strip", "color", "#F3F1EB"],
-  accent_color: ["Accent color", "color", "#D5A66D"],
+  primary_color: ["Primary color", "color", "#142F3E"],
+  secondary_color: ["Secondary color / strip", "color", "#F7F6F2"],
+  accent_color: ["Accent color", "color", "#F4B979"],
   background_style: [
     "Background",
     ["preserve", "neutral", "solid", "studio"],
     "neutral",
   ],
-  background_color: ["Background color", "color", "#F3F1EB"],
+  background_color: ["Background color", "color", "#F7F6F2"],
   theme: [
     "Visual theme",
     ["restrained", "warm", "cool", "editorial", "natural"],
@@ -512,7 +512,7 @@ export async function brandStudio(api, shell) {
       b.dataset.profile = p.id;
       b.setAttribute("aria-label", p.name);
       const swatch = el("span", null, "studio-directory-swatch");
-      swatch.style.background = p.settings?.primary_color ?? "#243f37";
+      swatch.style.background = p.settings?.primary_color ?? "#142f3e";
       b.prepend(swatch);
       list.append(b);
     }

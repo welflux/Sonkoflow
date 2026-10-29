@@ -15,6 +15,12 @@
 }
 :root {
   --ink: #142f3e;
+  --heading: #14161b;
+  --field-surface: #f2f7f9;
+  --focus-ring: #245e7826;
+  --surface-overlay: #f7f6f2f2;
+  --sun-wash: #f4b97922;
+  --sky-wash: #b8ddec25;
   --muted: #6b7280;
   --sky: #b8ddec;
   --sky-dark: #245e78;

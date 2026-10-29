@@ -289,6 +289,9 @@ test("Saved profiles can be edited, duplicated and deleted without silently chan
   await expect(
     page.getByRole("button", { name: "Evergreen Studio", exact: true }),
   ).toBeVisible();
+  expect(s.profiles[0].settings.primary_color.toLowerCase()).toBe(
+    settings.primary_color.toLowerCase(),
+  );
   await page.getByRole("button", { name: "Duplicate profile" }).click();
   await expect(page.getByLabel("Brand name", { exact: true })).toHaveValue(
     "Evergreen Studio copy",

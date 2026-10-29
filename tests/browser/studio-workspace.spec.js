@@ -97,6 +97,10 @@ test("visual stage, exact HEX entry and footer anchors persist supported setting
   const { state } = await fixture(page);
   await page.goto("/app/brands");
   await page.getByLabel("Brand name", { exact: true }).fill("Aster Studio");
+  await expect(page.locator("#studio-save")).toHaveCSS(
+    "background-color",
+    "rgb(20, 47, 62)",
+  );
   await page.getByLabel("Primary color HEX", { exact: true }).fill("#123456");
   await expect(page.getByLabel("Primary color", { exact: true })).toHaveValue(
     "#123456",

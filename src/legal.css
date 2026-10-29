@@ -3,7 +3,7 @@ html {
   scroll-padding-top: 110px;
 }
 body {
-  background: #fffdf9;
+  background: var(--paper);
 }
 .legal-layout {
   display: grid;

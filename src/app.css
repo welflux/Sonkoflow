@@ -1,5 +1,5 @@
 .application {
-  background: #f1f3ef;
+  background: var(--paper);
 }
 button,
 .button {
@@ -116,7 +116,7 @@ h3 {
   width: 115px;
   height: 145px;
   object-fit: cover;
-  border: 6px solid #f1f3ef;
+  border: 6px solid var(--border);
   transform: rotate(6deg);
 }
 .account-art-note {
@@ -229,8 +229,8 @@ input[type="password"] {
   line-height: 1.6;
   overflow-wrap: anywhere;
   border-radius: 6px;
-  background: #e3efec;
-  border-left: 3px solid #4b7b66;
+  background: var(--sky-light);
+  border-left: 3px solid var(--sky-dark);
   color: var(--ink);
 }
 .notice.error {
@@ -281,7 +281,7 @@ form > .help {
   transition: background 0.2s;
 }
 .sidebar > a:hover {
-  background: #e7eceb;
+  background: var(--sky-light);
 }
 .sidebar a[aria-current="page"] {
   background: var(--ink);
@@ -575,7 +575,7 @@ form > button {
   width: 80px;
   height: 80px;
   object-fit: contain;
-  background: #edf0ee;
+  background: var(--sky-light);
   border-radius: 4px;
 }
 .upload-preview > div {
@@ -607,7 +607,7 @@ form > button {
   border: 0;
   border-radius: 0;
   position: relative;
-  background: #e4eae9;
+  background: var(--sky-light);
   overflow: hidden;
 }
 .photo-preview-button:after {
@@ -626,7 +626,7 @@ form > button {
 .photo-preview-button:hover,
 .photo-preview-button:focus-visible {
   transform: none;
-  background: #e4eae9;
+  background: var(--sky-light);
 }
 .photo-preview-button:hover:after,
 .photo-preview-button:focus-visible:after {
@@ -657,8 +657,8 @@ form > button {
   display: inline-block;
   font-size: var(--text-body-size);
   line-height: 1.6;
-  color: #39674f;
-  background: #e5ece5;
+  color: var(--sky-dark);
+  background: var(--sky-light);
   border-radius: 30px;
   padding: 4px 9px;
   margin-top: 12px;
@@ -744,7 +744,7 @@ form > button {
   width: 100%;
   height: min(60dvh, 650px);
   object-fit: contain;
-  background: #e4eae9;
+  background: var(--sky-light);
 }
 .dialog-footer {
   padding: 20px 24px;
@@ -1108,7 +1108,7 @@ textarea:focus-visible {
   width: 100%;
   aspect-ratio: 1;
   object-fit: contain;
-  background: #e4eae9;
+  background: var(--sky-light);
   border-radius: 10px;
 }
 .reference-panel figcaption {
@@ -1214,8 +1214,8 @@ textarea:focus-visible {
   background: var(--paper);
 }
 .job-status[data-state="completed"] {
-  color: #39674f;
-  background: #e5ece5;
+  color: var(--sky-dark);
+  background: var(--sky-light);
 }
 .job-status[data-state="uncertain"],
 .job-status[data-state="failed"] {
@@ -1372,8 +1372,8 @@ textarea:focus-visible {
   color: #714b16;
 }
 .quality-status[data-state="passed"] {
-  background: #e7f0e9;
-  color: #254e36;
+  background: var(--sky-light);
+  color: var(--ink);
 }
 .quality-status[data-state="failed"] {
   background: #fae6e0;
@@ -1394,7 +1394,7 @@ textarea:focus-visible {
   overflow-wrap: anywhere;
 }
 .quality-checks li[data-state="passed"] {
-  border-left-color: #5b8064;
+  border-left-color: var(--sky-dark);
 }
 .quality-checks li[data-state="failed"] {
   border-left-color: #ad5543;
@@ -1436,9 +1436,9 @@ textarea:focus-visible {
 }
 .pack-option {
   padding: 1rem;
-  border: 1px solid #d8dfdd;
+  border: 1px solid var(--border);
   border-radius: 12px;
-  background: #f7f8f4;
+  background: var(--sky-light);
 }
 .pack-option .check-row {
   margin-bottom: 0.5rem;
@@ -1449,7 +1449,7 @@ textarea:focus-visible {
 .pack-quote {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #d8dfdd;
+  border-top: 1px solid var(--border);
 }
 .pack-plan-list {
   padding-left: 1.2rem;
@@ -1469,7 +1469,7 @@ textarea:focus-visible {
 .pack-output-status {
   padding: 0.75rem 1rem;
   border-radius: 8px;
-  background: #e8eeeb;
+  background: var(--sky-light);
 }
 .pack-output .result-comparison {
   margin: 1rem 0;
@@ -1478,7 +1478,7 @@ textarea:focus-visible {
   min-height: 180px;
 }
 .pack-review {
-  border-top: 1px solid #d8dfdd;
+  border-top: 1px solid var(--border);
   margin-top: 1rem;
   padding-top: 1rem;
 }
@@ -1536,7 +1536,7 @@ textarea:focus-visible {
 .brand-preview {
   margin: 20px 0;
   padding: 18px;
-  background: #f8f8f4;
+  background: var(--white);
   border: 1px solid var(--line, #deded6);
   border-radius: 12px;
 }
@@ -1642,7 +1642,7 @@ textarea:focus-visible {
 .brand-picker {
   margin: 20px 0;
   padding: 16px;
-  border: 1px solid #d5dbd7;
+  border: 1px solid var(--border);
   border-radius: 12px;
   min-width: 0;
 }
@@ -1722,7 +1722,7 @@ textarea:focus-visible {
 }
 .library-card {
   background: var(--surface, #faf9f5);
-  border: 1px solid #d7deda;
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 18px;
   min-width: 0;
@@ -1778,7 +1778,7 @@ textarea:focus-visible {
   max-width: min(950px, 95vw);
   max-height: 90vh;
   padding: 24px;
-  border: 1px solid #d6dcd7;
+  border: 1px solid var(--border);
   border-radius: 12px;
   background: #faf9f5;
 }

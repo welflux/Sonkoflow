@@ -19,14 +19,14 @@ textarea {
   font-style: normal;
 }
 body {
-  color: #6b7280;
+  color: var(--muted);
   font-size: var(--text-body-size) !important;
   font-weight: 500;
   line-height: 24px;
   margin: 0;
 }
 :where(p:not(.plan-price):not(.pack-units):not(.once-price):not(.commerce-balance):not(.commerce-total):not(.auth-provider-notice):not(.notice)) {
-  color: #6b7280 !important;
+  color: var(--muted) !important;
 }
 :where(p:not(.plan-price):not(.pack-units):not(.once-price):not(.commerce-balance):not(.commerce-total)),
 li,
@@ -53,7 +53,7 @@ h1,
 h2,
 h3 {
   font-family: Inter, Helvetica, Arial, sans-serif !important;
-  color: #14161b !important;
+  color: var(--heading) !important;
   font-style: normal !important;
   font-weight: 700 !important;
   letter-spacing: var(--text-heading-tracking) !important;
@@ -63,10 +63,10 @@ h2 { font-size: var(--text-h2-size) !important; line-height: var(--text-h2-leadi
 h3 { font-size: var(--text-h3-size) !important; line-height: var(--text-h3-leading) !important; }
 /* Preserve readable text on the existing dark panels and footer. */
 :is(.process-section, .public-footer, .price-final, .once-card-featured) :is(h1, h2, h3) {
-  color: #f7faf7 !important;
+  color: var(--white) !important;
 }
 :is(.process-section, .public-footer, .price-final, .once-card-featured) p {
-  color: #d2e0dc !important;
+  color: var(--sky) !important;
 }
 small,
 .help,
@@ -192,7 +192,7 @@ input[type="submit"],
   font-family: 'Playfair', Georgia, serif !important;
   font-weight: 400 !important;
   letter-spacing: -0.7px !important;
-  color: #14161b !important;
+  color: var(--heading) !important;
 }
 .lighting-heading > span, .lighting-heading > em { display: block; }
-.lighting-heading > em { font-weight: 300; font-style: italic; color: #b8ddec; }
+.lighting-heading > em { font-weight: 300; font-style: italic; color: var(--sky); }

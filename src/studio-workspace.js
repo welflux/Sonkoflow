@@ -73,7 +73,7 @@ export function studioSettings(controls) {
         color.dispatchEvent(new Event("input", { bubbles: true }));
       } else original?.call(color);
     };
-    hex.title = "Exact sRGB HEX color, for example #243F37";
+    hex.title = "Exact sRGB HEX color, for example #142F3E";
   }
   const align = controls.querySelector("[data-setting=logo_align]");
   const anchors = node("div", undefined, "studio-logo-anchors");
@@ -135,11 +135,11 @@ export function stagePreview(figure, settings, state, onChange) {
   );
   canvas.style.setProperty(
     "--studio-primary",
-    settings.primary_color || "#243f37",
+    settings.primary_color || "#142f3e",
   );
   canvas.style.setProperty(
     "--studio-accent",
-    settings.accent_color || "#d5a66d",
+    settings.accent_color || "#f4b979",
   );
   const guides = node("div", undefined, "studio-guides");
   guides.setAttribute("aria-hidden", "true");

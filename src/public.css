@@ -9,7 +9,7 @@
 }
 .public-header {
   height: 88px;
-  background: #fffdf9;
+  background: var(--paper);
   position: sticky;
   top: 0;
   z-index: 30;
@@ -50,7 +50,7 @@
 }
 .public-button {
   background: var(--ink);
-  color: #fff;
+  color: var(--white);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -78,9 +78,9 @@
   gap: 18px;
 }
 .public-button.light {
-  background: #fffdf9;
+  background: var(--paper);
   color: var(--ink);
-  border-color: #fffdf9;
+  border-color: var(--paper);
 }
 .public-text-link {
   font-size: var(--text-body-size);
@@ -141,7 +141,7 @@
   display: none;
 }
 .public-footer {
-  background: #142f3e;
+  background: var(--ink);
   color: white;
   margin-top: 70px;
 }
@@ -169,7 +169,7 @@
   font-size: var(--text-body-size);
   letter-spacing: 0;
   line-height: 1.5;
-  color: #fff;
+  color: var(--white);
   margin-bottom: 22px;
   font-weight: 700;
 }
@@ -274,7 +274,7 @@
     top: 74px;
     left: 0;
     right: 0;
-    background: #fffdf9;
+    background: var(--paper);
     padding: 24px 20px;
     border-bottom: 1px solid var(--border);
     box-shadow: 0 12px 20px #142f3e0b;

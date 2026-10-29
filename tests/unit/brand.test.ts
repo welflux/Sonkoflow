@@ -231,7 +231,7 @@ test("Saved profile → preset → explicit override resolves on the server and 
   assert.equal(saved.preset_revision, 2);
   f.rows.brand_profiles[0].settings.primary_color = "#FF0000";
   f.rows.brand_profiles[0].name = "Renamed";
-  assert.equal(saved.settings.primary_color, "#243F37");
+  assert.equal(saved.settings.primary_color, "#142F3E");
   assert.equal(saved.profile_name, "Evergreen");
   f.rows.brand_profiles[0].revision = 2;
   await assert.rejects(

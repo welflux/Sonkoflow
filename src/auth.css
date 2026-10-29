@@ -1,8 +1,8 @@
 .auth-page {
-  background: #fffdf9;
+  background: var(--paper);
 }
 .auth-page .app-header {
-  background: #fffdf9;
+  background: var(--paper);
   height: 80px;
   border-bottom: 1px solid #142f3e10;
   padding-inline: 4%;
@@ -23,7 +23,7 @@
   margin: 0;
 }
 .auth-visual {
-  background: #e7eee6;
+  background: var(--sky-light);
   padding: 46px 9% 30px;
   overflow: hidden;
   position: relative;
@@ -44,13 +44,13 @@
 }
 .auth-visual h1 em {
   font-style: normal;
-  color: #446854;
+  color: var(--sky-dark);
 }
 .auth-visual-copy > p:last-child {
   font-size: var(--text-body-size);
   line-height: 1.85;
   margin-top: 22px;
-  color: #526357;
+  color: var(--muted);
 }
 .auth-moodboard {
   position: relative;
@@ -73,7 +73,7 @@
   right: 0;
   bottom: 8px;
   transform: rotate(6deg);
-  border: 7px solid #fffdf9;
+  border: 7px solid var(--paper);
   border-radius: 8px;
   box-shadow: 0 10px 30px #142f3e12;
 }
@@ -84,7 +84,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #fffdf9;
+  background: var(--paper);
   padding: 14px 17px;
   transform: rotate(-6deg);
   box-shadow: 0 8px 20px #142f3e0a;
@@ -109,31 +109,31 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: #354c3e;
-  border: 2px solid #fffdf9;
+  background: var(--ink);
+  border: 2px solid var(--paper);
 }
 .auth-swatches i:nth-child(2) {
-  background: #b7c9ac;
+  background: var(--sky);
 }
 .auth-swatches i:nth-child(3) {
-  background: #d6c4a5;
+  background: var(--sun);
 }
 .auth-swatches i:nth-child(4) {
-  background: #af6e48;
+  background: var(--sky-dark);
 }
 .auth-disclosure {
   font-size: var(--text-body-size);
   line-height: 1.8;
   max-width: 350px;
   margin-top: 15px;
-  color: #5a6a5d;
+  color: var(--muted);
 }
 .auth-form-panel {
   padding: 46px 10% 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fffdf9;
+  background: var(--paper);
 }
 .auth-form-inner {
   max-width: 460px;
@@ -178,7 +178,7 @@
   height: 18px;
 }
 .auth-google:hover {
-  background: #f2f5f1;
+  background: var(--sky-light);
   transform: none;
 }
 .auth-google[hidden],
@@ -218,7 +218,7 @@
   width: 100%;
   min-height: 48px;
   background: white;
-  border: 1px solid #cbd4d2;
+  border: 1px solid var(--border);
   border-radius: 7px;
   padding: 12px 14px;
   font-size: var(--text-body-size);
@@ -291,11 +291,11 @@
   color: #923c28;
 }
 .auth-page .notice.auth-success {
-  background: #eaf2e5;
-  border: 1px solid #cedec4;
+  background: var(--sky-light);
+  border: 1px solid var(--border);
   padding: 12px 14px;
   border-radius: 6px;
-  color: #315538;
+  color: var(--ink);
 }
 .auth-provider-notice {
   font-size: var(--text-body-size);
@@ -327,7 +327,7 @@
   width: 14px;
   height: 17px;
   fill: none;
-  stroke: #587064;
+  stroke: var(--muted);
   stroke-width: 1.6;
   flex-shrink: 0;
   margin-top: 2px;
@@ -335,7 +335,7 @@
 .auth-security p {
   font-size: var(--text-body-size);
   line-height: 1.8;
-  color: #637168;
+  color: var(--muted);
 }
 .auth-legal {
   font-size: var(--text-body-size);
