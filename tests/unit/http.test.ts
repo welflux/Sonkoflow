@@ -71,7 +71,7 @@ test("protected APIs reject missing sessions before accessing external services"
       403,
     );
   }
-  for (const [method, route] of [["patch","/api/account/details"],["post","/api/account/sessions/revoke-others"]] as const) {
+  for (const [method, route] of [["patch","/api/account/details"]] as const) {
     assert.equal((await request(app)[method](route).set("Origin",config.APP_ORIGIN).send({})).status,401);
     assert.equal((await request(app)[method](route).set("Origin","https://attacker.example").send({})).status,403);
   }

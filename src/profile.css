@@ -57,18 +57,6 @@
 .account-page .account-privacy h2 { font-size: 14px !important; line-height: 22px !important; letter-spacing: 0 !important; }
 .account-privacy p { font-size: 12px !important; line-height: 19px !important; margin: 7px 0; }
 .account-privacy a { color: #365747; font-size: 12px; }
-.account-session { padding: 16px 0; border-bottom: 1px solid #e0e6dc; }
-.account-session:first-child { padding-top: 0; }
-.account-session-title { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
-.account-session-title strong { color: #344c43; font-size: 13px; font-weight: 600; }
-.account-current { background: #e0ebdb; color: #456440; padding: 2px 6px; font-size: 10px; line-height: 16px; }
-.account-session p { margin-top: 5px; font-size: 12px !important; line-height: 20px !important; }
-.account-session small { color: #7a857e; font-size: 11px; line-height: 18px; }
-.account-session-actions { margin-top: 20px; }
-.account-confirm { max-width: min(460px,calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; padding: 28px; background: #f9faf6; border: 1px solid #c7d3c8; border-radius: 10px; color: #344c43; }
-.account-confirm::backdrop { background: #142f3e80; backdrop-filter: blur(3px); }
-.account-confirm h2 { font-size: 24px !important; line-height: 32px !important; letter-spacing: -.5px !important; }
-.account-confirm p { margin-top: 14px; }
 @media (max-width: 1180px) {
   .account-columns { grid-template-columns: minmax(0,1.35fr) minmax(260px,1fr); gap: 20px; }
   .account-card { padding: 22px; }
