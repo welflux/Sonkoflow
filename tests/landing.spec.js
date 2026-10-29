@@ -197,17 +197,34 @@ test('hero phrase types repeatedly without layout shift and respects reduced mot
   await expect(page.locator('h1')).toHaveCSS('color', 'rgb(20, 22, 27)');
 });
 
-test('hero images move on scroll without replacing photos or rotations', async ({ page }) => {
+test('hero photos enter from opposite sides and above once, then settle', async ({ page }) => {
   await page.goto('/');
-  const tile = page.locator('.tile-one');
-  const sources = await page.locator('.hero-tile img').evaluateAll(images => images.map(image => image.getAttribute('src')));
-  const before = await tile.evaluate(el => ({translate:getComputedStyle(el).translate,rotation:getComputedStyle(el).transform}));
-  await page.evaluate(() => window.scrollTo({top:320, behavior:'instant'}));
-  await expect.poll(() => tile.evaluate(el => getComputedStyle(el).translate)).not.toBe(before.translate);
-  expect(await tile.evaluate(el => getComputedStyle(el).transform)).toBe(before.rotation);
-  expect(await page.locator('.hero-tile img').evaluateAll(images => images.map(image => image.getAttribute('src')))).toEqual(sources);
+  const tiles = page.locator('.hero-tile');
+  const sources = await tiles.locator('img').evaluateAll(images => images.map(image => image.getAttribute('src')));
+  const rotations = await tiles.evaluateAll(elements => elements.map(el => getComputedStyle(el).transform));
+  for (const [index, tile] of (await page.locator('.hero-tile:visible').all()).entries()) {
+    await tile.evaluate(el => el.scrollIntoView({behavior:'instant', block:'center'}));
+    await expect.poll(() => tile.evaluate(el => el.getAnimations().length)).toBe(1);
+    const frames = await tile.evaluate(el => {
+      const animation = el.getAnimations()[0];
+      animation.pause();
+      return animation.effect.getKeyframes();
+    });
+    expect(frames[0].translate).toMatch(index === 0 ? /^-/ : index === 1 ? /^0px -/ : /^[1-9]/);
+    if (index === 1) expect(Number(frames[0].opacity)).toBe(0);
+    await tile.evaluate(el => el.getAnimations()[0].finish());
+    await expect(tile).toHaveCSS('translate', 'none');
+    await expect(tile).toHaveCSS('opacity', '1');
+  }
+  expect(await tiles.evaluateAll(elements => elements.map(el => getComputedStyle(el).transform))).toEqual(rotations);
+  expect(await tiles.locator('img').evaluateAll(images => images.map(image => image.getAttribute('src')))).toEqual(sources);
+  await page.evaluate(() => window.scrollTo({top:0, behavior:'instant'}));
+  await page.locator('.hero-tile:visible').last().scrollIntoViewIfNeeded();
+  expect(await tiles.evaluateAll(elements => elements.every(el => el.getAnimations().length === 0))).toBe(true);
   await page.emulateMedia({reducedMotion:'reduce'});
-  await expect(tile).toHaveCSS('translate', 'none');
+  await page.reload();
+  await page.locator('.hero-tile:visible').last().scrollIntoViewIfNeeded();
+  expect(await tiles.evaluateAll(elements => elements.every(el => getComputedStyle(el).translate === 'none' && getComputedStyle(el).opacity === '1' && el.getAnimations().length === 0))).toBe(true);
 });
 
 test('hero typing is italic and regular weight with square buttons and outlined sign-in', async ({ page }) => {

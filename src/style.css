@@ -1169,8 +1169,8 @@ p {
   }
 }
 
-/* Independent translation preserves the original photographs and rotations. */
-.hero-tile { translate: 0 var(--hero-scroll-y, 0px); }
+/* Keep entrance motion within the viewport without changing the photo layout. */
+.landing-hero { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
-  .hero-tile { translate: none !important; }
+  .hero-tile { translate: none !important; opacity: 1 !important; }
 }
