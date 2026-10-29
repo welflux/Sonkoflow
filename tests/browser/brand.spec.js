@@ -392,7 +392,9 @@ test("Save conflicts preserve the unsaved form and asset uploads use the private
   await page.getByLabel("Brand name", { exact: true }).fill("Unsaved draft");
   await page.getByRole("button", { name: "Save profile changes" }).click();
   await expect(
-    page.getByText("These brand settings changed. Reload and review."),
+    page.getByText("These brand settings changed. Reload and review.", {
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(page.getByLabel("Brand name", { exact: true })).toHaveValue(
     "Unsaved draft",
@@ -408,4 +410,8 @@ test("Save conflicts preserve the unsaved form and asset uploads use the private
   await page.getByRole("button", { name: "Upload asset", exact: true }).click();
   await expect(page.locator(".brand-asset")).toContainText("Evergreen logo");
   expect(s.assets).toHaveLength(1);
+  await expect(page.getByLabel("Brand name", { exact: true })).toHaveValue(
+    "Unsaved draft",
+  );
+  await expect(page.locator(".studio-savebar")).toContainText("Not saved.");
 });

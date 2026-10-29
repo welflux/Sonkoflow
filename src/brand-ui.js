@@ -1,3 +1,9 @@
+import "./studio-workspace.css";
+import {
+  studioSettings,
+  stagePreview,
+  assetQueue,
+} from "./studio-workspace.js";
 const fields = {
   primary_color: ["Primary color", "color", "#243F37"],
   secondary_color: ["Secondary color / strip", "color", "#F3F1EB"],
@@ -89,6 +95,16 @@ function settingsForm(settings, assets, partial = false, onChange = () => {}) {
       }
     }
     c.dataset.setting = key;
+    if (
+      key === "logo_asset_id" &&
+      settings[key] &&
+      !assets.some(
+        (asset) => asset.kind === "logo" && asset.id === settings[key],
+      )
+    ) {
+      option(c, "Unavailable logo — choose another", settings[key]);
+      c.lastElementChild.disabled = true;
+    }
     c.value = settings[key] ?? fallback;
     c.setAttribute("aria-label", label);
     l.append(c);
@@ -116,6 +132,7 @@ export function brandPreview(
   settings,
   assets = [],
   title = "Visual configuration preview",
+  stage = null,
 ) {
   const s = Object.fromEntries(
       Object.entries(fields).map(([k, v]) => [k, settings[k] ?? v[2]]),
@@ -176,6 +193,7 @@ export function brandPreview(
       "help",
     ),
   );
+  if (stage) stagePreview(box, s, stage.state, stage.update);
   return box;
 }
 export async function brandPicker(
@@ -351,28 +369,111 @@ export function brandHistory(snapshot) {
 }
 export async function brandStudio(api, shell) {
   const page = shell("brands");
-  page.innerHTML =
-    '<div class="page-heading"><div><p class="eyebrow">YOUR VISUAL LANGUAGE</p><h1>Brand Studio.</h1><p>A considered direction, ready for your next product photograph.</p></div></div><div id="brand-notice" class="notice" role="status"></div><div class="brand-layout"><aside class="panel"><h2>Your brands</h2><div id="brand-list"></div><button id="brand-new" class="secondary">Create brand profile</button><a class="text-link" href="/app">Apply a brand from a product project</a></aside><div id="brand-editor"></div></div><section class="panel brand-library"><h2>Private asset library</h2><p>Logos and reference images · PNG, JPEG or WebP · up to 2 MB / 8 megapixels. Normalized to lossless WebP, maximum 1024 pixels per side. SVG and animation are not supported.</p><p class="help">Only a selected logo is composited into results. Reference assets are stored for your review; this phase does not send them to the AI. Brand styling is available in product edits and image packs. Business presets may be saved, but are not applied to personal photographs or headshots.</p><form id="brand-upload"><label>Asset name<input name="name" maxlength="100" required></label><label>Asset type<select name="kind"><option value="logo">Logo</option><option value="reference">Visual reference</option></select></label><label>File<input name="asset" type="file" accept="image/png,image/jpeg,image/webp" required></label><button>Upload asset</button><div class="notice" role="status"></div></form><div id="brand-assets" class="brand-asset-grid"></div><p class="help">Up to 20 active profiles and 20 presets per profile. Asset storage is capped at 50 files / 25 MB including retained historical assets. Removed assets are hidden from new selections but retained privately for saved jobs.</p></section>';
+  page.classList.add("studio-page");
+  page.innerHTML = `<header class="page-heading studio-heading"><div><p class="eyebrow">YOUR VISUAL LANGUAGE</p><h1>Brand Studio</h1><p>A visual workspace for consistent product photography.</p></div><div class="studio-heading-actions"><a class="text-link" href="#brand-library">Private assets ↓</a></div></header><div id="brand-notice" class="notice" role="status"></div>
+    <section class="studio-directory" aria-label="Brand directory"><div><span class="studio-micro">SAVED VISUAL IDENTITIES</span><h2>Your brands</h2></div><label class="studio-switcher">Switch brand profile<select id="studio-switch" disabled><option value="">New visual identity</option></select></label><button id="brand-new" type="button" class="secondary" disabled>Create brand profile</button><div id="brand-list"></div></section>
+    <div class="brand-layout"><div id="brand-editor"></div></div>
+    <section class="panel brand-library" id="brand-library"><header class="studio-library-heading"><div><span class="studio-micro">PRIVATE WORKSPACE ASSETS</span><h2>Private asset library</h2><p>Keep logos and visual references close to your brand profiles.</p></div><a href="/app">Use a brand in a product project ↗</a></header><details class="studio-asset-rules"><summary>Supported files & asset rules</summary><p>PNG, JPEG or WebP · up to 2 MB / 8 megapixels per file. Normalized to lossless WebP, maximum 1024 pixels per side. SVG and animation are not supported. Logos can be composited in a separate footer. Reference assets are stored for your review; they are not sent to the AI. Brand styling applies to product edits and packs, not personal photographs or headshots.</p><p>Up to 20 active profiles and 20 presets per profile. Asset storage is capped at 50 files / 25 MB, including retained historical assets. Removed assets are hidden from new selections but retained privately for saved jobs.</p></details>
+    <form id="brand-upload"><div class="studio-upload-defaults"><label>Asset name<input name="name" maxlength="100" required></label><label>Asset type<select name="kind"><option value="logo">Logo</option><option value="reference">Visual reference</option></select></label></div><label class="studio-dropzone"><span class="studio-drop-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 16V3m-5 5 5-5 5 5M4 16v5h16v-5"/></svg></span><strong>Drop your logos and references here</strong><span>or choose files · PNG, JPEG, WebP · up to 2 MB each</span><input name="asset" type="file" accept="image/png,image/jpeg,image/webp" multiple></label><div class="studio-upload-queue"></div><div class="studio-upload-actions"><button type="submit" disabled>Upload asset</button><button type="button" class="secondary studio-clear-queue">Clear queue</button></div><div class="notice" role="status"></div></form><div id="brand-assets" class="brand-asset-grid"></div></section><div class="studio-savebar"><span id="studio-save-context">New visual identity</span><button id="studio-save" type="submit" form="studio-profile-form" disabled>Save brand profile</button></div>`;
   const top = page.querySelector("#brand-notice"),
     editor = page.querySelector("#brand-editor");
   let profiles = [],
     assets = [],
     selectedId = null,
-    loadRevision = 0;
+    loadRevision = 0,
+    dirty = false,
+    saving = false,
+    assetsReady = false,
+    updatePreview = () => {};
+  const stageState = { light: "studio", guides: true };
+  const saveAction = page.querySelector("#studio-save");
+  const switcher = page.querySelector("#studio-switch");
+  const syncDirectory = () => {
+    switcher.value = selectedId ?? "";
+    for (const item of page.querySelectorAll(".brand-list-item"))
+      item.setAttribute(
+        "aria-pressed",
+        String(item.dataset.profile === selectedId),
+      );
+  };
+  function markDirty() {
+    dirty = true;
+    page.querySelector(".studio-savebar").classList.remove("has-error");
+    page.querySelector("#studio-save-context").textContent = "Unsaved changes";
+    page
+      .querySelector("#studio-edit-state")
+      ?.replaceChildren(document.createTextNode("Unsaved changes"));
+  }
+  const mayDiscard = () =>
+    !dirty || confirm("Discard unsaved brand settings and switch profiles?");
+  const upload = page.querySelector("#brand-upload");
+  const assetUploads = assetQueue({
+    canUpload: () => assetsReady,
+    form: upload,
+    api,
+    onSaved: async () => {
+      await refresh();
+      syncAssetOptions();
+    },
+    notify: (text, error = false) =>
+      note(upload.querySelector(".notice"), text, error),
+  });
+  window.addEventListener("beforeunload", (event) => {
+    if (dirty || assetUploads.hasPending()) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+  });
+  switcher.onchange = () => {
+    const id = switcher.value;
+    if (!id) {
+      if (!mayDiscard()) {
+        syncDirectory();
+        return;
+      }
+      loadRevision++;
+      selectedId = null;
+      render();
+      syncDirectory();
+    } else load(id);
+  };
+  function unavailable() {
+    saveAction.disabled = true;
+    page.querySelector(".studio-savebar").hidden = true;
+    switcher.disabled = true;
+    page.querySelector("#brand-new").disabled = true;
+    page.querySelector("#brand-upload").hidden = true;
+    const card = el("section", null, "panel");
+    card.append(
+      el("h2", "Brand records are unavailable"),
+      el(
+        "p",
+        "Refresh this screen to try again. Your saved projects and brand data have not been changed.",
+        "help",
+      ),
+    );
+    const retry = el("a", "Reload Brand Studio", "text-link");
+    retry.href = "/app/brands";
+    card.append(retry);
+    editor.replaceChildren(card);
+    page
+      .querySelector("#brand-assets")
+      .replaceChildren(el("p", "Asset records could not be loaded.", "help"));
+  }
   try {
     const cap = await api("/brands/capabilities");
     if (!cap.available) {
       note(
         top,
-        "Brand Studio is unavailable until the Phase 5 database migration is applied. Existing projects are retained.",
+        "Brand Studio is temporarily unavailable. Your existing projects remain available.",
       );
-      page.querySelector("#brand-new").disabled = true;
-      page.querySelector("#brand-upload").hidden = true;
+      unavailable();
       return;
     }
     await refresh();
   } catch (e) {
     note(top, e.message, true);
+    unavailable();
     return;
   }
   async function refresh() {
@@ -382,15 +483,41 @@ export async function brandStudio(api, shell) {
     ]);
     const list = page.querySelector("#brand-list");
     list.replaceChildren();
+    switcher.replaceChildren();
+    option(switcher, "New visual identity", "");
+    for (const profile of profiles) option(switcher, profile.name, profile.id);
     if (!profiles.length)
-      list.append(el("p", "Create your first saved visual direction.", "help"));
+      list.append(
+        el(
+          "p",
+          "No saved brands yet. Create a visual identity below to get started.",
+          "help",
+        ),
+      );
     for (const p of profiles) {
       const b = button(p.name, () => load(p.id));
       b.classList.add("brand-list-item");
+      b.dataset.profile = p.id;
+      b.setAttribute("aria-label", p.name);
+      const swatch = el("span", null, "studio-directory-swatch");
+      swatch.style.background = p.settings?.primary_color ?? "#243f37";
+      b.prepend(swatch);
       list.append(b);
     }
+    syncDirectory();
     const grid = page.querySelector("#brand-assets");
     grid.replaceChildren();
+    if (!assets.length) {
+      const empty = el("div", null, "studio-assets-empty");
+      empty.append(
+        el("strong", "Your private asset library is ready"),
+        el(
+          "p",
+          "Upload a logo or a visual reference to see its thumbnail, dimensions and file details here.",
+        ),
+      );
+      grid.append(empty);
+    }
     for (const a of assets) {
       const c = el("article", null, "brand-asset"),
         img = el("img");
@@ -408,7 +535,7 @@ export async function brandStudio(api, shell) {
           try {
             await api(`/brands/assets/${a.id}`, { method: "DELETE" });
             await refresh();
-            if (selectedId) await load(selectedId);
+            syncAssetOptions();
           } catch (e) {
             note(top, e.message, true);
           }
@@ -418,26 +545,69 @@ export async function brandStudio(api, shell) {
       c.append(
         img,
         el("strong", a.name),
-        el("small", `${a.kind} · ${a.width} × ${a.height}`),
+        el(
+          "small",
+          `${a.kind === "logo" ? "Logo" : "Visual reference"} · ${a.width} × ${a.height}`,
+        ),
+        el(
+          "small",
+          `${a.byte_size ? Math.round(a.byte_size / 1024) + " KB · " : ""}Private · Ready`,
+        ),
         remove,
       );
       grid.append(c);
     }
   }
-  async function load(id) {
+  function syncAssetOptions() {
+    for (const select of editor.querySelectorAll(
+      "[data-setting=logo_asset_id]",
+    )) {
+      const value = select.value;
+      select.replaceChildren();
+      option(select, "No logo", "");
+      for (const asset of assets.filter((asset) => asset.kind === "logo"))
+        option(select, asset.name, asset.id);
+      if (value && !assets.some((asset) => asset.id === value)) {
+        option(select, "Unavailable logo — choose another", value);
+        select.lastElementChild.disabled = true;
+      }
+      select.value = value;
+    }
+    updatePreview();
+  }
+  async function load(id, force = false) {
+    if (saving && !force) return;
+    if (!force && !mayDiscard()) {
+      syncDirectory();
+      return;
+    }
     const version = ++loadRevision;
-    editor.replaceChildren(el("p", "Loading brand settings…", "notice"));
+    editor.inert = true;
+    saveAction.disabled = true;
     try {
       const r = await api(`/brands/${id}`);
       if (version !== loadRevision) return;
       selectedId = id;
       render(r.profile, r.presets);
-    } catch (e) {
-      note(top, e.message, true);
+      syncDirectory();
+    } catch (error) {
+      note(top, error.message, true);
+      syncDirectory();
+    } finally {
+      if (version === loadRevision) {
+        editor.inert = false;
+        saveAction.disabled = false;
+      }
     }
   }
   function render(profile = null, presets = []) {
+    dirty = false;
+    editor.inert = false;
     editor.replaceChildren();
+    page.querySelector(".studio-savebar").classList.remove("has-error");
+    page.querySelector("#studio-save-context").textContent = profile
+      ? `${profile.name} · revision ${profile.revision}`
+      : "New visual identity";
     const form = el("form", null, "panel"),
       head = el(
         "h2",
@@ -449,6 +619,8 @@ export async function brandStudio(api, shell) {
       description = el("textarea"),
       preview = el("div", null, "brand-preview-slot"),
       message = el("div", null, "notice");
+    form.id = "studio-profile-form";
+    form.classList.add("studio-profile-form");
     name.required = true;
     name.maxLength = 100;
     name.value = profile?.name ?? "";
@@ -459,32 +631,56 @@ export async function brandStudio(api, shell) {
     nameLabel.append(name);
     let controls;
     const update = () =>
-      preview.replaceChildren(brandPreview(readSettings(controls), assets));
-    controls = settingsForm(profile?.settings ?? {}, assets, false, update);
-    const save = el(
-      "button",
-      profile ? "Save profile changes" : "Save brand profile",
+      preview.replaceChildren(
+        brandPreview(readSettings(controls), assets, "Visual staging preview", {
+          state: stageState,
+          update,
+        }),
+      );
+    updatePreview = update;
+    controls = settingsForm(profile?.settings ?? {}, assets, false, () => {
+      markDirty();
+      update();
+    });
+    controls.classList.add("studio-config");
+    studioSettings(controls);
+    const save = saveAction;
+    save.textContent = profile ? "Save profile changes" : "Save brand profile";
+    save.disabled = false;
+    const identity = el("div", null, "studio-identity-fields");
+    identity.append(nameLabel, descriptionLabel);
+    const configuration = el("div", null, "studio-configuration");
+    configuration.append(identity, controls);
+    const state = el(
+      "span",
+      profile ? `Saved revision ${profile.revision}` : "New visual identity",
+      "studio-edit-state",
     );
+    state.id = "studio-edit-state";
+    name.oninput = description.oninput = markDirty;
     const identityLayout = el("div", null, "brand-identity-layout");
-    identityLayout.append(controls, preview);
+    identityLayout.append(configuration, preview);
     form.append(
       head,
-      nameLabel,
-      descriptionLabel,
+      state,
       identityLayout,
       el(
         "p",
-        "The optional logo footer reserves 14% of the canvas and fits the entire edited photograph above it. It does not paste over the product. Check final composition and logo legibility.",
+        "Saved settings guide product edits and packs. Review generated details and logo legibility before use.",
         "help",
       ),
       message,
-      save,
     );
     editor.append(form);
     update();
     const intent = profile?.id ?? crypto.randomUUID();
     form.onsubmit = async (e) => {
       e.preventDefault();
+      if (saving) return;
+      saving = true;
+      form.inert = true;
+      switcher.disabled = true;
+      page.querySelector("#brand-new").disabled = true;
       save.disabled = true;
       try {
         const r = await api("/brands", {
@@ -499,18 +695,32 @@ export async function brandStudio(api, shell) {
             },
           }),
         });
+        dirty = false;
         await refresh();
-        await load(r.profile.id);
+        await load(r.profile.id, true);
         note(top, "Brand profile saved.");
       } catch (err) {
         note(message, err.message, true);
+        page.querySelector(".studio-savebar").classList.add("has-error");
+        page.querySelector("#studio-save-context").textContent =
+          `Not saved. ${err.message}`;
         save.disabled = false;
+      } finally {
+        saving = false;
+        form.inert = false;
+        switcher.disabled = false;
+        page.querySelector("#brand-new").disabled = false;
       }
     };
     if (!profile) return;
     const actions = el("div", null, "result-actions");
     actions.append(
       button("Duplicate profile", async () => {
+        if (
+          dirty &&
+          !confirm("Duplicate the saved revision and discard unsaved changes?")
+        )
+          return;
         try {
           const r = await api("/brands", {
             method: "POST",
@@ -522,7 +732,7 @@ export async function brandStudio(api, shell) {
             }),
           });
           await refresh();
-          await load(r.profile.id);
+          await load(r.profile.id, true);
         } catch (e) {
           note(message, e.message, true);
         }
@@ -546,6 +756,7 @@ export async function brandStudio(api, shell) {
               }),
             });
             selectedId = null;
+            dirty = false;
             await refresh();
             render();
           } catch (e) {
@@ -575,6 +786,10 @@ export async function brandStudio(api, shell) {
         button(
           "Delete preset",
           async () => {
+            if (dirty) {
+              note(top, "Save your brand profile before changing presets.");
+              return;
+            }
             try {
               await api(`/brands/${profile.id}/presets`, {
                 method: "POST",
@@ -584,7 +799,7 @@ export async function brandStudio(api, shell) {
                   action: "delete",
                 }),
               });
-              await load(profile.id);
+              await load(profile.id, true);
             } catch (e) {
               note(top, e.message, true);
             }
@@ -600,6 +815,10 @@ export async function brandStudio(api, shell) {
       target,
     );
     function editPreset(p = null) {
+      if (dirty) {
+        note(top, "Save your brand profile before editing presets.");
+        return;
+      }
       target.replaceChildren();
       const f = el("form"),
         nl = el("label", "Preset name"),
@@ -637,7 +856,7 @@ export async function brandStudio(api, shell) {
               },
             }),
           });
-          await load(profile.id);
+          await load(profile.id, true);
           note(top, "Preset saved.");
         } catch (err) {
           note(msg, err.message, true);
@@ -647,39 +866,15 @@ export async function brandStudio(api, shell) {
     }
   }
   page.querySelector("#brand-new").onclick = () => {
+    if (saving || !mayDiscard()) return;
     loadRevision++;
     selectedId = null;
     render();
+    syncDirectory();
   };
   render();
-  const upload = page.querySelector("#brand-upload");
-  let uploadId = crypto.randomUUID();
-  upload.elements.asset.onchange = () => (uploadId = crypto.randomUUID());
-  upload.onsubmit = async (e) => {
-    e.preventDefault();
-    const b = upload.querySelector("button"),
-      n = upload.querySelector(".notice");
-    b.disabled = true;
-    try {
-      const data = new FormData(upload);
-      data.set("id", uploadId);
-      await api("/brands/assets", { method: "POST", body: data });
-      upload.reset();
-      uploadId = crypto.randomUUID();
-      await refresh();
-      for (const selector of editor.querySelectorAll(
-        "[data-setting=logo_asset_id]",
-      )) {
-        for (const a of assets.filter((a) => a.kind === "logo")) {
-          if (!Array.from(selector.options).some((o) => o.value === a.id))
-            option(selector, a.name, a.id);
-        }
-      }
-      note(n, "Asset saved privately.");
-    } catch (err) {
-      note(n, err.message, true);
-    } finally {
-      b.disabled = false;
-    }
-  };
+  assetsReady = true;
+  upload.querySelector("button[type=submit]").disabled = false;
+  switcher.disabled = false;
+  page.querySelector("#brand-new").disabled = false;
 }
