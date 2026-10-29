@@ -166,10 +166,22 @@ export function brandPreview(
         : s.logo_align === "center"
           ? "center"
           : "flex-end";
-    const img = el("img");
-    img.src = `/api/brands/assets/${s.logo_asset_id}/content`;
-    img.alt = "Uploaded brand logo";
-    footer.append(img);
+    if (
+      stage &&
+      !assets.some(
+        (asset) => asset.id === s.logo_asset_id && asset.kind === "logo",
+      )
+    ) {
+      const warning = el("span", "Logo unavailable", "help");
+      warning.style.background = "#ffffffd9";
+      warning.style.padding = "2px 6px";
+      footer.append(warning);
+    } else {
+      const img = el("img");
+      img.src = `/api/brands/assets/${s.logo_asset_id}/content`;
+      img.alt = "Uploaded brand logo";
+      footer.append(img);
+    }
     canvas.append(footer);
   }
   const palette = el("div", null, "brand-palette");

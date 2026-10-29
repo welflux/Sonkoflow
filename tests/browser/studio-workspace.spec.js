@@ -255,13 +255,11 @@ test("files selected before brand metadata finishes loading remain in the queue"
     return route.fulfill({ json: { assets: state.assets } });
   });
   await page.goto("/app/brands");
-  await page
-    .locator("#brand-upload input[type=file]")
-    .setInputFiles({
-      name: "early-logo.webp",
-      mimeType: "image/webp",
-      buffer: photo,
-    });
+  await page.locator("#brand-upload input[type=file]").setInputFiles({
+    name: "early-logo.webp",
+    mimeType: "image/webp",
+    buffer: photo,
+  });
   await expect(page.locator(".studio-queued-asset")).toHaveCount(1);
   await expect(
     page.getByRole("button", { name: "Upload asset", exact: true }),
@@ -276,4 +274,25 @@ test("files selected before brand metadata finishes loading remain in the queue"
     "Asset saved privately",
   );
   expect(state.assets).toHaveLength(1);
+});
+
+test("removed logos remain explicit in saved settings without a broken staging image", async ({
+  page,
+}) => {
+  const { state } = await fixture(page);
+  const missing = "99999999-9999-4999-8999-999999999999";
+  state.profiles[0].settings.logo_asset_id = missing;
+  state.profiles[0].settings.logo_placement = "footer";
+  await page.goto("/app/brands");
+  await page.getByLabel("Switch brand profile").selectOption(id);
+  await expect(
+    page.locator(".studio-preview .brand-preview-footer"),
+  ).toContainText("Logo unavailable");
+  await expect(
+    page.locator(".studio-preview .brand-preview-footer img"),
+  ).toHaveCount(0);
+  await expect(page.locator("[data-setting=logo_asset_id]")).toHaveValue(
+    missing,
+  );
+  expect(state.paidRequests).toBe(0);
 });
