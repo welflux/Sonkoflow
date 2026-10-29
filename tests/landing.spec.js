@@ -198,6 +198,16 @@ test('hero phrase types repeatedly without layout shift and respects reduced mot
 });
 
 test('hero photos enter from opposite sides and above once, then settle', async ({ page }) => {
+  // Slow only the artwork entrance so every frame can be inspected under CI load.
+  // Finish each animation explicitly below; production timing remains unchanged.
+  await page.addInitScript(() => {
+    const animate = Element.prototype.animate;
+    Element.prototype.animate = function (...args) {
+      const animation = animate.apply(this, args);
+      if (this.matches('.hero-tile')) animation.playbackRate = 0.05;
+      return animation;
+    };
+  });
   await page.goto('/');
   const tiles = page.locator('.hero-tile');
   const sources = await tiles.locator('img').evaluateAll(images => images.map(image => image.getAttribute('src')));
