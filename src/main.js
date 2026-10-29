@@ -1,3 +1,4 @@
+import { startHeroTypewriter } from "./typewriter.js";
 import "./public.js";
 const slider = document.querySelector("#comparison-range");
 slider?.addEventListener("input", () =>
@@ -28,3 +29,5 @@ for (const tab of tabs) {
     selectTab(tabs[n], true);
   });
 }
+
+startHeroTypewriter();

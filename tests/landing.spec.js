@@ -177,12 +177,22 @@ test('shared Inter typography follows the desktop, tablet and mobile scale', asy
   expect(await page.evaluate(() => document.fonts.check('500 15px Inter'))).toBeTruthy();
 });
 
-test('highlighted heading words keep their content and respect reduced motion', async ({ page }) => {
+test('hero phrase types repeatedly without layout shift and respects reduced motion', async ({ page }) => {
   await page.goto('/');
-  const words = page.locator('h1 em').first();
-  const text = await words.textContent();
-  await expect(words).toHaveCSS('animation-name', 'heading-tone-flow');
+  await page.evaluate(() => document.fonts.ready);
+  const word = page.locator('h1 em');
+  const ink = word.locator('.typewriter-ink');
+  const phrase = 'what’s next.';
+  await expect(page.getByRole('heading', {level:1})).toHaveAccessibleName('Every image. Made for what’s next.');
+  const before = await word.boundingBox();
+  await expect.poll(() => ink.textContent()).toBe(phrase);
+  await expect.poll(() => ink.textContent(), {timeout:8000}).toBe('');
+  await expect.poll(async () => (await ink.textContent()).length).toBeGreaterThan(0);
+  const after = await word.boundingBox();
+  expect(Math.abs(before.width-after.width)).toBeLessThan(1);
+  expect(Math.abs(before.height-after.height)).toBeLessThan(1);
   await page.emulateMedia({reducedMotion:'reduce'});
-  await expect(words).toHaveCSS('animation-name', 'none');
-  await expect(words).toHaveText(text);
+  await expect(ink).toHaveText(phrase);
+  await expect(word).toHaveCSS('color', 'rgb(45, 108, 134)');
+  await expect(page.locator('h1')).toHaveCSS('color', 'rgb(20, 22, 27)');
 });

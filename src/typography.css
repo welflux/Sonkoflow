@@ -127,16 +127,27 @@ footer :is(p, a, h2, h3, small),
   }
 }
 
-/* Existing highlighted words stay fixed; only their readable color shifts. */
-:is(h1, h2, h3) em {
+/* Only the hero phrase types; its full width remains reserved throughout. */
+.landing-hero h1 em.hero-typewriter {
+  display: inline-block;
+  position: relative;
+  white-space: nowrap;
+  color: #2d6c86;
   font-style: normal;
-  font-weight: inherit;
-  animation: heading-tone-flow 8s ease-in-out infinite;
 }
-@keyframes heading-tone-flow {
-  0%, 100% { color: #2d6c86; }
-  50% { color: #446854; }
+.typewriter-reserve { visibility: hidden; }
+.typewriter-ink { position: absolute; left: 0; top: 0; }
+.hero-typewriter.is-writing .typewriter-ink::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 0.85em;
+  margin-left: 2px;
+  vertical-align: -0.04em;
+  background: currentColor;
+  animation: typing-caret 1s step-end infinite;
 }
+@keyframes typing-caret { 50% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
-  :is(h1, h2, h3) em { animation: none !important; }
+  .hero-typewriter .typewriter-ink::after { display: none !important; animation: none !important; }
 }
