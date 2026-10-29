@@ -248,15 +248,12 @@ function drawOrder() {
         renderCards();
         drawOrder();
       };
-      label.append(
-        radio,
-        el(
-          "span",
-          choice === "year"
-            ? `Yearly · ${money(offer.cents)} today · ${money(offer.cents / 12)}/month equivalent`
-            : `Monthly · ${money(offer.cents)} today`,
-        ),
-      );
+      const copy = el("span", null, "period-copy");
+      const name = el("span", choice === "year" ? "Yearly" : "Monthly", "period-name");
+      if (choice === "year") name.append(el("span", "Save 20%", "period-saving"));
+      copy.append(name, el("span", `${money(offer.cents)} today`, "period-price"));
+      copy.append(el("span", choice === "year" ? `${money(offer.cents / 12)}/month equivalent` : "Billed monthly", "period-equivalent"));
+      label.append(radio, copy);
       periods.append(label);
     }
   }

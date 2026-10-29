@@ -268,3 +268,31 @@ test("annual prices stay visible while unconfigured checkout remains disabled", 
   await expect(page.locator('#continue-order')).toBeDisabled();
   await expect(page.locator('#order-status')).toContainText('awaiting merchant configuration');
 });
+
+
+test('plan dialog keeps the full order and actions visible without internal scrolling', async ({ page }, info) => {
+  const viewport = info.project.name === 'desktop' ? {width:1280,height:640}
+    : info.project.name === 'tablet' ? {width:768,height:1024} : {width:390,height:844};
+  await page.setViewportSize(viewport);
+  await page.goto('/pricing');
+  for (const name of ['Choose Starter', 'Choose Pro', 'Start free', 'Choose one-time pack']) {
+    await page.getByRole('button', {name, exact:true}).first().click();
+    const dialog = page.locator('#plan-dialog');
+    await expect(dialog).toBeVisible();
+    const measure = async () => dialog.evaluate(el => {
+      const box = el.getBoundingClientRect();
+      const action = document.querySelector('#continue-order').getBoundingClientRect();
+      const terms = document.querySelector('.order-selection > .small-copy:last-child').getBoundingClientRect();
+      return {fits:el.scrollHeight <= el.clientHeight + 1, visible:box.top >= 0 && box.bottom <= innerHeight,
+        actionVisible:action.top >= box.top && action.bottom <= box.bottom,
+        termsVisible:terms.bottom <= box.bottom};
+    });
+    expect(await measure()).toEqual({fits:true,visible:true,actionVisible:true,termsVisible:true});
+    if (name === 'Choose Starter' || name === 'Choose Pro') {
+      await page.getByRole('radio', {name:/Yearly/}).check();
+      expect(await measure()).toEqual({fits:true,visible:true,actionVisible:true,termsVisible:true});
+    }
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+  }
+});
