@@ -418,3 +418,32 @@ test("Save conflicts preserve the unsaved form and asset uploads use the private
   );
   await expect(page.locator(".studio-savebar")).toContainText("Not saved.");
 });
+
+test('Create brand profile opens and focuses a fresh editor without saving or navigating away', async ({page}) => {
+ const s=await fixture(page,{empty:true});
+ await page.goto('/app/brands');
+ await expect(page.locator('#brand-new')).toBeEnabled();
+ await page.locator('#brand-new').click();
+ await expect(page.getByLabel('Brand name',{exact:true})).toBeFocused();
+ await expect(page.getByLabel('Brand name',{exact:true})).toHaveValue('');
+ await expect(page.getByRole('heading',{name:'Create visual identity',exact:true})).toBeInViewport();
+ await expect(page).toHaveURL('/app/brands');
+ expect(s.mutations).toEqual([]);
+});
+test('Create brand profile preserves unsaved edits when cancelled and resets only after confirmation', async ({page}) => {
+ const s=await fixture(page);
+ await page.goto('/app/brands');
+ await page.getByRole('button',{name:'Evergreen',exact:true}).click();
+ await page.getByLabel('Brand name',{exact:true}).fill('Unsaved identity');
+ page.once('dialog',d=>d.dismiss());
+ await page.locator('#brand-new').click();
+ await expect(page.getByLabel('Brand name',{exact:true})).toHaveValue('Unsaved identity');
+ page.once('dialog',d=>d.accept());
+ await page.locator('#brand-new').click();
+ await expect(page.getByLabel('Brand name',{exact:true})).toHaveValue('');
+ await expect(page.getByLabel('Brand name',{exact:true})).toBeFocused();
+ await expect(page.locator('#studio-switch')).toHaveValue('');
+ await expect(page.getByRole('heading',{name:'Create visual identity',exact:true})).toBeInViewport();
+ expect(s.profiles).toHaveLength(1);
+ expect(s.mutations).toEqual([]);
+});

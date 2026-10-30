@@ -883,6 +883,8 @@ export async function brandStudio(api, shell) {
     selectedId = null;
     render();
     syncDirectory();
+    editor.scrollIntoView({ block: "start", behavior: "auto" });
+    editor.querySelector('[aria-label="Brand name"]').focus({ preventScroll: true });
   };
   render();
   assetsReady = true;

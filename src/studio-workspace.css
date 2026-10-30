@@ -1024,3 +1024,6 @@
 .studio-page textarea:focus {
   outline-color: var(--focus-ring);
 }
+
+/* Keep the creation heading visible when jumping from the brand directory. */
+.studio-page #brand-editor { scroll-margin-top: 24px; }

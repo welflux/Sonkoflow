@@ -645,3 +645,8 @@ test("project directory bulk links preselect only an existing project and never 
  await expect(page.locator('select[name="project"]')).toHaveValue(target);
  expect(f.state.uploads).toEqual([]);
 });
+
+test('cross-page batch history links land on the history section after asynchronous page loading', async ({page}) => {
+ await setup(page,{path:'/app/batches#batch-history-section'});
+ await expect(page.locator('#batch-history-heading')).toBeInViewport();
+});

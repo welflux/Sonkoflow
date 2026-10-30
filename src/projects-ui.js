@@ -159,7 +159,7 @@ export async function projectDirectory({ api, shell, audience }) {
       link("Open project packs & results ↗", `/app/projects/${p.id}`),
       link(
         "Open batch history ↗",
-        `/app/batches?project=${p.id}#batch-history`,
+        `/app/batches?project=${p.id}#batch-history-section`,
       ),
       link(
         "Download individual assets ↗",

@@ -347,6 +347,15 @@ async function main() {
     else if (/^\/app\/projects\/[a-f0-9-]{36}$/.test(location.pathname))
       await projectPage(location.pathname.split("/").pop());
     else await projectsPage();
+    // Workspace sections arrive after session/API reads, after the browser's
+    // initial fragment navigation has already run. Resolve that intent now.
+    if (location.hash) {
+      let target;
+      try {
+        target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      } catch { /* Ignore malformed fragments without interrupting the page. */ }
+      target?.scrollIntoView({ block: "start", behavior: "auto" });
+    }
   } catch (error) {
     if (error.status === 401) {
       location.assign("/account/signin");

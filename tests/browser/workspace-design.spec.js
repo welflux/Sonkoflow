@@ -259,3 +259,9 @@ for (const width of [320, 768, 1024]) {
     await expect(page.getByRole('status')).toContainText('Your profile has been saved');
   });
 }
+
+test('cross-page upload links reach the photograph dropzone after asynchronous project loading', async ({page}) => {
+ await workspaceFixture(page);
+ await page.goto(`/app/projects/${projectId}#dropzone`);
+ await expect(page.locator('#dropzone')).toBeInViewport();
+});

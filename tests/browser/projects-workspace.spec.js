@@ -257,6 +257,7 @@ test("archive requires confirmation, restore is available, quick links preserve 
   await page
     .getByRole("button", { name: "Production exports", exact: true })
     .click();
+  await expect(page.getByRole("link", { name: "Open batch history ↗", exact: true })).toHaveAttribute("href", `/app/batches?project=${ids[0]}#batch-history-section`);
   await expect(page.locator("#project-exports")).toContainText(
     "A full-project archive is not available",
   );
