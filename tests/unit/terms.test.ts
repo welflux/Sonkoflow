@@ -37,7 +37,7 @@ test("published terms deliver legal metadata and 24 sections while unfinished le
     (await request(app).get("/sitemap.xml")).text,
     /<loc>https:\/\/sonkoflow.com\/terms<\/loc>/,
   );
-  for (const path of ["/cookies", "/legal"]) {
+  for (const path of ["/legal"]) {
     const other = await request(app).get(path);
     assert.equal(other.headers["x-robots-tag"], "noindex, nofollow");
     assert.match(other.text, /Document not yet published/);

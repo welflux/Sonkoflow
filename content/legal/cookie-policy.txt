@@ -1,0 +1,154 @@
+SONKOFLOW
+COOKIE POLICY
+Effective Date: 30 October 2026
+Last Updated: 30 October 2026
+1. INTRODUCTION
+This Cookie Policy explains how SONKOFLOW ("we", "us", "our" or the "Company") uses cookies and similar technologies when you visit or interact with our website and digital services at https://sonkoflow.com.
+SONKOFLOW is operated by AaronPrime PTY LTD, a company registered in the Republic of South Africa.
+Cookies help websites function correctly, maintain secure sessions, remember preferences and, where enabled, understand how visitors interact with online services.
+This Policy explains the types of cookies that may be used, their purposes and the choices available to you.
+This Policy should be read together with our Privacy Policy and Terms & Conditions.
+2. WHAT ARE COOKIES?
+Cookies are small text files that websites may store on your browser or device when you visit a website.
+They allow a website to recognise a browser or device and retain certain information between visits or during a browsing session.
+Depending on their purpose, cookies may:
+Maintain account login sessions.
+Support website security.
+Remember user preferences.
+Improve website functionality.
+Measure website performance.
+Help understand visitor behaviour.
+Support advertising and marketing activities, where applicable.
+Cookies do not automatically provide access to all information stored on your device.
+3. TYPES OF COOKIES WE MAY USE
+SONKOFLOW may use the following categories of cookies, depending on the technologies implemented on the website.
+3.1 Strictly Necessary Cookies
+These cookies are required for essential website and application functionality.
+They may support:
+User authentication.
+Account login sessions.
+Security and fraud prevention.
+Session management.
+Essential navigation and application functionality.
+Protection against unauthorised access.
+Strictly necessary cookies cannot generally be disabled through a website preference centre without affecting essential functionality.
+3.2 Functional Cookies
+Functional cookies allow the website to remember certain preferences and settings.
+Depending on the features implemented, these may include:
+User interface preferences.
+Language preferences.
+Previously selected settings.
+Other convenience-related preferences.
+Disabling these cookies may affect certain personalised website features.
+3.3 Analytics and Performance Cookies
+If analytics tools are implemented, these cookies may help us understand how visitors interact with SONKOFLOW.
+They may collect information such as:
+Pages visited.
+Time spent on pages.
+Navigation patterns.
+Browser and device information.
+General website performance information.
+Interaction with website features.
+We may use this information to understand website performance and improve the user experience.
+Where required by applicable law, analytics cookies will only be activated after the appropriate consent has been obtained.
+3.4 Marketing and Advertising Cookies
+If advertising or marketing technologies are implemented, these cookies may be used to:
+Measure advertising performance.
+Understand interactions with promotional campaigns.
+Support relevant advertising.
+Measure conversions.
+Avoid repeatedly displaying the same advertisements, where supported.
+Marketing cookies are not essential to the operation of SONKOFLOW.
+Where required by applicable law, these cookies will only be activated after the appropriate consent has been obtained.
+4. FIRST-PARTY AND THIRD-PARTY COOKIES
+4.1 First-Party Cookies
+First-party cookies are placed directly by SONKOFLOW or through technologies operating on our behalf.
+They may be used to support account functionality, security, session management and website preferences.
+4.2 Third-Party Cookies
+Certain services integrated into SONKOFLOW may use their own cookies or similar technologies.
+Depending on the services actually implemented, these may relate to:
+Website analytics.
+Authentication services.
+Payment-related functionality.
+Security and fraud prevention.
+Embedded third-party content.
+Marketing and advertising tools.
+Third-party providers may process information in accordance with their own privacy policies and applicable contractual arrangements.
+We do not control all cookies or tracking technologies operated independently by third-party providers.
+5. SIMILAR TRACKING TECHNOLOGIES
+In addition to cookies, SONKOFLOW or its service providers may use other technologies where implemented and legally permitted.
+These may include:
+Local storage.
+Session storage.
+Tracking pixels.
+Web beacons.
+Similar browser-based technologies.
+Such technologies may support authentication, preferences, performance measurement and other website functionality.
+Where these technologies are subject to consent requirements, we will apply the appropriate consent mechanisms.
+6. HOW WE USE COOKIES
+Depending on the cookies and technologies implemented, we may use them to:
+6.1. Maintain secure access to user Accounts.
+6.2. Support login and session functionality.
+6.3. Protect the website and Services against suspicious or malicious activity.
+6.4. Remember relevant user preferences.
+6.5. Improve website navigation and functionality.
+6.6. Understand website performance and visitor interactions, where analytics are enabled.
+6.7. Measure marketing and advertising activities, where applicable.
+6.8. Identify technical issues and improve the reliability of the Services.
+We aim to use cookies only for purposes that are relevant to the operation and improvement of SONKOFLOW.
+7. COOKIE CONSENT AND YOUR CHOICES
+Where applicable law requires consent before placing or accessing non-essential cookies or similar technologies, SONKOFLOW will request the appropriate consent.
+Depending on the available cookie preference controls, you may be able to:
+Accept all optional cookies.
+Reject optional cookies.
+Accept or reject individual cookie categories.
+Change your cookie preferences.
+Withdraw previously given consent.
+Strictly necessary cookies may remain active because they are required for essential website functionality.
+Your choices concerning optional cookies should not unnecessarily prevent access to core website services.
+Where applicable, we will maintain records of cookie consent and preference changes.
+8. HOW TO MANAGE COOKIES THROUGH YOUR BROWSER
+Most modern web browsers allow you to manage cookies through their privacy or security settings.
+You may be able to:
+View cookies stored on your device.
+Delete existing cookies.
+Block some or all cookies.
+Restrict third-party cookies.
+Configure notifications when websites attempt to store cookies.
+Please note that disabling certain cookies may affect login sessions, saved preferences and other website functionality.
+For detailed instructions, consult the help documentation for your browser.
+9. DATA PROTECTION AND PRIVACY
+Information collected through cookies and similar technologies may constitute personal information depending on the circumstances.
+Where applicable, our processing of such information is governed by our Privacy Policy and relevant data-protection legislation, including the Protection of Personal Information Act 4 of 2013 (POPIA).
+We aim to ensure that personal information collected through cookies is handled responsibly and only for appropriate purposes.
+Further information about how we collect, use, store and protect personal information is available in our Privacy Policy.
+10. INTERNATIONAL DATA PROCESSING
+Some third-party providers used by SONKOFLOW may operate outside South Africa.
+Where cookies or similar technologies result in personal information being transferred internationally, we will take reasonable steps to ensure that applicable legal requirements, including Section 72 of POPIA where relevant, are satisfied.
+Third-party providers may also apply their own international privacy and data-protection arrangements.
+11. COOKIE RETENTION
+Cookies may be classified according to how long they remain on your device.
+Session cookies: These are generally removed when you close your browser.
+Persistent cookies: These remain on your device for a defined period or until they are deleted.
+The retention period depends on the purpose and configuration of the relevant cookie.
+We aim to avoid retaining cookie-related information for longer than reasonably necessary for its intended purpose, subject to applicable legal requirements.
+12. CHANGES TO THIS COOKIE POLICY
+We may update this Cookie Policy to reflect changes in:
+Website functionality.
+Cookies and tracking technologies used.
+Third-party services.
+Privacy and data-protection requirements.
+Our business and operational practices.
+The latest version will be published at https://sonkoflow.com with an updated revision date.
+We encourage visitors to review this Policy periodically.
+13. CONTACT INFORMATION
+If you have questions about this Cookie Policy or how SONKOFLOW uses cookies and similar technologies, please contact us:
+SONKOFLOW
+Operated by AaronPrime PTY LTD
+Website: https://sonkoflow.com
+Email: hello@sonkoflow.com
+Country: Republic of South Africa
+Please use the subject line Cookie Policy Enquiry – SONKOFLOW when contacting us.
+
+© 2026 SONKOFLOW. All rights reserved.
+A product of AaronPrime PTY LTD.

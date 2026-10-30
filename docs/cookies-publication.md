@@ -1,0 +1,11 @@
+# Cookie Policy publication — 30 October 2026
+
+The `/cookies` placeholder now contains the user's supplied policy, with 13 main sections and six subsections. The source is retained in `content/legal/cookie-policy.txt`. Only the requested effective-date and revision-date placeholders are replaced by **30 October 2026**. Main headings use sentence case; substantive wording, numbered clauses, conditional descriptions, company details and contact instructions are preserved. Browser checks compare every supplied paragraph, subsection and numbered clause against the rendered policy.
+
+The page reuses the published legal reading layout and progressive reading controls. A Cookie-page-only stylesheet defines the subsection hierarchy without changing the existing legal documents. Desktop section navigation, a collapsible mobile index, reading-position indication, legal navigation and browser printing / saving as PDF are available. All policy content is static HTML and remains readable without scripts. Inline references link to the published Privacy Policy and Terms & Conditions. The contact shortcut uses the supplied subject line, Cookie Policy Enquiry – SONKOFLOW; ordinary inline email links remain available.
+
+Cookie-specific canonical, description, social metadata and WebPage/BreadcrumbList structured data are included. Publication and modification dates are 2026-10-30. `/cookies` is added to the sitemap and removed from the legal-placeholder noindex list. Only Legal Information remains an unpublished legal placeholder. Existing Terms and Privacy content and styling are unchanged.
+
+This change publishes the supplied policy only. It does not add analytics, advertising, tracking, a consent banner, a preference centre, new cookies or storage keys. It does not alter authentication, billing or image processing. Conditional statements in the supplied policy remain conditional; no cookie names, providers or lifetimes are invented.
+
+Validation: production build/TypeScript; six browser checks covering all supplied content, 13 sections, six subsections, anchor/contact/policy links, printing, no-script access and 320px layout; eleven legal-publication, SEO and authentication-origin regression checks; visual checks at 1440, 768, 390 and 320 pixels and an A4 print preview.

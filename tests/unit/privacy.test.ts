@@ -37,7 +37,7 @@ test("published privacy policy delivers legal metadata and 19 sections while unf
     (await request(app).get("/sitemap.xml")).text,
     /<loc>https:\/\/sonkoflow.com\/privacy<\/loc>/,
   );
-  for (const path of ["/cookies", "/legal"]) {
+  for (const path of ["/legal"]) {
     const other = await request(app).get(path);
     assert.equal(other.headers["x-robots-tag"], "noindex, nofollow");
     assert.match(other.text, /Document not yet published/);
