@@ -43,7 +43,7 @@ async function setup(page, options = {}) {
       body = {
         projects: options.noProjects
           ? []
-          : [{ id: project, name: "Product collection" }],
+          : options.projectChoices || [{ id: project, name: "Product collection" }],
       };
     else if (path === "/api/brands/capabilities")
       body = { available: !!options.brand };
@@ -183,7 +183,7 @@ async function setup(page, options = {}) {
     }
     await route.fulfill({ json: body });
   });
-  await page.goto("/app/batches");
+  await page.goto(options.path || "/app/batches");
   return { ...state, state, releaseCap, releaseUpload };
 }
 async function nameBatch(page) {
@@ -636,4 +636,12 @@ test("saved Brand Studio direction is passed through the existing batch quote an
   expect(state.uploads).toHaveLength(1);
   expect(state.creates).toHaveLength(0);
   expect(state.errors).toEqual([]);
+});
+
+
+test("project directory bulk links preselect only an existing project and never start work", async ({page}) => {
+ const target="99999999-9999-4999-8999-999999999999";
+ const f=await setup(page,{path:`/app/batches?project=${target}`,projectChoices:[{id:project,name:"First collection"},{id:target,name:"Selected campaign"}]});
+ await expect(page.locator('select[name="project"]')).toHaveValue(target);
+ expect(f.state.uploads).toEqual([]);
 });

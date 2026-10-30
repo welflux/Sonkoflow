@@ -3,6 +3,7 @@ import { profilePage as renderProfilePage } from "./profile-ui.js";
 import { accountPage as renderAccountPage } from "./auth-ui.js";
 import { checkoutPage, billingPage, welcomePage } from "./billing-ui.js";
 import { libraryPage } from "./library-ui.js";
+import { projectDirectory } from "./projects-ui.js";
 import { batchesPage, batchPage } from "./batches-ui.js";
 import { brandStudio } from "./brand-ui.js";
 import { packEditor, packResult, projectPacks } from "./packs-ui.js";
@@ -103,49 +104,7 @@ function shell(active) {
   return document.querySelector("#page");
 }
 async function projectsPage() {
-  const page = shell("projects");
-  page.innerHTML =
-    '<div class="page-heading"><div><p class="eyebrow">Your creative home</p><h1>Your projects<span class="heading-dot">.</span></h1><p>Keep original photographs organized around your work.</p></div></div><div id="page-notice" class="notice"></div><section class="panel compact-form"><h2>Create a project</h2><form><div class="inline-row"><label>Project name<input name="name" required maxlength="100" placeholder="e.g. Autumn collection"></label><label>Workflow<select name="audience"><option value="ecommerce">E-commerce products</option><option value="professional">Professional imagery</option><option value="individual">Personal photographs</option></select></label></div><div class="notice"></div><button type="submit">Create project</button></form></section><h2 class="section-title">Your collections</h2><div id="projects" aria-live="polite"></div>';
-  page.querySelector("select").value = profile.audience;
-  bindForm(page.querySelector("form"), async (data) => {
-    await api("/projects", {
-      method: "POST",
-      body: JSON.stringify(Object.fromEntries(data)),
-    });
-    await projectsPage();
-  });
-  const result = await api("/projects");
-  const list = page.querySelector("#projects");
-  if (!result.projects.length) {
-    list.innerHTML =
-      '<div class="empty"><span class="empty-art" aria-hidden="true">▱</span><h2>Your next chapter starts here.</h2><p>Give it a name. Make a little space.<br>Create your first project using the form above.</p></div>';
-    return;
-  }
-  list.className = "project-grid";
-  for (const project of result.projects) {
-    const card = document.createElement("article");
-    card.className = `project-card audience-${project.audience}`;
-    const art = document.createElement("div");
-    art.className = "project-art";
-    art.innerHTML = icon(
-      project.audience === "ecommerce"
-        ? "grid"
-        : project.audience === "professional"
-          ? "person"
-          : "image",
-    );
-    art.setAttribute("aria-hidden", "true");
-    const tag = document.createElement("span");
-    tag.className = "tag";
-    tag.textContent = audienceNames[project.audience];
-    const link = document.createElement("a");
-    link.href = `/app/projects/${project.id}`;
-    link.textContent = project.name;
-    const date = document.createElement("p");
-    date.textContent = `Created ${new Date(project.created_at).toLocaleDateString()}`;
-    card.append(art, tag, link, date);
-    list.append(card);
-  }
+  return projectDirectory({ api, shell, audience: profile.audience });
 }
 async function projectPage(id) {
   const page = shell("projects");
@@ -368,7 +327,7 @@ async function main() {
     else if (location.pathname === "/app/library")
       await libraryPage(api, shell);
     else if (location.pathname === "/app/batches")
-      await batchesPage(api, shell);
+      await batchesPage(api, shell, new URLSearchParams(location.search).get("project"));
     else if (/^\/app\/batches\/[a-f0-9-]{36}$/.test(location.pathname))
       await batchPage(api, shell, location.pathname.split("/").pop());
     else if (location.pathname === "/app/brands") await brandStudio(api, shell);

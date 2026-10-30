@@ -52,7 +52,9 @@ async function workspaceFixture(
       body = {
         profile: { display_name: "Creative owner", audience: "ecommerce" },
       };
-    else if (path === "/api/projects") {
+    else if (path === "/api/projects/directory") {
+      body = { projects: state.projects.map(p => ({...p, archived:false, metadata_available:true, asset_count:0, last_activity_at:p.created_at, last_operation:null})) };
+    } else if (path === "/api/projects") {
       if (request.method() === "POST")
         state.projects.push({
           id: projectId,
@@ -108,8 +110,9 @@ test("empty projects, create flow, navigation, and long names remain usable", as
   const state = await workspaceFixture(page, { empty: true });
   await page.goto("/app");
   await expect(
-    page.getByRole("heading", { name: "Your next chapter starts here." }),
+    page.getByRole("heading", { name: "Create your first project" }),
   ).toBeVisible();
+  await page.locator("#project-new").click();
   await page.getByLabel("Project name").fill("Autumn collection");
   await page.getByRole("button", { name: "Create project" }).click();
   await expect(
