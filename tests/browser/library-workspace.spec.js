@@ -258,6 +258,12 @@ test("asset ledger is the default, filters are compact and project governance is
     "border-radius",
     "6px",
   );
+  if (page.viewportSize().width > 1024) {
+    const sidebar = await page.locator(".sidebar").boundingBox();
+    const active = await page.locator(".sidebar a[aria-current=page]").boundingBox();
+    expect(active.x - sidebar.x).toBe(8);
+    expect(sidebar.x + sidebar.width - active.x - active.width).toBe(9); // 8px inset + 1px divider
+  }
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -309,17 +315,26 @@ test("selection persists across views and density changes; clipboard and private
   page,
 }) => {
   const s = await fixture(page);
+  await expect(page.locator("#library-density")).toBeHidden();
+  const rowHeight = await page.locator(".library-ledger tbody tr").first().evaluate(el => el.getBoundingClientRect().height);
   await select(page);
   await expect(page.locator("#library-count")).toHaveText("1 selected");
   await page.getByRole("button", { name: "Grid view", exact: true }).click();
   await expect(page.locator("#library-results")).toHaveClass("library-grid");
   await expect(page.locator(`[data-asset-id="${image}"] input`)).toBeChecked();
+  await expect(page.locator("#library-density")).toBeVisible();
+  await expect(page.locator("#library-grid-view")).toHaveCSS("background-color", "rgb(20, 47, 62)");
+  await expect(page.locator("#library-grid-view")).toHaveCSS("color", "rgb(255, 255, 255)");
+  await expect(page.locator("#library-grid-view")).toHaveCSS("border-radius", "6px");
   await page.locator("#library-density").fill("88");
   await expect(page.locator("#library-results")).toHaveCSS(
-    "--library-thumb",
-    "88px",
+    "--library-gallery-width",
+    "308px",
   );
   await page.getByRole("button", { name: "List view", exact: true }).click();
+  await expect(page.locator("#library-density")).toBeHidden();
+  await expect(page.locator("#library-list-view")).toHaveCSS("background-color", "rgb(20, 47, 62)");
+  expect(await page.locator(".library-ledger tbody tr").first().evaluate(el => el.getBoundingClientRect().height)).toBe(rowHeight);
   await page
     .getByRole("button", {
       name: "Copy asset ID for Product linen.webp",

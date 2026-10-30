@@ -316,10 +316,11 @@
   width: 17px;
   height: 17px;
 }
-.library-view-switch button[aria-pressed="true"] {
-  background: var(--sky-light);
-  color: var(--ink);
-  border-color: var(--sky-dark);
+.library-workspace .library-view-switch button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--white);
+  border-color: var(--ink);
+  border-radius: 6px !important;
   z-index: 1;
 }
 .library-batch-menu {
