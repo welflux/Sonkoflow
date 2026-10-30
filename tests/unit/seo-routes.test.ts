@@ -57,7 +57,7 @@ test("indexable public pages serve real HTML with one H1, self canonical URLs, s
     );
   }
 });
-test("sitemap contains only live canonical marketing pages and robots refers to its real URL", async () => {
+test("sitemap contains only live canonical published pages and robots refers to its real URL", async () => {
   const app = createApp(null),
     sitemap = await request(app).get("/sitemap.xml"),
     robots = await request(app).get("/robots.txt");
@@ -71,7 +71,7 @@ test("sitemap contains only live canonical marketing pages and robots refers to 
   );
   assert.deepEqual(
     urls,
-    pages.map((p) => "https://sonkoflow.com" + p),
+    [...pages, "/terms"].map((p) => "https://sonkoflow.com" + p),
   );
   assert.ok(
     urls.every(
@@ -100,7 +100,6 @@ test("private and placeholder routes remain nonindexable without weakening authe
     "/account/signin",
     "/account/confirm",
     "/api/session",
-    "/terms",
     "/privacy",
   ]) {
     const r = await request(app).get(path);

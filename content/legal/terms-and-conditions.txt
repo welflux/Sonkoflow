@@ -1,0 +1,213 @@
+SONKOFLOW
+TERMS & CONDITIONS
+Effective Date: 30 October 2026
+Last Updated: 30 October 2026
+These Terms and Conditions ("Terms") govern access to and use of the SONKOFLOW website, applications, software, image-processing services and related digital products (collectively, the "Services").
+SONKOFLOW is operated by AaronPrime PTY LTD ("Company", "we", "us" or "our").
+By accessing our website, creating an account, purchasing a subscription or credit package, uploading content, or using any part of our Services, you acknowledge that you have read, understood and agreed to these Terms.
+If you do not agree with these Terms, you must not access or use the Services.
+1. COMPANY INFORMATION
+SONKOFLOW is a software-as-a-service platform providing AI-powered image enhancement and commercial image-production tools.
+The contracting service provider is:
+Legal entity: AaronPrime PTY LTD
+Trading name: SONKOFLOW
+Legal status: Private Company
+Country of registration: Republic of South Africa
+Company registration number: 2021 / 592876 / 07
+Website: https://sonkoflow.com
+Contact email: hello@sonkoflow.com
+2. DEFINITIONS
+For purposes of these Terms:
+Account means a registered user profile that provides access to SONKOFLOW.
+User means any individual or authorised representative accessing or using the Services.
+User Content means images, photographs, files, text, prompts, instructions and other materials uploaded, submitted or supplied by a User.
+Generated Content means images, enhancements, variations or other outputs produced by the Services in response to User Content and processing instructions.
+Subscription means a recurring paid plan providing access to specified features, allowances and usage limits for a defined billing period.
+Credit Pack means a separately purchased allocation of image-processing credits or usage capacity, as described at the time of purchase.
+Services means the SONKOFLOW website, applications, AI image-processing capabilities, account facilities, storage and associated functionality.
+3. ELIGIBILITY AND ACCOUNT REGISTRATION
+3.1. You must be at least 18 years old and legally capable of entering into a binding agreement to create an account or purchase Services.
+3.2. If you access SONKOFLOW on behalf of a company or other organisation, you confirm that you are authorised to accept these Terms on its behalf.
+3.3. You agree to provide accurate, complete and current registration and account information.
+3.4. You are responsible for maintaining the confidentiality of your login credentials and for activities conducted through your Account.
+3.5. You must notify us promptly if you become aware of unauthorised access to your Account or any suspected security incident involving your credentials.
+3.6. Accounts must not be sold, transferred, shared or made available to unauthorised individuals in violation of the applicable subscription or account restrictions.
+3.7. We reserve the right to request reasonable information to verify account ownership, investigate suspected misuse or protect the security of the Services.
+4. DESCRIPTION AND SCOPE OF SERVICES
+4.1. SONKOFLOW provides digital image-processing tools designed to help users enhance, improve and prepare images for personal, creative and commercial applications.
+4.2. Depending on the features available under a particular plan, the Services may include:
+AI-powered image enhancement.
+Portrait enhancement.
+Product image enhancement.
+Multiple product image outputs.
+Product image quality review and controlled retries.
+Bulk image processing.
+Image projects, galleries and saved results.
+Image downloads and related account functionality.
+4.3. The features, output formats, processing allowances, file limits and availability may differ between subscription plans and separately purchased Credit Packs.
+4.4. The precise features and limitations applicable to your purchase will be presented on the relevant pricing, checkout or account interface.
+4.5. We may improve, update, modify or discontinue individual features where reasonably necessary for security, technical maintenance, product development, legal compliance or operational reasons.
+4.6. We will not represent a feature as available where it has not actually been implemented or made available to the relevant user.
+5. USER CONTENT AND OWNERSHIP
+5.1. You retain ownership of the images, photographs, files and other materials that you upload to SONKOFLOW, subject to any rights belonging to third parties.
+5.2. You confirm that you own the User Content or have obtained all necessary rights, permissions, licences and authorisations required to upload, process and use it through the Services.
+5.3. You must not upload content that infringes another person's copyright, trademark, privacy, publicity or other legal rights.
+5.4. By submitting User Content, you grant SONKOFLOW a limited, non-exclusive, worldwide, royalty-free licence to host, store, reproduce, transmit and process that content solely as reasonably necessary to:
+Provide the requested Services.
+Generate and deliver your requested outputs.
+Maintain and secure your Account.
+Troubleshoot errors and provide technical support.
+Prevent fraud, abuse and security incidents.
+Comply with applicable legal obligations.
+5.5. This licence does not transfer ownership of your User Content to SONKOFLOW.
+5.6. We will not claim ownership of your original photographs or User Content merely because you process them through our platform.
+5.7. We will not use private User Content for public promotion, advertising or portfolio demonstrations without an appropriate legal basis and any required permission.
+5.8. Our handling, retention and deletion of User Content and personal information are further explained in our Privacy Policy.
+6. AI-GENERATED AND ENHANCED CONTENT
+6.1. SONKOFLOW uses artificial intelligence and automated image-processing technologies to produce enhanced or modified visual outputs.
+6.2. You acknowledge that AI-generated or enhanced results may differ from the original image and may contain inaccuracies, unexpected alterations, visual inconsistencies or imperfections.
+6.3. We do not guarantee that every output will meet your subjective expectations, reproduce every original detail or be suitable for every commercial purpose.
+6.4. You are responsible for reviewing Generated Content before publishing, distributing, printing, selling or otherwise using it.
+6.5. You must independently verify that the final output accurately represents any product, brand, person or item being advertised or sold.
+6.6. SONKOFLOW does not guarantee that generated images will preserve every product characteristic, including labels, packaging text, dimensions, colours, materials or other identifying details.
+6.7. You are responsible for ensuring that your use of Generated Content complies with applicable copyright, trademark, advertising, consumer-protection, privacy and other relevant laws.
+6.8. Subject to third-party rights, applicable law and these Terms, SONKOFLOW does not claim ownership of Generated Content solely because it was produced using the Services.
+6.9. AI outputs may not qualify for copyright protection in every jurisdiction. We make no representation that every Generated Content output is independently copyrightable or free from third-party rights.
+7. ACCEPTABLE USE AND PROHIBITED ACTIVITIES
+You agree to use SONKOFLOW lawfully and responsibly.
+You must not:
+7.1. Upload, generate, process or distribute content that is unlawful or infringes the rights of another person.
+7.2. Use the Services to impersonate another person, misrepresent identity or create deceptive commercial representations.
+7.3. Use the Services to create fraudulent product images, misleading advertisements or deceptive representations of goods and services.
+7.4. Upload malicious software, harmful code or files intended to compromise the platform or other users.
+7.5. Attempt to gain unauthorised access to SONKOFLOW systems, databases, accounts, infrastructure or security controls.
+7.6. Reverse engineer, decompile, copy, reproduce or attempt to extract the underlying source code, models, systems or proprietary technology, except where such restriction is prohibited by applicable law.
+7.7. Circumvent subscription restrictions, processing limits, credit controls, security measures or usage quotas.
+7.8. Use automated scripts, bots or other mechanisms to abuse, overload, scrape or interfere with the Services without our prior written authorisation.
+7.9. Resell, sublicense or commercially redistribute access to SONKOFLOW itself without our written permission.
+7.10. Use the Services in a manner that violates applicable laws or exposes SONKOFLOW or other users to legal, financial or security risks.
+We may investigate suspected violations and take proportionate action, including restricting access, suspending an Account or terminating access where justified.
+Any action will remain subject to applicable consumer-protection laws and other non-excludable legal rights.
+8. SUBSCRIPTIONS, CREDIT PACKS AND PAYMENTS
+8.1. SONKOFLOW may offer free access, recurring paid subscriptions and separately purchased one-time Credit Packs.
+8.2. The features, prices, billing periods, processing allowances and other conditions applicable to each offer will be displayed before purchase.
+8.3. By purchasing a Subscription, you authorise the applicable payment provider to collect the recurring subscription fees according to the selected billing interval, subject to the payment provider's terms and applicable law.
+8.4. One-time Credit Packs are separate purchases and do not automatically constitute recurring subscriptions.
+8.5. Credit Pack allowances, expiry periods, restrictions and applicable usage conditions will be disclosed at the time of purchase.
+8.6. Processing allowances are subject to the applicable plan limits and may be consumed by successful processing, retries or other chargeable operations as disclosed within the platform.
+8.7. We will not knowingly charge users for processing operations that our published billing rules state are not chargeable.
+8.8. Payments may be processed through third-party payment providers. Their payment-processing terms may also apply.
+8.9. Prices, applicable taxes, billing currency and any additional charges will be disclosed before you confirm a purchase, to the extent required by applicable law.
+8.10. We do not receive or store complete payment-card details where those details are handled directly by the relevant payment provider.
+8.11. Your subscription or Credit Pack purchase will be reflected in your Account after payment has been confirmed through the applicable payment verification process.
+8.12. A payment page redirect or unverified browser notification alone does not constitute confirmation that a payment has been successfully completed.
+9. SUBSCRIPTION RENEWAL AND CANCELLATION
+9.1. Paid Subscriptions renew automatically at the end of each billing period unless cancelled before the next renewal, subject to the terms displayed when you subscribe.
+9.2. You may cancel a Subscription through the available account or subscription-management facilities, or by contacting our support team where self-service cancellation is unavailable.
+9.3. Cancellation will prevent future recurring renewals once successfully processed.
+9.4. Unless applicable law requires otherwise, cancellation does not automatically reverse payments already properly processed for a previous billing period.
+9.5. Access to paid features will ordinarily continue until the end of the paid period, unless a different arrangement is clearly disclosed or required by law.
+9.6. Cancelling a Subscription does not automatically cancel separately purchased Credit Packs. Their applicable conditions remain in effect.
+9.7. Nothing in this section removes any statutory cancellation, cooling-off or refund right that applies to your transaction.
+10. REFUNDS AND CONSUMER RIGHTS
+10.1. Refund requests will be assessed in accordance with applicable law, the nature of the purchase and the circumstances of the request.
+10.2. Where SONKOFLOW is required by law to provide a refund, cancellation or other remedy, we will comply with the applicable legal requirements.
+10.3. Digital services, subscriptions and Credit Packs may be subject to specific legal rules concerning cancellation, commencement of service and refunds.
+10.4. We do not intend to exclude or restrict any consumer right that cannot lawfully be excluded or restricted.
+10.5. Where a payment has been duplicated, incorrectly charged or processed without authorisation, you may contact our support team to request an investigation.
+10.6. Refunds approved by SONKOFLOW will ordinarily be returned through the original payment method where reasonably possible, subject to payment-provider procedures and applicable law.
+10.7. Nothing in this section should be interpreted as removing any cooling-off or other statutory right available under the Electronic Communications and Transactions Act 25 of 2002, the Consumer Protection Act 68 of 2008 or other applicable legislation.
+11. SERVICE AVAILABILITY AND MAINTENANCE
+11.1. We aim to provide a reliable and accessible service but do not guarantee uninterrupted or error-free operation.
+11.2. Access may occasionally be interrupted by maintenance, software updates, infrastructure failures, security incidents, network problems or circumstances outside our reasonable control.
+11.3. AI processing may be affected by third-party infrastructure, processing capacity, provider availability and technical limitations.
+11.4. We will take reasonable steps to restore affected Services and address significant technical issues.
+11.5. We do not guarantee a particular processing speed, completion time or uninterrupted availability unless expressly agreed in writing.
+11.6. Where a material interruption affects paid Services, any remedy will be determined in accordance with applicable law and the circumstances involved.
+12. DATA STORAGE AND USER RESPONSIBILITIES
+12.1. SONKOFLOW may provide facilities for storing projects, uploaded images, processed outputs and related account information.
+12.2. Storage availability and retention may depend on your plan, technical limits and the policies disclosed within the platform.
+12.3. You remain responsible for retaining independent copies of important original images and downloaded outputs.
+12.4. We recommend downloading important results rather than relying exclusively on continued availability within your Account.
+12.5. We will take reasonable technical and organisational measures to protect stored information, as further described in our Privacy Policy.
+12.6. We do not guarantee that content will remain available indefinitely, particularly where an Account is deleted, a retention period expires or deletion is required by law.
+13. INTELLECTUAL PROPERTY RIGHTS
+13.1. SONKOFLOW, including its software, platform design, branding, logos, website content, interface elements, documentation, proprietary systems and underlying technology, is owned by or licensed to AaronPrime PTY LTD.
+13.2. Except where expressly permitted, you may not copy, modify, distribute, publish, sell, sublicense or commercially exploit SONKOFLOW's proprietary materials.
+13.3. Access to the Services grants you a limited, revocable, non-exclusive and non-transferable right to use the platform for its intended purposes in accordance with these Terms.
+13.4. No ownership rights in SONKOFLOW's software, branding or proprietary technology are transferred to you.
+13.5. All rights not expressly granted under these Terms are reserved by their respective owners.
+14. THIRD-PARTY SERVICES
+14.1. SONKOFLOW may rely on third-party providers for infrastructure, hosting, authentication, AI processing, storage, communications and payment processing.
+14.2. Such providers may have their own terms, privacy notices and service limitations.
+14.3. We are not responsible for independent services or websites that we do not own or control.
+14.4. Our use of third-party providers does not remove our own legal obligations concerning the Services we provide.
+14.5. Where a third-party failure affects SONKOFLOW, we will take reasonable steps to address the resulting issue within our control.
+15. ACCOUNT SUSPENSION AND TERMINATION
+15.1. You may stop using SONKOFLOW at any time and request Account deletion through the available account facilities or by contacting support.
+15.2. We may restrict, suspend or terminate an Account where reasonably necessary because of:
+A material breach of these Terms.
+Fraudulent or unauthorised activity.
+Attempts to compromise platform security.
+Repeated abuse of processing allowances.
+Unlawful use of the Services.
+A legal or regulatory requirement.
+15.3. Where reasonably practicable and legally permissible, we will provide notice and an opportunity to address a remediable breach before termination.
+15.4. We may take immediate protective action where necessary to prevent serious security risks, fraud, unlawful activity or harm to the Services or other users.
+15.5. Account termination does not remove any rights or obligations that accrued before termination.
+15.6. Any applicable refund, data-access or deletion rights remain subject to applicable law.
+16. DISCLAIMERS
+16.1. SONKOFLOW is provided on an "as available" basis, subject to the rights and protections that applicable law provides to users.
+16.2. We do not guarantee that the Services will satisfy every individual requirement or produce a particular commercial result.
+16.3. We do not guarantee increased sales, improved conversion rates, advertising performance, search rankings or business profitability as a result of using SONKOFLOW.
+16.4. Users are responsible for independently evaluating Generated Content before relying on it for commercial, advertising or business purposes.
+16.5. Nothing in these Terms excludes any warranty, guarantee or statutory protection that cannot lawfully be excluded.
+17. LIMITATION OF LIABILITY
+17.1. To the extent permitted by applicable law, SONKOFLOW will not be liable for indirect or consequential losses that are not reasonably foreseeable, including loss of anticipated profits, business opportunities or goodwill.
+17.2. We will not be responsible for losses caused by a user's failure to protect account credentials, maintain independent copies of important files or comply with these Terms, to the extent that such failure caused the loss.
+17.3. Nothing in these Terms excludes or limits liability for fraud, wilful misconduct, gross negligence, death or personal injury where such exclusion or limitation is prohibited by law.
+17.4. Nothing in this section removes consumer rights or remedies that cannot lawfully be excluded or restricted.
+17.5. Any limitation of liability must be interpreted consistently with applicable law, including the Consumer Protection Act 68 of 2008 where applicable.
+18. INDEMNITY
+18.1. To the extent permitted by applicable law, you agree to be responsible for third-party claims, losses and reasonable expenses arising directly from your unlawful use of SONKOFLOW or your infringement of another person's rights through User Content.
+18.2. This section does not apply to the extent that a claim or loss was caused by SONKOFLOW's own unlawful conduct, breach of legal obligations or other conduct for which responsibility cannot lawfully be excluded.
+18.3. We will provide reasonable notice of any claim for which we seek indemnification and allow you an appropriate opportunity to participate in its resolution.
+19. CHANGES TO THESE TERMS
+19.1. We may update these Terms from time to time to reflect changes in our Services, business operations, technology or legal obligations.
+19.2. The latest version will be published on the SONKOFLOW website with its updated revision date.
+19.3. Where a change materially affects existing users' rights or obligations, we will take reasonable steps to provide advance notice where practicable and legally required.
+19.4. Changes will not retrospectively remove rights already accrued or override mandatory legal protections.
+19.5. Continued use after an updated version takes effect will constitute acceptance only to the extent permitted by applicable law.
+20. PRIVACY AND PERSONAL INFORMATION
+20.1. Our collection, use, storage, disclosure and processing of personal information are governed by our Privacy Policy.
+20.2. SONKOFLOW aims to handle personal information in accordance with applicable data-protection laws, including the Protection of Personal Information Act 4 of 2013 (POPIA), where applicable.
+20.3. You acknowledge that using image-processing Services may require the processing of User Content and related technical information.
+20.4. Please review our Privacy Policy for further information about data processing, retention, security, user rights and contact procedures.
+21. GOVERNING LAW AND JURISDICTION
+21.1. These Terms are governed by the laws of the Republic of South Africa, subject to any mandatory consumer-protection or other laws that apply to you.
+21.2. The parties submit to the jurisdiction of the competent courts of the Republic of South Africa, subject to any non-excludable rights to bring proceedings before another competent court.
+21.3. Nothing in this section prevents a consumer from exercising mandatory rights available under the laws applicable to their transaction.
+22. DISPUTE RESOLUTION
+22.1. If you have a complaint or dispute concerning SONKOFLOW, we encourage you to contact our support team first so that we can attempt to resolve the matter informally.
+22.2. Please provide sufficient information about the issue, including relevant transaction references where applicable.
+22.3. We will make reasonable efforts to investigate and respond within a reasonable period.
+22.4. If the dispute cannot be resolved informally, either party may pursue the remedies available under applicable law.
+22.5. Nothing in this section prevents a user from approaching a competent regulator, consumer-protection authority or court.
+23. GENERAL PROVISIONS
+23.1. Entire Agreement: These Terms, together with the applicable Privacy Policy, Cookie Policy, Legal Information and purchase-specific terms, constitute the agreement governing your use of SONKOFLOW.
+23.2. Severability: If any provision is found to be invalid or unenforceable, the remaining provisions will continue to apply to the extent legally possible.
+23.3. No Waiver: Failure to enforce a provision does not constitute a permanent waiver of that provision.
+23.4. Assignment: You may not transfer your rights or obligations under these Terms without our prior written consent. We may transfer or assign our rights and obligations as part of a lawful business restructuring or transfer, subject to applicable law and the protection of users' rights.
+23.5. Force Majeure: Neither party will be responsible for a failure caused by circumstances beyond its reasonable control, provided that this provision does not remove any mandatory statutory obligations.
+23.6. Electronic Communications: You agree that notices and communications may be provided electronically where permitted by applicable law.
+23.7. Survival: Provisions that by their nature should continue after termination, including intellectual property, accrued payment obligations, liability provisions and dispute-related provisions, will continue to apply where legally permissible.
+24. CONTACT INFORMATION
+For questions, complaints, billing enquiries or requests relating to these Terms, contact:
+SONKOFLOW
+Operated by AaronPrime PTY LTD
+Website: https://sonkoflow.com
+Email: hello@sonkoflow.com
+Country: Republic of South Africa
+
+© 2026 SONKOFLOW. All rights reserved.
+A product of AaronPrime PTY LTD.
