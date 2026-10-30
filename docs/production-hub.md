@@ -1,0 +1,15 @@
+# Production Hub
+
+`/app/production-hub` is an additional private dashboard screen, linked from the shared workspace navigation. Projects remains the default workspace home. Existing server authentication, recovery-purpose redirects and the workspace's noindex/no-store behavior cover this route without server changes.
+
+The visual directory contains eleven entries: product photo enhancement, professional portraits, personal photo enhancement, lighting/background options, product image packs, bulk processing, Brand Studio, review/comparison, Image Library, Projects and downloads/exports. Category filters and keyword search run locally against this fixed inventory. It does not advertise background cutouts, vector generation, video, model training, social publishing or other unimplemented products.
+
+The hero has product/portrait/personal subject controls. Photographic cards use SonkoFlow's existing original concept artwork, with layered canvas, queue, palette, inspection and collection illustrations built in scoped HTML/CSS. Artwork is explicitly labelled as illustrative, not customer content or generated application output. The lighting slider only adjusts the illustrative warm-light overlay. It sends no request and is not an editing tool. Five pack outputs mean the existing listing, lifestyle, detail, social and wide types; no unseen product angles are promised.
+
+Subtle hero motion pauses outside the viewport. Cards enter once as they become visible. Reduced-motion preferences disable animation and preserve visible content. The page uses the established ink, sky, paper and warm orange palette, with responsive layouts and scoped sidebar insets.
+
+Editor cards open a native source-selection dialog. Only ready, non-trashed originals returned by the existing private library endpoint are offered. Library reads occur only when the picker opens; authorized bounded thumbnail reads follow. Full image content is requested only by the destination editor after the user follows its link. Original records are paginated, deduplicated and searchable within the loaded set. Existing thumbnail DOM nodes are reused across filtering, pagination and workflow changes. Closing or reopening the dialog aborts/invalidates older reads; failed requests show retry, not a misleading empty library.
+
+The picker links to existing reference editors or pack creation. An allowlisted `mode` query parameter selects a supported initial editing mode. Unknown values keep the existing audience-based default. This parameter does not grant capabilities or change provider consent, validation, allowance review, billing or generation logic. Opening a workflow never creates a job, uploads files or starts a provider request.
+
+Workflow cards link directly to the existing bulk, brand, library, project and review screens. Private WebP downloads and approved pack/batch ZIP exports retain their existing authorization and limits; no generic project ZIP endpoint is introduced. Processing availability is read from the existing capability endpoint; unavailable/unknown availability is described without enabling it.

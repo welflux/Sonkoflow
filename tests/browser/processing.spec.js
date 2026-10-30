@@ -243,3 +243,14 @@ test("a lost submission response can be safely resubmitted with the same identif
     state.submitted[1].submission_key,
   );
 });
+
+for (const requested of ['personal','portrait','product','unsupported']) {
+ test(`Production Hub editor handoff accepts only supported initial mode ${requested}`, async ({page}) => {
+  const state=await fixture(page,{enabled:false});
+  await page.goto(`/app/edit/${image}?mode=${requested}`);
+  await expect(page.getByLabel('Enhancement mode')).toHaveValue(requested==='unsupported'?'product':requested);
+  await expect(page.locator('[name=provider_consent]')).not.toBeChecked();
+  await expect(page.getByRole('button',{name:'Generate edited photograph'})).toBeDisabled();
+  expect(state.submitted).toEqual([]);
+ });
+}

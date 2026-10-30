@@ -4,6 +4,7 @@ import { accountPage as renderAccountPage } from "./auth-ui.js";
 import { checkoutPage, billingPage, welcomePage } from "./billing-ui.js";
 import { libraryPage } from "./library-ui.js";
 import { projectDirectory } from "./projects-ui.js";
+import { productionHub } from "./production-hub.js";
 import { batchesPage, batchPage } from "./batches-ui.js";
 import { brandStudio } from "./brand-ui.js";
 import { packEditor, packResult, projectPacks } from "./packs-ui.js";
@@ -22,6 +23,7 @@ const audienceNames = {
 let profile;
 const paths = {
   grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+  spark: '<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/>',
   person: '<circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/>',
   arrow: '<path d="M6 18 18 6M6 6h12v12"/>',
   image:
@@ -89,7 +91,7 @@ function accountPage() {
 }
 function shell(active) {
   releasePreview();
-  root.innerHTML = `<div class="workspace-layout"><nav class="sidebar" aria-label="Workspace"><p>Your workspace</p><a href="/app" ${active === "projects" ? 'aria-current="page"' : ""}>${icon("grid")} Projects</a><a href="/app/library" ${active === "library" ? 'aria-current="page"' : ""}>${icon("grid")} Image library</a><a href="/app/batches" ${active === "batches" ? 'aria-current="page"' : ""}>${icon("grid")} Bulk processing</a><a href="/app/brands" ${active === "brands" ? 'aria-current="page"' : ""}>${icon("grid")} Brand Studio</a><a href="/app/billing" ${active === "billing" ? 'aria-current="page"' : ""}>${icon("grid")} Plan & usage</a><a href="/app/profile" ${active === "profile" ? 'aria-current="page"' : ""}>${icon("person")} Account profile</a><a href="/">${icon("arrow")} Product website</a></nav><section class="workspace-content"><div id="page"></div></section></div>`;
+  root.innerHTML = `<div class="workspace-layout"><nav class="sidebar" aria-label="Workspace"><p>Your workspace</p><a href="/app" ${active === "projects" ? 'aria-current="page"' : ""}>${icon("grid")} Projects</a><a href="/app/production-hub" ${active === "hub" ? 'aria-current="page"' : ""}>${icon("spark")} Production Hub</a><a href="/app/library" ${active === "library" ? 'aria-current="page"' : ""}>${icon("grid")} Image library</a><a href="/app/batches" ${active === "batches" ? 'aria-current="page"' : ""}>${icon("grid")} Bulk processing</a><a href="/app/brands" ${active === "brands" ? 'aria-current="page"' : ""}>${icon("grid")} Brand Studio</a><a href="/app/billing" ${active === "billing" ? 'aria-current="page"' : ""}>${icon("grid")} Plan & usage</a><a href="/app/profile" ${active === "profile" ? 'aria-current="page"' : ""}>${icon("person")} Account profile</a><a href="/">${icon("arrow")} Product website</a></nav><section class="workspace-content"><div id="page"></div></section></div>`;
   signout.hidden = false;
   signout.onclick = async () => {
     signout.disabled = true;
@@ -324,6 +326,8 @@ async function main() {
       await billingPage(api, shell);
     else if (location.pathname === "/app/welcome")
       await welcomePage(api, shell);
+    else if (location.pathname === "/app/production-hub")
+      await productionHub(api, shell);
     else if (location.pathname === "/app/library")
       await libraryPage(api, shell);
     else if (location.pathname === "/app/batches")

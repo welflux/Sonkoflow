@@ -83,8 +83,10 @@ export async function processingEditor(api, shell, imageId) {
         ? "Prioritize the real product’s shape, colors, labels, and logos."
         : "Keep recognizable identity and original appearance.";
   };
-  select.value =
-    image.audience === "ecommerce"
+  const requestedMode = new URLSearchParams(location.search).get("mode");
+  select.value = Object.hasOwn(modes, requestedMode || "")
+    ? requestedMode
+    : image.audience === "ecommerce"
       ? "product"
       : image.audience === "professional"
         ? "portrait"

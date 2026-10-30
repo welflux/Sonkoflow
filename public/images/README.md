@@ -13,3 +13,5 @@ These images are original AI-created concept artwork for SONKOFLOW's visual iden
 New concepts were generated on 28 October 2026. The full-size WebP files and 640-pixel variants are compressed exports from the generated masters, which are kept outside the repository. Generated concepts should not be treated as guarantees of physical product accuracy or real people/organizations.
 
 Manrope is self-hosted separately in `public/fonts/` under its included SIL Open Font License. No third-party image or font host is required by the browser.
+
+The dashboard Production Hub reuses these SonkoFlow concept photographs in its visual directory and illustrative UI compositions. The lighting study is a display overlay; the pack layouts and review frames are illustrations, not actual generated before/after results. No customer photographs are included in this static showcase.
