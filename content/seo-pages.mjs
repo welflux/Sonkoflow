@@ -3,9 +3,9 @@ export const updated = "2026-10-30";
 export const corePages = [
   {
     path: "/",
-    title: "SonkoFlow — AI Commercial Image Production & Enhancement Platform",
+    title: "AI Image Enhancement for Product Photography | SonkoFlow",
     description:
-      "AI product photo editing, portrait enhancement and product image packs in one private workspace. Plan batches, save brand direction and review every result.",
+      "AI image enhancement for product photos and portraits. Create ecommerce-ready visuals, product image variations and streamlined image production with SonkoFlow.",
     image: "footwear",
     alt: "Concept product photograph of an ivory sneaker on a studio plinth",
   },

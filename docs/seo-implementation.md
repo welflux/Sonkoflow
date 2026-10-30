@@ -1,6 +1,6 @@
 # Public SEO implementation — 30 October 2026
 
-The two supplied strategy documents describe substantially the same scope. This implementation adapts them to the existing Vite/Express application and its implemented product capabilities. Public artwork, colors, account/OAuth/recovery behavior, billing activation and processing rules are preserved. The homepage now uses the requested “Every image. Made for sales.” headline with the existing italic typewriter treatment.
+The two supplied strategy documents describe substantially the same scope. This implementation adapts them to the existing Vite/Express application and its implemented product capabilities. Public artwork, colors, account/OAuth/recovery behavior, billing activation and processing rules are preserved. The homepage now uses the requested “AI Image Enhancement for Professional Product Photography” headline with the existing italic typewriter treatment on “Product Photography” only. The supporting copy describes ecommerce-ready product visuals, portraits and image variations. Homepage search and social metadata share this product-photography focus.
 
 ## Public search architecture
 

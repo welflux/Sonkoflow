@@ -8,7 +8,7 @@ test("navigation, artwork, disclosures, and layout", async ({
   await page.goto("/");
   await expect(page).toHaveTitle(/SonkoFlow/);
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    "Every image",
+    "AI Image Enhancement",
   );
   await expect(page.locator("#availability")).toContainText(
     "service activation",
@@ -184,11 +184,11 @@ test('hero phrase types repeatedly without layout shift and respects reduced mot
   await page.evaluate(() => document.fonts.ready);
   const word = page.locator('h1 em');
   const ink = word.locator('.typewriter-ink');
-  const phrase = 'sales.';
-  await expect(page.getByRole('heading', {level:1})).toHaveAccessibleName('Every image. Made for sales.');
+  const phrase = 'Product Photography';
+  await expect(page.getByRole('heading', {level:1})).toHaveAccessibleName('AI Image Enhancement for Professional Product Photography');
   const before = await word.boundingBox();
   await expect.poll(() => ink.textContent()).toBe(phrase);
-  await expect.poll(() => ink.textContent(), {timeout:8000, intervals:[100]}).toBe('');
+  await expect.poll(() => ink.textContent(), {timeout:10000, intervals:[100]}).toBe('');
   await expect.poll(async () => (await ink.textContent()).length).toBeGreaterThan(0);
   const after = await word.boundingBox();
   expect(Math.abs(before.width-after.width)).toBeLessThan(1);

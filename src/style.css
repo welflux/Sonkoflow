@@ -40,6 +40,7 @@ p {
   line-height: 1.03;
   margin-inline: auto;
   max-width: 1000px;
+  text-align: center;
 }
 .landing-hero h1 em {
   font-style: normal;
@@ -1182,4 +1183,9 @@ p {
 .landing-hero { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   .hero-tile { translate: none !important; opacity: 1 !important; }
+}
+
+/* Keep the complete animated phrase on one line on narrow phones. */
+@media (max-width: 600px) {
+  .landing-hero h1 em { font-size: clamp(24px, 8vw, 36px); }
 }
