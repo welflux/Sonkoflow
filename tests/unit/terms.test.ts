@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import request from "supertest";
 import { createApp } from "../../server/app.js";
 
-test("published terms deliver legal metadata and 24 sections while unfinished legal pages remain unpublished", async () => {
+test("published terms deliver legal metadata and 24 sections with canonical publication dates", async () => {
   const app = createApp(null);
   const response = await request(app).get("/terms");
   assert.equal(response.status, 200);
@@ -37,9 +37,4 @@ test("published terms deliver legal metadata and 24 sections while unfinished le
     (await request(app).get("/sitemap.xml")).text,
     /<loc>https:\/\/sonkoflow.com\/terms<\/loc>/,
   );
-  for (const path of ["/legal"]) {
-    const other = await request(app).get(path);
-    assert.equal(other.headers["x-robots-tag"], "noindex, nofollow");
-    assert.match(other.text, /Document not yet published/);
-  }
 });

@@ -1,0 +1,70 @@
+/* Operator details use the existing legal reading layout and brand tokens. */
+.legal-information-page .terms-dates {
+  grid-template-columns: 1fr;
+}
+.legal-information-page .terms-introduction p:last-child {
+  border: 0;
+  padding: 0;
+  background: none;
+}
+.operator-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 22px 0;
+  border: 1px solid var(--border);
+  background: var(--field-surface);
+}
+.operator-details > div {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  min-width: 0;
+}
+.operator-details > div:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+.operator-details > div:last-child {
+  grid-column: 1 / -1;
+  border: 0;
+}
+.operator-details dt {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.operator-details dd {
+  color: var(--ink);
+  font-size: 14px;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.legal-information-page .terms-bullets {
+  margin-left: 0;
+}
+.legal-policy-links {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+.legal-policy-links li {
+  padding: 17px 0;
+  border-bottom: 1px solid var(--border);
+}
+.legal-policy-links li:last-child {
+  border: 0;
+}
+@media (max-width: 600px) {
+  .operator-details {
+    grid-template-columns: 1fr;
+  }
+  .operator-details > div:nth-child(odd) {
+    border-right: 0;
+  }
+  .operator-details > div:last-child {
+    grid-column: auto;
+  }
+}
+@media print {
+  .operator-details > div {
+    break-inside: avoid;
+  }
+}

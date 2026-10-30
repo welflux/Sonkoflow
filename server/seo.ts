@@ -15,9 +15,6 @@ export function indexingHeaders(
   if (
     /^\/(?:app(?:\/|$|\.html$)|account(?:\/|$)|api(?:\/|$)|config(?:\/|$))/.test(
       req.path,
-    ) ||
-    ["/legal"].some(
-      (p) => req.path === p || req.path === p + ".html",
     )
   )
     res.set("X-Robots-Tag", "noindex, nofollow");

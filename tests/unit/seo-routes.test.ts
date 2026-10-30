@@ -71,7 +71,7 @@ test("sitemap contains only live canonical published pages and robots refers to 
   );
   assert.deepEqual(
     urls,
-    [...pages, "/terms", "/privacy", "/cookies"].map((p) => "https://sonkoflow.com" + p),
+    [...pages, "/terms", "/privacy", "/cookies", "/legal"].map((p) => "https://sonkoflow.com" + p),
   );
   assert.ok(
     urls.every(
@@ -90,7 +90,7 @@ test("sitemap contains only live canonical published pages and robots refers to 
     /Disallow: \/(?:images|assets|features|solutions)/,
   );
 });
-test("private and placeholder routes remain nonindexable without weakening authentication or inventing legacy content", async () => {
+test("private routes remain nonindexable without weakening authentication or inventing legacy content", async () => {
   const app = createApp(null);
   for (const path of [
     "/app",
@@ -100,7 +100,6 @@ test("private and placeholder routes remain nonindexable without weakening authe
     "/account/signin",
     "/account/confirm",
     "/api/session",
-    "/legal",
   ]) {
     const r = await request(app).get(path);
     assert.equal(r.headers["x-robots-tag"], "noindex, nofollow", path);
