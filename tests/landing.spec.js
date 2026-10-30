@@ -1,11 +1,12 @@
 import { test, expect } from "@playwright/test";
+import { featurePages } from "../content/seo-pages.mjs";
 test("navigation, artwork, disclosures, and layout", async ({
   page,
 }, testInfo) => {
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
-  await expect(page).toHaveTitle(/SONKOFLOW/);
+  await expect(page).toHaveTitle(/SonkoFlow/);
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Every image",
   );
@@ -32,6 +33,7 @@ test("navigation, artwork, disclosures, and layout", async ({
         href.startsWith("/app/") ||
         href.startsWith("/pricing#") ||
         [
+          ...featurePages.map(page => page.path),
           "/",
           "/app",
           "/pricing",
@@ -182,8 +184,8 @@ test('hero phrase types repeatedly without layout shift and respects reduced mot
   await page.evaluate(() => document.fonts.ready);
   const word = page.locator('h1 em');
   const ink = word.locator('.typewriter-ink');
-  const phrase = 'what’s next.';
-  await expect(page.getByRole('heading', {level:1})).toHaveAccessibleName('Every image. Made for what’s next.');
+  const phrase = 'sales.';
+  await expect(page.getByRole('heading', {level:1})).toHaveAccessibleName('Every image. Made for sales.');
   const before = await word.boundingBox();
   await expect.poll(() => ink.textContent()).toBe(phrase);
   await expect.poll(() => ink.textContent(), {timeout:8000, intervals:[100]}).toBe('');

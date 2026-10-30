@@ -6,3 +6,8 @@ playwright-report/
 .env.*
 !.env.example
 build/
+# Static feature HTML is generated from content/seo-pages.mjs before Vite builds.
+/features/bulk-image-processing.html
+/features/ecommerce-product-photography.html
+/features/portrait-enhancer.html
+/solutions/automation.html

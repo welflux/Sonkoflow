@@ -1,5 +1,6 @@
 // Read-only audit of public page links and fragment destinations. No forms are submitted.
 import { spawnSync } from "node:child_process";
+import { featurePages } from "../content/seo-pages.mjs";
 const base = process.argv[2] || "https://sonkoflow.com",
   origin = new URL(base);
 if (
@@ -14,6 +15,7 @@ if (
     "Supply an HTTPS origin without a trailing slash, or a local test origin.",
   );
 const seeds = [
+  ...featurePages.map(page => page.path),
   "/",
   "/pricing",
   "/terms",

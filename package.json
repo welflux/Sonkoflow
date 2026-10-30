@@ -21,7 +21,9 @@
     "postinstall": "npm run build",
     "check:processing": "node --env-file-if-exists=.env --import tsx scripts/check-processing.ts",
     "test:live:processing": "node --env-file-if-exists=.env --import tsx --test tests/live/processing.test.ts",
-    "test:live:packs": "node --env-file-if-exists=.env --import tsx --test tests/live/packs.test.ts"
+    "test:live:packs": "node --env-file-if-exists=.env --import tsx --test tests/live/packs.test.ts",
+    "prebuild": "node scripts/generate-feature-pages.mjs",
+    "predev": "node scripts/generate-feature-pages.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.12",

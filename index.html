@@ -6,9 +6,11 @@
     <meta name="theme-color" content="#142f3e" />
     <meta
       name="description"
-      content="A new perspective for products, portraits and personal photographs. Explore SonkoFlow’s connected image workspace, product packs and reusable brand identity."
+      content="AI product photo editing, portrait enhancement and product image packs in one private workspace. Plan batches, save brand direction and review every result."
     />
-    <title>SONKOFLOW — Every image. Made for what’s next.</title>
+    <title>
+      SonkoFlow — AI Commercial Image Production &amp; Enhancement Platform
+    </title>
     <link rel="icon" href="/favicon.svg" />
     <link
       rel="preload"
@@ -20,6 +22,104 @@
     <link rel="stylesheet" href="/src/design-system.css" />
     <link rel="stylesheet" href="/src/public.css" />
     <link rel="stylesheet" href="/src/style.css" />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href="https://sonkoflow.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="SonkoFlow" />
+    <meta
+      property="og:title"
+      content="SonkoFlow — AI Commercial Image Production &amp; Enhancement Platform"
+    />
+    <meta
+      property="og:description"
+      content="AI product photo editing, portrait enhancement and product image packs in one private workspace. Plan batches, save brand direction and review every result."
+    />
+    <meta property="og:url" content="https://sonkoflow.com/" />
+    <meta
+      property="og:image"
+      content="https://sonkoflow.com/images/footwear.webp"
+    />
+    <meta
+      property="og:image:alt"
+      content="Concept product photograph of an ivory sneaker on a studio plinth"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="SonkoFlow — AI Commercial Image Production &amp; Enhancement Platform"
+    />
+    <meta
+      name="twitter:description"
+      content="AI product photo editing, portrait enhancement and product image packs in one private workspace. Plan batches, save brand direction and review every result."
+    />
+    <meta
+      name="twitter:image"
+      content="https://sonkoflow.com/images/footwear.webp"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Concept product photograph of an ivory sneaker on a studio plinth"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://sonkoflow.com/#organization",
+            "name": "AaronPrime PTY LTD",
+            "url": "https://sonkoflow.com/",
+            "logo": "https://sonkoflow.com/brand/wordmark-ink.svg"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://sonkoflow.com/#website",
+            "name": "SonkoFlow",
+            "url": "https://sonkoflow.com/",
+            "inLanguage": "en",
+            "publisher": { "@id": "https://sonkoflow.com/#organization" }
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://sonkoflow.com/#software",
+            "name": "SonkoFlow",
+            "url": "https://sonkoflow.com/",
+            "applicationCategory": "MultimediaApplication",
+            "operatingSystem": "Web browser",
+            "description": "Reference-based product photo editing, portrait enhancement and connected product photography workflows.",
+            "publisher": { "@id": "https://sonkoflow.com/#organization" },
+            "image": "https://sonkoflow.com/images/footwear.webp",
+            "offers": {
+              "@type": "Offer",
+              "name": "Free workspace account",
+              "price": "0.00",
+              "priceCurrency": "USD",
+              "url": "https://sonkoflow.com/pricing",
+              "description": "Free workspace account. Image generation and purchasing depend on service availability and account allowances."
+            },
+            "featureList": [
+              "Reference-based product photo enhancement",
+              "Professional portraits from uploaded photographs",
+              "Personal photo enhancement",
+              "Product image packs with five output types",
+              "Product batch staging and allowance review",
+              "Saved brand profiles and reusable presets",
+              "Private image library and result review"
+            ]
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://sonkoflow.com/#page",
+            "url": "https://sonkoflow.com/",
+            "name": "SonkoFlow — AI Commercial Image Production & Enhancement Platform",
+            "description": "AI product photo editing, portrait enhancement and product image packs in one private workspace. Plan batches, save brand direction and review every result.",
+            "inLanguage": "en",
+            "isPartOf": { "@id": "https://sonkoflow.com/#website" },
+            "about": { "@id": "https://sonkoflow.com/#software" }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <a class="skip" href="#main">Skip to content</a>
@@ -59,7 +159,12 @@
           <details class="nav-resources">
             <summary>Resources</summary>
             <div>
-              <a href="/#how-it-works">How it works</a
+              <a href="/features/ecommerce-product-photography"
+                >Product photography</a
+              ><a href="/features/bulk-image-processing">Bulk editing</a
+              ><a href="/features/portrait-enhancer">Portrait enhancement</a
+              ><a href="/solutions/automation">Production workflows</a
+              ><a href="/#how-it-works">How it works</a
               ><a href="/#faq">Questions & answers</a
               ><a href="/legal">Legal & privacy</a>
             </div>
@@ -86,11 +191,14 @@
     <main id="main" tabindex="-1">
       <section class="landing-hero public-wrap">
         <p class="public-eyebrow">A FRESH PERSPECTIVE ON PHOTO PRODUCTION</p>
-        <h1 aria-label="Every image. Made for what’s next.">Every image.<br />Made for <em>what’s next.</em></h1>
+        <h1 aria-label="Every image. Made for sales.">
+          Every image.<br />Made for <em>sales.</em>
+        </h1>
         <p class="hero-intro">
-          Better light for your portraits. A consistent look for your
-          products.<br class="desktop-break" />
-          A thoughtful workspace for bringing it all together.
+          AI commercial image production for product photos and portraits.<br
+            class="desktop-break"
+          />
+          Plan a collection, save your brand direction and review every result.
         </p>
         <div class="public-actions">
           <a class="public-button" href="/account/signup"
@@ -127,6 +235,11 @@
           <figure class="hero-tile tile-one">
             <img
               src="/images/portrait.webp"
+              srcset="
+                /images/portrait-small.webp  640w,
+                /images/portrait.webp       1536w
+              "
+              sizes="(max-width: 700px) 90vw, (max-width: 1100px) 44vw, 35vw"
               alt="Illustrative professional portrait in a navy blazer"
               width="1536"
               height="1024"
@@ -150,6 +263,11 @@
           <figure class="hero-tile tile-three">
             <img
               src="/images/apparel.webp"
+              srcset="
+                /images/apparel-small.webp  640w,
+                /images/apparel.webp       1536w
+              "
+              sizes="(max-width: 700px) 90vw, (max-width: 1100px) 44vw, 35vw"
               alt="Illustrative leather bag and linen clothing arranged for a product collection"
               width="1536"
               height="1024"
@@ -266,6 +384,11 @@
           <div class="audience-picture product-picture">
             <img
               src="/images/footwear.webp"
+              srcset="
+                /images/footwear-small.webp  640w,
+                /images/footwear.webp       1536w
+              "
+              sizes="(max-width: 700px) 90vw, (max-width: 1100px) 44vw, 35vw"
               alt="Illustrative ivory sneaker on sculptural studio blocks"
               width="1536"
               height="1024"
@@ -313,6 +436,11 @@
           <div class="audience-picture">
             <img
               src="/images/portrait.webp"
+              srcset="
+                /images/portrait-small.webp  640w,
+                /images/portrait.webp       1536w
+              "
+              sizes="(max-width: 700px) 90vw, (max-width: 1100px) 44vw, 35vw"
               alt="Illustrative professional headshot against a softly lit blue background"
               width="1536"
               height="1024"
@@ -360,6 +488,11 @@
           <div class="audience-picture">
             <img
               src="/images/lifestyle.webp"
+              srcset="
+                /images/lifestyle-small.webp  640w,
+                /images/lifestyle.webp       1536w
+              "
+              sizes="(max-width: 700px) 90vw, (max-width: 1100px) 44vw, 35vw"
               alt="Illustrative casual portraits of two adults in warm natural light"
               width="1536"
               height="1024"
@@ -403,7 +536,10 @@
           <div class="section-top">
             <div>
               <p class="public-eyebrow">MORE THAN AN EDITING MOMENT</p>
-              <h2>A connected space.<br />From first upload to final file.</h2>
+              <h2>
+                Commercial image production.<br />From first upload to final
+                file.
+              </h2>
             </div>
             <a class="public-text-link" href="/app"
               >Meet your workspace
@@ -424,6 +560,11 @@
               <div class="tool-image">
                 <img
                   src="/images/objects.webp"
+                  srcset="
+                    /images/objects-small.webp  640w,
+                    /images/objects.webp       1536w
+                  "
+                  sizes="(max-width: 700px) 90vw, (max-width: 1100px) 44vw, 35vw"
                   alt="Illustrative collection of a watch, wool fabric, glass and an amber bottle"
                   width="1536"
                   height="1024"
@@ -458,25 +599,25 @@
               >
                 <img
                   src="/images/apparel-small.webp"
-                  alt="Illustrative apparel collection"
+                  alt="Concept product photograph of a leather tote, linen shirt and sunglasses"
                   width="640"
                   height="427"
                   loading="lazy"
                 /><img
                   src="/images/footwear-small.webp"
-                  alt="Illustrative footwear collection"
+                  alt="Concept ivory sneaker photographed on stone studio blocks"
                   width="640"
                   height="427"
                   loading="lazy"
                 /><img
                   src="/images/interior-small.webp"
-                  alt="Illustrative interior photograph"
+                  alt="Concept cream sofa in a sunlit interior"
                   width="640"
                   height="427"
                   loading="lazy"
                 /><img
                   src="/images/objects-small.webp"
-                  alt="Illustrative accessories collection"
+                  alt="Concept still life with a watch, glassware and amber bottle"
                   width="640"
                   height="427"
                   loading="lazy"
@@ -698,7 +839,9 @@
       <section class="public-section public-wrap lighting-section">
         <div>
           <p class="public-eyebrow">A LITTLE LIGHT CHANGES THE FEELING</p>
-          <h2 class="lighting-heading"><span>See the possibilities.</span><em>Keep your own eye.</em></h2>
+          <h2 class="lighting-heading">
+            <span>See the possibilities.</span><em>Keep your own eye.</em>
+          </h2>
           <p>
             Background and lighting choices shape a photograph’s mood. Explore
             two visual treatments in this interactive illustration.
@@ -724,6 +867,11 @@
           <div class="comparison" style="--split: 50%">
             <img
               src="/images/interior.webp"
+              srcset="
+                /images/interior-small.webp  640w,
+                /images/interior.webp       1536w
+              "
+              sizes="(max-width: 700px) 90vw, (max-width: 1100px) 44vw, 35vw"
               alt="Concept interior with a cool lighting treatment"
               width="1536"
               height="1024"
@@ -732,6 +880,11 @@
             <div class="comparison-warm">
               <img
                 src="/images/interior.webp"
+                srcset="
+                  /images/interior-small.webp  640w,
+                  /images/interior.webp       1536w
+                "
+                sizes="(max-width: 700px) 90vw, (max-width: 1100px) 44vw, 35vw"
                 alt="The same illustrative interior with a warm lighting treatment"
                 width="1536"
                 height="1024"
@@ -769,42 +922,111 @@
           <div class="process-header">
             <div>
               <p class="public-eyebrow">A CLEAR PATH THROUGH THE WORK</p>
-              <h2>Start with a photo.<br /><span>Finish with a decision.</span></h2>
+              <h2>
+                Start with a photo.<br /><span>Finish with a decision.</span>
+              </h2>
             </div>
-            <p class="process-intro">Your original is the starting point. Your eye guides the rest. Move from a photograph to a result you can review, keep and make your own.</p>
+            <p class="process-intro">
+              Your original is the starting point. Your eye guides the rest.
+              Move from a photograph to a result you can review, keep and make
+              your own.
+            </p>
           </div>
           <div class="process-grid">
             <article>
-              <div class="process-step"><span>01</span><span>THE STARTING POINT</span></div>
+              <div class="process-step">
+                <span>01</span><span>THE STARTING POINT</span>
+              </div>
               <div class="process-illustration" aria-hidden="true">
-                <svg viewBox="0 0 320 144" fill="none"><path class="diagram-muted" d="M68 25h158v100H68z"/><path d="M84 16h158v100H84z"/><path class="diagram-muted" d="m101 98 40-40 29 29 21-18 35 29H101Z"/><circle cx="203" cy="42" r="9"/><path d="M258 62v40m-14-26 14-14 14 14"/><path class="diagram-muted" d="M247 114h22"/></svg>
+                <svg viewBox="0 0 320 144" fill="none">
+                  <path class="diagram-muted" d="M68 25h158v100H68z" />
+                  <path d="M84 16h158v100H84z" />
+                  <path
+                    class="diagram-muted"
+                    d="m101 98 40-40 29 29 21-18 35 29H101Z"
+                  />
+                  <circle cx="203" cy="42" r="9" />
+                  <path d="M258 62v40m-14-26 14-14 14 14" />
+                  <path class="diagram-muted" d="M247 114h22" />
+                </svg>
               </div>
               <h3>Bring your original.</h3>
-              <p>Create a private project and upload a supported photograph. Keep your starting point close throughout the edit.</p>
+              <p>
+                Create a private project and upload a supported photograph. Keep
+                your starting point close throughout the edit.
+              </p>
               <span class="process-detail">A private place to begin</span>
             </article>
             <article>
-              <div class="process-step"><span>02</span><span>THE CREATIVE DIRECTION</span></div>
+              <div class="process-step">
+                <span>02</span><span>THE CREATIVE DIRECTION</span>
+              </div>
               <div class="process-illustration" aria-hidden="true">
-                <svg viewBox="0 0 320 144" fill="none"><path class="diagram-muted" d="M65 40h190M65 72h190M65 104h190"/><path d="M65 40h53M65 72h130M65 104h85"/><circle cx="124" cy="40" r="6"/><circle cx="201" cy="72" r="6"/><circle cx="156" cy="104" r="6"/><path class="diagram-muted" d="M48 19v106m224-106v106"/></svg>
+                <svg viewBox="0 0 320 144" fill="none">
+                  <path
+                    class="diagram-muted"
+                    d="M65 40h190M65 72h190M65 104h190"
+                  />
+                  <path d="M65 40h53M65 72h130M65 104h85" />
+                  <circle cx="124" cy="40" r="6" />
+                  <circle cx="201" cy="72" r="6" />
+                  <circle cx="156" cy="104" r="6" />
+                  <path class="diagram-muted" d="M48 19v106m224-106v106" />
+                </svg>
               </div>
               <h3>Give it direction.</h3>
-              <p>Choose your mode, output quality and editing instructions. Check the processing estimate before you start.</p>
+              <p>
+                Choose your mode, output quality and editing instructions. Check
+                the processing estimate before you start.
+              </p>
               <span class="process-detail">Your choices, clearly defined</span>
             </article>
             <article>
-              <div class="process-step"><span>03</span><span>THE FINAL SAY</span></div>
+              <div class="process-step">
+                <span>03</span><span>THE FINAL SAY</span>
+              </div>
               <div class="process-illustration" aria-hidden="true">
-                <svg viewBox="0 0 320 144" fill="none"><path class="diagram-muted" d="M65 21h190v102H65zM160 21v102"/><path class="diagram-muted" d="m80 107 38-43 28 32m29 11 36-43 29 32"/><circle cx="160" cy="72" r="13" fill="#142f3e"/><path d="m154 72 4 4 8-8M237 113l9 9 18-18"/><path d="M80 37h28m67 0h28"/></svg>
+                <svg viewBox="0 0 320 144" fill="none">
+                  <path
+                    class="diagram-muted"
+                    d="M65 21h190v102H65zM160 21v102"
+                  />
+                  <path
+                    class="diagram-muted"
+                    d="m80 107 38-43 28 32m29 11 36-43 29 32"
+                  />
+                  <circle cx="160" cy="72" r="13" fill="#142f3e" />
+                  <path d="m154 72 4 4 8-8M237 113l9 9 18-18" />
+                  <path d="M80 37h28m67 0h28" />
+                </svg>
               </div>
               <h3>Review. Keep. Download.</h3>
-              <p>Compare your saved result with the original. Inspect the details, download your chosen version and revisit it in your library.</p>
+              <p>
+                Compare your saved result with the original. Inspect the
+                details, download your chosen version and revisit it in your
+                library.
+              </p>
               <span class="process-detail">The decision stays with you</span>
             </article>
           </div>
           <div class="process-footer">
-            <div><span class="process-footer-label">FROM FIRST UPLOAD TO FINAL FILE</span><p>One workspace. A considered process. Your perspective.</p></div>
-            <a class="public-button light" href="/account/signup">Create your workspace<svg class="public-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6 18 18 6M6 6h12v12" /></svg></a>
+            <div>
+              <span class="process-footer-label"
+                >FROM FIRST UPLOAD TO FINAL FILE</span
+              >
+              <p>One workspace. A considered process. Your perspective.</p>
+            </div>
+            <a class="public-button light" href="/account/signup"
+              >Create your workspace<svg
+                class="public-arrow"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.7"
+                aria-hidden="true"
+              >
+                <path d="M6 18 18 6M6 6h12v12" /></svg
+            ></a>
           </div>
         </div>
       </section>
@@ -963,13 +1185,13 @@
         <div class="final-art">
           <img
             src="/images/lifestyle-small.webp"
-            alt="Illustrative lifestyle portrait collection"
+            alt="Concept portrait of two craftspeople in a pottery studio"
             width="640"
             height="427"
             loading="lazy"
           /><img
             src="/images/objects-small.webp"
-            alt="Illustrative product styling collection"
+            alt="Concept product styling with a watch, wool fabric and amber bottle"
             width="640"
             height="427"
             loading="lazy"
@@ -1006,14 +1228,15 @@
         <div>
           <h2>Image tools</h2>
           <a href="/#solutions">Personal photo enhancement</a
-          ><a href="/#solutions">Professional portraits</a
-          ><a href="/#product">Product photo enhancement</a
+          ><a href="/features/portrait-enhancer">Professional portraits</a
+          ><a href="/features/ecommerce-product-photography"
+            >Product photo enhancement</a
           ><a href="/#collections">Product image packs</a>
         </div>
         <div>
           <h2>Your workspace</h2>
           <a href="/app/brands">Brand Studio</a
-          ><a href="/app/batches">Bulk processing</a
+          ><a href="/features/bulk-image-processing">Bulk processing</a
           ><a href="/app/library">Image library</a
           ><a href="/pricing">Plans & pricing</a>
         </div>

@@ -6,6 +6,7 @@ import {
   validAuthRequestProof,
 } from "./auth/request-proof.js";
 import { accountRoutes } from "./account/routes.js";
+import { indexingHeaders, publicSEORoutes } from "./seo.js";
 import { projectDirectoryRoutes } from "./projects/routes.js";
 import { GoogleAuth } from "./auth/google.js";
 import {
@@ -55,6 +56,7 @@ export function createApp(config: Config | null) {
   const secure = config?.NODE_ENV === "production";
   const cookieName = secure ? "__Host-sonkoflow_session" : "sonkoflow_session";
   app.disable("x-powered-by");
+  app.use(indexingHeaders);
   app.set("trust proxy", config?.TRUST_PROXY_HOPS ?? false);
   app.use((req, res, next) => {
     res.locals.requestId = randomUUID();
@@ -781,6 +783,7 @@ export function createApp(config: Config | null) {
   app.use("/api", (_req, _res, next) =>
     next(new AppError(404, "not_found", "Endpoint not found.")),
   );
+  publicSEORoutes(app);
   for (const page of ["terms", "privacy", "cookies", "legal"])
     app.get(`/${page}`, (_q, r) =>
       r.sendFile(path.resolve(`dist/${page}.html`)),
@@ -851,6 +854,8 @@ export function createApp(config: Config | null) {
               "internal_error",
               "An unexpected error occurred. Please try again.",
             );
+      if (safe.status === 404 || safe.status === 410)
+        res.set("X-Robots-Tag", "noindex, nofollow");
       if (safe.status === 429) {
         const daily = ["daily_limit", "budget_limit"].includes(safe.code);
         const now = new Date();
