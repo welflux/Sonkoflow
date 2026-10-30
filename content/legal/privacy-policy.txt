@@ -1,0 +1,259 @@
+SONKOFLOW
+PRIVACY POLICY
+Effective Date: 30 October 2026
+Last Updated: 30 October 2026
+1. INTRODUCTION
+SONKOFLOW ("we", "us", "our" or the "Company") is committed to respecting and protecting the privacy and personal information of individuals who access or use our website, applications and digital services.
+SONKOFLOW is operated by AaronPrime PTY LTD, a company registered in the Republic of South Africa.
+This Privacy Policy explains how we collect, use, store, process, disclose and protect personal information when you visit https://sonkoflow.com, create an account, upload images, purchase a subscription, use our AI-powered image-processing services or communicate with us.
+We process personal information in accordance with applicable data-protection laws, including the Protection of Personal Information Act 4 of 2013 (POPIA), where applicable.
+By using SONKOFLOW, you acknowledge that you have read this Privacy Policy.
+2. COMPANY AND RESPONSIBLE PARTY INFORMATION
+For purposes of applicable South African data-protection legislation, the responsible party is:
+Legal entity: AaronPrime PTY LTD
+Trading name: SONKOFLOW
+Legal status: Private Company
+Country of registration: Republic of South Africa
+Company registration number: 2021 / 592876 / 07
+Website: https://sonkoflow.com
+Privacy contact email: hello@sonkoflow.com
+For privacy-related enquiries, requests or complaints, please contact us using the email address above.
+Where applicable, information concerning the Company's Information Officer or designated privacy contact will be made available through the appropriate legal or regulatory channels.
+3. PERSONAL INFORMATION WE COLLECT
+The categories of information we collect depend on how you interact with SONKOFLOW and which Services you use.
+3.1 Account and Registration Information
+When you create or manage an Account, we may collect:
+Name or display name.
+Email address.
+Account identification details.
+Authentication and login-related information.
+Password-related authentication data, where applicable.
+Account preferences and settings.
+Account creation and activity information.
+Where third-party authentication is enabled, we may also receive information made available through the relevant authentication provider.
+3.2 Uploaded Images and User Content
+When you use SONKOFLOW's image-processing Services, you may submit:
+Original photographs.
+Product images.
+Portrait images.
+Other uploaded image files.
+Processing instructions and prompts.
+Related project information.
+Generated or enhanced image outputs.
+Images may contain personal information, including identifiable individuals or other information visible within the image.
+You should only upload images that you are authorised to submit and process.
+3.3 Image Processing and Usage Information
+We may collect information relating to your use of the Services, including:
+Processing requests.
+Selected image-enhancement modes.
+Processing status and job information.
+Usage allowances and credit consumption.
+Processing errors and technical logs.
+Download activity.
+Project and gallery information.
+This information helps us operate the platform, manage usage, investigate technical issues and protect against misuse.
+3.4 Payment and Transaction Information
+When you purchase a Subscription or Credit Pack, we may process information relating to the transaction, including:
+Purchase and subscription records.
+Selected subscription plan.
+Billing interval.
+Transaction reference.
+Payment status.
+Amount and currency.
+Subscription renewal and cancellation information.
+Relevant billing records.
+Payments may be handled by third-party payment providers.
+Where payment details are collected directly by a payment provider, those details are generally subject to that provider's own privacy and security practices.
+We do not intend to store complete payment-card details on SONKOFLOW systems where these are handled directly by the payment provider.
+3.5 Technical and Device Information
+When you access SONKOFLOW, certain technical information may be collected automatically, including:
+IP address.
+Browser type and version.
+Device and operating-system information.
+Access timestamps.
+Pages and platform features accessed.
+Session and diagnostic information.
+Security and error logs.
+This information may be used to maintain the security, reliability and performance of the Services.
+3.6 Communications and Support Information
+If you contact us, we may collect:
+Your name and email address.
+The contents of your communication.
+Support requests.
+Complaint details.
+Relevant account or transaction references.
+Information you voluntarily provide when requesting assistance.
+We use this information to respond to enquiries and provide customer support.
+4. HOW WE USE PERSONAL INFORMATION
+We collect and process personal information for legitimate operational, contractual and legal purposes, including:
+4.1. Creating, managing and authenticating user Accounts.
+4.2. Providing access to SONKOFLOW's image-enhancement and image-production Services.
+4.3. Processing uploaded images and delivering requested outputs.
+4.4. Managing projects, image galleries, downloads and saved results.
+4.5. Managing subscriptions, Credit Packs, payments and usage allowances.
+4.6. Monitoring processing requests and maintaining accurate usage records.
+4.7. Providing customer support and responding to enquiries.
+4.8. Detecting fraudulent activity, unauthorised access and misuse of the platform.
+4.9. Maintaining, troubleshooting and improving the reliability and security of the Services.
+4.10. Communicating important service updates, account notices and transaction-related information.
+4.11. Complying with applicable legal, regulatory and contractual obligations.
+4.12. Establishing, exercising or defending legal claims where necessary.
+We will not process personal information for purposes that are incompatible with the purpose for which it was originally collected unless an appropriate legal basis exists.
+5. AI IMAGE PROCESSING AND UPLOADED CONTENT
+SONKOFLOW uses artificial intelligence and automated image-processing technologies to enhance and transform images submitted by users.
+5.1 Processing of Uploaded Images
+When you upload an image, the relevant file and associated processing information may be transmitted to the systems and service providers necessary to complete your requested operation.
+This may include third-party AI-processing infrastructure.
+5.2 Purpose of Processing
+Uploaded images are processed to:
+Perform the image enhancement requested by the user.
+Generate requested product image variations.
+Improve or transform portrait images.
+Complete applicable image-processing workflows.
+Deliver the resulting outputs to the user's Account.
+5.3 AI Training and Model Improvement
+SONKOFLOW does not represent that user-uploaded images are used to train its own AI models.
+Where external AI providers are involved, their handling of submitted content is subject to their applicable terms, privacy policies and data-processing arrangements.
+We will disclose the relevant processing arrangements accurately and will not promise that uploaded content is excluded from provider-side model improvement or retention unless that exclusion has been verified and is contractually or technically supported.
+5.4 Sensitive and Confidential Images
+Users should avoid uploading confidential, highly sensitive or personal images unless they have a legitimate reason and are comfortable with the processing required to provide the requested Service.
+You are responsible for obtaining any necessary permissions before submitting photographs containing identifiable individuals.
+6. LEGAL BASIS FOR PROCESSING
+Where POPIA or other applicable data-protection legislation requires a lawful basis for processing, SONKOFLOW will rely on an appropriate basis depending on the nature and purpose of the processing.
+These may include:
+Consent: Where you voluntarily consent to a particular processing activity.
+Contractual necessity: Where processing is necessary to provide Services you have requested or to fulfil an agreement with you.
+Legal obligation: Where processing is required to comply with applicable legislation.
+Legitimate interests: Where processing is necessary for legitimate operational, security or business interests, provided that applicable legal requirements and individual rights are respected.
+Where consent is relied upon, you may withdraw it, subject to applicable legal requirements and the consequences of withdrawing consent for the relevant Service.
+Withdrawal of consent does not invalidate processing lawfully undertaken before withdrawal.
+7. SHARING AND DISCLOSURE OF PERSONAL INFORMATION
+SONKOFLOW does not sell personal information to third parties as a commercial data-brokering activity.
+However, we may share or disclose personal information where necessary for the operation of the Services or where legally permitted or required.
+7.1 Technology and Infrastructure Providers
+We may use third-party providers to support:
+Website and application hosting.
+Database and file storage.
+Account authentication.
+AI image processing.
+Email delivery and communications.
+Technical monitoring and security.
+Payment processing.
+These providers may process personal information on our behalf or independently in accordance with their respective roles and applicable contractual arrangements.
+7.2 Payment Providers
+Where a payment provider processes your transaction, relevant information may be shared to authenticate payments, confirm transactions, manage subscriptions, process refunds and prevent fraud.
+7.3 Legal and Regulatory Disclosure
+We may disclose personal information where reasonably necessary to:
+Comply with applicable legislation.
+Respond to lawful requests from competent authorities.
+Protect the rights, property or security of SONKOFLOW or other individuals.
+Investigate suspected fraud or unlawful activity.
+Establish, exercise or defend legal claims.
+7.4 Business Transfers
+If AaronPrime PTY LTD undergoes a lawful restructuring, merger, acquisition or transfer of business assets, personal information may be transferred where legally permitted and subject to appropriate safeguards.
+8. INTERNATIONAL DATA TRANSFERS
+SONKOFLOW is operated from South Africa and may use third-party technology providers whose infrastructure, processing facilities or support operations are located in other countries.
+Consequently, personal information may be transferred to or processed in jurisdictions outside South Africa.
+Where such transfers involve personal information protected by POPIA, we will take reasonable steps to ensure that the applicable requirements of Section 72 of POPIA are satisfied.
+Depending on the circumstances, this may involve appropriate contractual safeguards, adequate protection under the receiving country's laws or another legally permitted transfer mechanism.
+9. DATA RETENTION
+SONKOFLOW retains personal information only for as long as reasonably necessary for the purposes for which it was collected, subject to applicable legal obligations.
+Retention periods may depend on:
+The type of information collected.
+Whether your Account remains active.
+The nature of the Services used.
+Applicable subscription and transaction records.
+Security and fraud-prevention requirements.
+Legal, regulatory and dispute-resolution obligations.
+Uploaded images, generated outputs and project information may remain associated with your Account while the relevant storage facilities are available and the applicable retention conditions are satisfied.
+We may delete or anonymise information when it is no longer required, subject to applicable law and legitimate retention requirements.
+Where deletion is requested, we will assess the request and take appropriate action in accordance with applicable law.
+Certain information may need to be retained for a limited period where required by law or necessary to establish, exercise or defend legal claims.
+10. DATA SECURITY
+SONKOFLOW takes the protection of personal information seriously.
+We aim to implement reasonable technical and organisational measures designed to protect information against:
+Unauthorised access.
+Accidental loss.
+Unlawful processing.
+Unauthorised alteration.
+Unauthorised disclosure.
+Destruction or misuse.
+Depending on the relevant systems, safeguards may include access controls, authentication protections, restricted storage access, secure communications, monitoring and other appropriate security measures.
+However, no internet-based platform or electronic transmission system can be guaranteed to be completely secure.
+You are also responsible for maintaining the confidentiality of your Account credentials and notifying us promptly of suspected unauthorised access.
+11. COOKIES AND SIMILAR TECHNOLOGIES
+SONKOFLOW may use cookies and similar technologies to support website functionality and improve the user experience.
+These technologies may be used for:
+Essential website and account functionality.
+Authentication and session management.
+Security and fraud prevention.
+Remembering user preferences.
+Understanding website usage and performance, where applicable.
+Where non-essential cookies or tracking technologies require consent under applicable law, we will seek the appropriate consent.
+You may also manage cookies through your browser settings. Disabling certain cookies may affect some website or account functionality.
+Further information will be provided in our Cookie Policy.
+12. YOUR PRIVACY RIGHTS
+Subject to applicable legislation, including POPIA, you may have the right to:
+12.1. Request confirmation of whether we hold personal information about you.
+12.2. Request access to personal information relating to you.
+12.3. Request correction of inaccurate, incomplete, outdated or misleading information.
+12.4. Request deletion or destruction of personal information where legally justified.
+12.5. Object to certain forms of processing where permitted by law.
+12.6. Withdraw consent where processing is based on consent.
+12.7. Raise concerns or submit complaints concerning the processing of your personal information.
+12.8. Request information about third parties who have received your personal information, where applicable and legally permitted.
+We will assess privacy requests in accordance with applicable law and may request reasonable information to verify your identity before acting on a request.
+Some information may need to be retained where a legal obligation or another lawful ground applies.
+13. MARKETING COMMUNICATIONS
+SONKOFLOW may send service-related communications, including:
+Account verification messages.
+Password-reset communications.
+Payment and subscription notifications.
+Important service announcements.
+Security notifications.
+Customer support responses.
+Where we send promotional or direct marketing communications, we will comply with applicable legal requirements.
+You may opt out of promotional communications through an available unsubscribe mechanism or by contacting hello@sonkoflow.com.
+Opting out of marketing communications will not prevent us from sending essential service, account, security or transaction-related messages where necessary.
+14. THIRD-PARTY WEBSITES AND SERVICES
+Our website or Services may contain links to third-party websites, platforms or services.
+These third parties operate independently and may have their own privacy policies and data-handling practices.
+SONKOFLOW does not control the privacy practices of independent third-party websites.
+We recommend reviewing their privacy notices before providing them with personal information.
+15. CHILDREN'S PRIVACY
+SONKOFLOW is intended for individuals who are at least 18 years old.
+We do not knowingly design our paid account services for children or intentionally collect personal information from individuals under 18 for account registration or purchases.
+If we become aware that an Account has been created by an individual below the permitted age, we may take appropriate steps to restrict or terminate that Account and address the associated personal information in accordance with applicable law.
+16. DATA BREACHES AND SECURITY INCIDENTS
+If SONKOFLOW becomes aware of a security compromise involving personal information, we will assess the incident and take reasonable steps to investigate, contain and address it.
+Where a security compromise meets the applicable legal notification requirements, we will notify the relevant regulatory authority and affected individuals in accordance with applicable law.
+Such notification may include information about the nature of the incident, potential consequences and steps taken or recommended to reduce possible harm.
+17. CHANGES TO THIS PRIVACY POLICY
+We may update this Privacy Policy to reflect changes in:
+Our Services and platform functionality.
+The personal information we collect.
+Our technology and third-party providers.
+Applicable data-protection legislation.
+Our business and operational practices.
+The latest version will be published on https://sonkoflow.com with an updated revision date.
+Where legally required or appropriate for a material change, we will provide additional notice.
+We encourage users to review this Policy periodically.
+18. COMPLAINTS AND REGULATORY RIGHTS
+If you have concerns about how SONKOFLOW processes your personal information, please contact us first so that we can investigate the matter.
+You may also exercise your rights or submit a complaint to the relevant competent data-protection authority.
+For South African users, the relevant authority is:
+Information Regulator (South Africa)
+Website: https://inforegulator.org.za/
+The Information Regulator is responsible for overseeing compliance with applicable data-protection legislation, including POPIA.
+Nothing in this Policy prevents you from exercising any rights available under applicable law.
+19. CONTACT US
+For privacy-related questions, access requests, correction requests, deletion requests or complaints, please contact:
+SONKOFLOW
+Operated by AaronPrime PTY LTD
+Website: https://sonkoflow.com
+Email: hello@sonkoflow.com
+Country: Republic of South Africa
+Please use the subject line Privacy Request – SONKOFLOW when contacting us about personal information.
+
+© 2026 SONKOFLOW. All rights reserved.
+A product of AaronPrime PTY LTD.

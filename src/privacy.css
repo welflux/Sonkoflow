@@ -1,0 +1,18 @@
+/* Privacy-specific hierarchy layered on the existing legal reading layout. */
+.privacy-page .terms-section:first-child {
+  padding-top: 0;
+}
+.privacy-page .terms-section h3 {
+  margin: 26px 0 14px;
+  font-size: 17px !important;
+  line-height: 26px !important;
+  letter-spacing: -0.2px !important;
+}
+.privacy-page .terms-bullets {
+  margin-left: 0;
+}
+@media print {
+  .privacy-page .terms-section h3 {
+    break-after: avoid;
+  }
+}

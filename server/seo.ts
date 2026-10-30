@@ -16,7 +16,7 @@ export function indexingHeaders(
     /^\/(?:app(?:\/|$|\.html$)|account(?:\/|$)|api(?:\/|$)|config(?:\/|$))/.test(
       req.path,
     ) ||
-    ["/privacy", "/cookies", "/legal"].some(
+    ["/cookies", "/legal"].some(
       (p) => req.path === p || req.path === p + ".html",
     )
   )
