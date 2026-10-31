@@ -115,7 +115,7 @@ test("Google appears only on provider capability and safely reports initiation f
   );
   await expect(page).toHaveURL(/\/account\/signin$/);
 });
-test("legal destinations display the requested titles without pretending final policies exist", async ({
+test("legal destinations display the published policies and publication dates", async ({
   page,
 }) => {
   for (const [path, title] of Object.entries({
@@ -128,9 +128,9 @@ test("legal destinations display the requested titles without pretending final p
     await expect(
       page.getByRole("heading", { level: 1, name: title }),
     ).toBeVisible();
-    await expect(page.locator(".legal-review")).toContainText(
-      "Document not yet published",
-    );
+    await expect(page.locator(".legal-review")).toHaveCount(0);
+    await expect(page.locator(".terms-dates")).toContainText("30 October 2026");
+    await expect(page.locator(".terms-section").first()).toBeVisible();
     await expect(page.locator(".footer-bottom")).toContainText(
       "All rights reserved © 2026 SonkoFlow, a product of AaronPrime PTY LTD.",
     );

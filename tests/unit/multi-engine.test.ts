@@ -356,6 +356,17 @@ test("remote output URLs reject alternate buckets, credentials, localhost, IPs a
       ),
       "https://downloads.example.test/results/image.png?signature=abc",
     );
+    assert.equal(
+      allowedOutputURL("https://dl.claid.ai/fixture/result.png", f.registry.engines.claid),
+      "https://dl.claid.ai/fixture/result.png",
+    );
+    for (const url of [
+      "http://dl.claid.ai/fixture/result.png",
+      "https://dl.claid.ai.evil.test/fixture/result.png",
+      "https://user:password@dl.claid.ai/fixture/result.png",
+      "https://dl.claid.ai:8443/fixture/result.png",
+      "https://storage.googleapis.com/another-bucket/result.png",
+    ]) assert.throws(() => allowedOutputURL(url, f.registry.engines.claid), ProviderFailure);
   } finally {
     f.cleanup();
   }
@@ -472,8 +483,9 @@ test("Claid authentic and creative requests have distinct fixed operations with 
       const fetcher = (async (url: any, init: any) => {
         if (init.method === "POST") {
           posts++;
-          const blob = init.body.get("data") as Blob;
-          const payload = JSON.parse(await blob.text());
+          const data = init.body.get("data");
+          assert.equal(typeof data, "string", "Claid expects a text field, not an uploaded JSON file");
+          const payload = JSON.parse(data as string);
           assert.equal(payload.output.format, "png");
           assert.equal(payload.operations.resizing.fit, "bounds");
           assert.equal(payload.operations.background.remove, creative);
@@ -483,12 +495,16 @@ test("Claid authentic and creative requests have distinct fixed operations with 
             data: {
               output: {
                 tmp_url:
-                  "https://storage.googleapis.com/production-leapi-tmp-public/fixture/out.png",
+                  creative
+                    ? "https://storage.googleapis.com/production-leapi-tmp-public/fixture/out.png"
+                    : "https://dl.claid.ai/fixture/out.png",
               },
             },
           });
         }
         assert.equal(init.headers, undefined);
+        assert.equal(init.redirect, "error");
+        assert.equal(init.credentials, "omit");
         return new Response(new Uint8Array(out));
       }) as typeof fetch;
       const result = await processRemote(
@@ -936,7 +952,7 @@ test("admission pins the native dedicated route in the existing job without addi
       payload.price_snapshot.basis,
       "configured_provider_rate_estimate",
     );
-    assert.equal(payload.prompt_version, "multi-engine-v1:enhance");
+    assert.equal(payload.prompt_version, `${ADAPTER_VERSION}:enhance`);
   } finally {
     f.cleanup();
   }

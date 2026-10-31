@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { PGlite } from "@electric-sql/pglite";
+import {trialSlotId} from '../../server/processing/claid-trial.js';
 const db = new PGlite();
 const owner = "11111111-1111-4111-8111-111111111111",
   other = "22222222-2222-4222-8222-222222222222";
@@ -118,6 +119,23 @@ before(async () => {
 after(() => db.close());
 beforeEach(() => db.exec("begin"));
 afterEach(() => db.exec("rollback"));
+test("owner trial slots are durable unique reservations and use existing output checkpoints without invented dollar cost",async()=>{
+ const worker=randomUUID(),result=randomUUID(),id=trialSlotId(owner,0);
+ const insert=()=>db.query("insert into public.processing_jobs(id,user_id,project_id,input_image_id,submission_key,status,mode,lease_owner,provider_started_at,result_image_id,reserved_micro_usd) values($1,$2,$3,$4,$5,'running','personal',$6,now(),$7,0)",[id,owner,project,source,randomUUID(),worker,result]);
+ await insert();await expectFailure(insert,/duplicate key/);
+ await db.query("insert into public.usage_events(user_id,job_id,operation,units,idempotency_key,cost_basis) values($1,$2,'processing',0,$3,'free_trial_api_credits_unknown')",[owner,id,`processing:${id}`]);
+ assert(await step(id,worker,'response',{request_id:'trial-test-only',usage:{provider:'claid',reserved_api_credits:3,actual_api_credits:null},cost:null}));
+ const metadata={filename:'trial.webp',checksum:'b'.repeat(64),width:128,height:128,byte_size:1000};
+ assert(await step(id,worker,'prepare',metadata));assert(await step(id,worker,'prepare',metadata));
+ assert(await step(id,worker,'complete'));
+ const j=(await db.query<any>('select * from public.processing_jobs where id=$1',[id])).rows[0];
+ assert.equal(j.status,'completed');assert.equal(j.cost_estimate_micro_usd,null);assert.equal(Number(j.reserved_micro_usd),0);
+ const i=(await db.query<any>('select * from public.images where id=$1',[result])).rows[0];assert.equal(i.status,'ready');assert.equal(i.role,'generated');
+ assert.notEqual(result,source);
+ await db.query("select set_config('request.jwt.claim.sub',$1,false)",[other]);await db.exec('set role authenticated');
+ assert.equal((await db.query('select id from public.images where id=$1',[result])).rows.length,0);
+ await expectFailure(()=>db.query('delete from public.processing_jobs where id=$1',[id]),/permission denied/);
+});
 test("processing submission is idempotent and mismatched reuse is rejected", async () => {
   const p = payload();
   const a = await submit(p);

@@ -161,10 +161,9 @@ export async function processRemote(
     }
     form.set(
       "data",
-      new Blob([JSON.stringify({ operations, output: { format: "png" } })], {
-        type: "application/json",
-      }),
-      "request.json",
+      // Claid declares this multipart field as a string. A Blob with a
+      // filename becomes an uploaded file and is rejected by validation.
+      JSON.stringify({ operations, output: { format: "png" } }),
     );
   }
   let response: Response;
@@ -234,6 +233,18 @@ export async function processRemote(
     outputURL = body?.data?.output?.tmp_url;
     if (requestId) await receipt?.(requestId, { ...usage });
   }
+  const encoded = await downloadRemoteOutput(engine,route.size,outputURL,signal,fetcher);
+  usage.elapsed_ms = Date.now() - started;
+  return { encoded, usage: null, requestId, engineUsage: usage, estimatedCost: route.estimate_micro_usd };
+}
+export { json as readRemoteJSON };
+// Shared by production processing and the isolated owner trial/recovery path.
+export async function downloadRemoteOutput(
+  engine: RemoteEngine, size: string, outputURL: unknown, signal: AbortSignal,
+  fetcher: typeof fetch = timedProviderFetch(300_000),
+): Promise<string> {
+  const [width,height]=size.split('x').map(Number);
+  let response: Response;
   // Fetch only explicit provider storage prefixes. No credentials, source URL,
   // redirects, cookies or signed storage URLs are exposed to the browser/logs.
   const url = allowedOutputURL(outputURL, engine);
@@ -269,12 +280,5 @@ export async function processRemote(
   } catch {
     throw new ProviderFailure("invalid_output", true, false);
   }
-  usage.elapsed_ms = Date.now() - started;
-  return {
-    encoded,
-    usage: null,
-    requestId,
-    engineUsage: usage,
-    estimatedCost: route.estimate_micro_usd,
-  };
+  return encoded;
 }

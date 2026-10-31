@@ -25,6 +25,8 @@ import { brandRoutes } from "./brand/routes.js";
 import { packRoutes } from "./packs/routes.js";
 import { ProcessingEngine } from "./processing/engine.js";
 import { processingRoutes } from "./processing/routes.js";
+import { ClaidTrial } from './processing/claid-trial.js';
+import { claidTrialRoutes } from './processing/claid-trial-routes.js';
 import express, {
   type Request,
   type Response,
@@ -51,6 +53,8 @@ export function createApp(config: Config | null) {
   const app = express();
   const svc = config ? services(config) : null;
   const processing = svc ? new ProcessingEngine(svc.admin) : null;
+  const claidTrial = svc && config ? new ClaidTrial(svc.admin,config.SESSION_ENCRYPTION_KEY) : null;
+  app.locals.claidTrial=claidTrial;
   const google = config ? new GoogleAuth(config) : null;
   app.locals.processing = processing;
   const secure = config?.NODE_ENV === "production";
@@ -773,7 +777,8 @@ export function createApp(config: Config | null) {
     res.json({ ok: true });
   });
   if (processing) {
-    processingRoutes(app, processing, who);
+    processingRoutes(app, processing, who, claidTrial!);
+    claidTrialRoutes(app,claidTrial!,who,limit);
     packRoutes(app, processing, who, limit);
     brandRoutes(app, processing, who, limit);
     batchRoutes(app, processing, who, limit);

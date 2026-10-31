@@ -25,7 +25,10 @@ test("account shell renders without horizontal overflow and keeps landing page r
   ).toBeVisible();
   await page.getByRole("link", { name: "Back to SONKOFLOW" }).click();
   await expect(
-    page.getByRole("heading", { name: /Every image/ }),
+    page.getByRole("heading", {
+      level: 1,
+      name: "AI Image Enhancement for Professional Product Photography",
+    }),
   ).toBeVisible();
   expect(errors).toEqual([]);
 });

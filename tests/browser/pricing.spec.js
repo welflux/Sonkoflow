@@ -5,7 +5,7 @@ test("pricing cards, real activation notice, illustrations and keyboard dialog w
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/pricing");
-  await expect(page).toHaveTitle(/Pricing.*SONKOFLOW/);
+  await expect(page).toHaveTitle("SonkoFlow Pricing — Plans & Processing Allowances");
   await expect(page.locator(".plan-card")).toHaveCount(3);
   await expect(page.locator("#once-cards article")).toHaveCount(2);
   await expect(page.locator("#billing-toggle")).toBeVisible();

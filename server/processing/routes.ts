@@ -12,6 +12,7 @@ import {
 } from "./contracts.js";
 import { retryRequest } from "../quality/contracts.js";
 import { ProcessingEngine } from "./engine.js";
+import { type ClaidTrial, publicTrialSettings } from './claid-trial.js';
 function present(job: Record<string, unknown>) {
   const result: Record<string, unknown> = {};
   for (const field of `${jobFields},${qualityFields},${packJobFields}`.split(
@@ -19,6 +20,7 @@ function present(job: Record<string, unknown>) {
   ))
     result[field] = job[field] ?? null;
   const settings=result.settings as Record<string,any>|null;
+  result.settings=publicTrialSettings(settings);
   if(settings?.engine_route){
     const route=settings.engine_route;
     // Customer history needs provider/operation context, not internal pricing,
@@ -36,6 +38,7 @@ export function processingRoutes(
   app: Express,
   engine: ProcessingEngine,
   who: (res: Response) => Identity,
+  trial?: ClaidTrial,
 ) {
   const fields = async () =>
     jobFields +
@@ -60,7 +63,7 @@ export function processingRoutes(
     res.json({ image: { ...data, audience: project.data?.audience } });
   });
   app.get("/api/processing/capabilities", async (_req, res) =>
-    res.json(await engine.capabilities(who(res))),
+    res.json({...await engine.capabilities(who(res)),...(trial?{claid_trial:await trial.capabilities(who(res))}:{})}),
   );
   app.post("/api/jobs", async (req, res) => {
     const job = await engine.submit(jobInput.parse(req.body), who(res));

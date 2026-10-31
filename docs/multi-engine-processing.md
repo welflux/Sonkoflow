@@ -2,6 +2,13 @@
 
 ## Release state
 
+Subsequent Claid-only trial: an isolated, owner-authorized smart-resize request
+has now produced a downloaded and validated output. Multipart field handling and
+the exact `dl.claid.ai` delivery-host support were corrected locally. New engines
+remain disabled; full photographic-quality, paid-cost and authenticated workflow
+verification is still pending. See [the trial record](claid-first-trial-2026-10-31.md)
+for results and limits; the original release evidence below predates this trial.
+
 Implementation is prepared; **Topaz and Claid are disabled**. The owner confirmed that these accounts are not funded/configured and has not chosen a live comparison budget. No billable comparison was run and no successful live Topaz/Claid output, photographic-quality result or actual per-operation invoice cost is claimed. Existing OpenAI processing/billing activation flags are unchanged. Contract tests use explicit fixtures only; production contains no simulated provider responses.
 
 The existing dashboard layout, navigation, projects, private image library, original uploads, account/OAuth/recovery, packs, batches, brand profiles and commercial credit catalogue remain intact. No hosted schema migration or new credit system is required. Only the editor gains matching native form controls for the processing experience and, when activated, eligible providers/operations. Unverified Authentic Enhancement is visibly unavailable.

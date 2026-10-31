@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { isIP } from "node:net";
 import { AppError, hash } from "../security.js";
 import type { JobInput } from "./contracts.js";
-export const ADAPTER_VERSION = "multi-engine-v1";
+export const ADAPTER_VERSION = "multi-engine-v2";
 export const processingSelection = z
   .object({
     experience: z.enum(["authentic", "creative"]),
@@ -183,7 +183,12 @@ export function loadEngineRegistry(
     const model = id === "topaz" ? "Upscale High Fidelity V3" : "claid-edit-v1";
     const outputPrefixes =
       id === "claid"
-        ? ["https://storage.googleapis.com/production-leapi-tmp-public/"]
+        ? [
+            "https://storage.googleapis.com/production-leapi-tmp-public/",
+            // Observed in an authenticated live Claid response, 31 Oct 2026.
+            // Exact first-party origin only; downloads still reject redirects.
+            "https://dl.claid.ai/",
+          ]
         : (env.AI_TOPAZ_OUTPUT_PREFIXES || "")
             .split(",")
             .map((s) => s.trim())

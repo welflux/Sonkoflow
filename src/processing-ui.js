@@ -45,6 +45,11 @@ export async function processingEditor(api, shell, imageId) {
     `/api/images/${image.id}/content`;
   page.querySelector("#reference-name").textContent = image.filename;
   const capabilities = await api("/processing/capabilities");
+  if(capabilities.claid_trial){
+    const {renderClaidTrial}=await import('./claid-trial-ui.js');
+    await renderClaidTrial(api,page,image,capabilities.claid_trial);
+    return;
+  }
   const qualities = (capabilities.qualities ?? []).filter((quality) =>
     ["low", "medium", "high"].includes(quality),
   );

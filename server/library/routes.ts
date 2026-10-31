@@ -5,6 +5,7 @@ import { AppError, uuid, hash } from "../security.js";
 import type { ProcessingEngine } from "../processing/engine.js";
 import type { Identity } from "../services.js";
 import { jobFields, qualityFields } from "../processing/contracts.js";
+import { publicTrialSettings } from '../processing/claid-trial.js';
 export function libraryError(e: any) {
   if (!e) return;
   const name = [
@@ -153,7 +154,7 @@ export function libraryRoutes(
     libraryError(v.error);
     r.json({
       image: image.data,
-      jobs: v.data ?? [],
+      jobs: (v.data ?? []).map((j:any)=>({...j,settings:publicTrialSettings(j.settings)})),
       next_offset: v.data?.length === 24 ? offset + 24 : null,
     });
   });
