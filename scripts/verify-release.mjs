@@ -10,7 +10,7 @@ function get(path){
   return{status,body,json,location};
 }
 const checks=[];function record(name,ok,detail){checks.push({name,ok,...detail});}
-const home=get('/');record('new_homepage',home.status===200&&home.body.includes('/brand/wordmark-ink.svg')&&home.body.includes('Made for'),{status:home.status});
+const home=get('/');record('new_homepage',home.status===200&&home.body.includes('/brand/wordmark-ink.svg')&&home.body.includes('AI Image Enhancement for Professional Product Photography'),{status:home.status});
 const health=get('/api/health');record('backend_health',health.status===200&&health.json?.status==='ok',{status:health.status});
 const catalog=get('/api/public/pricing');record('pricing_catalog',catalog.status===200&&catalog.json?.offers?.starter_monthly?.cents===900&&catalog.json?.offers?.pro_monthly?.cents===1900,{status:catalog.status,checkoutEnabled:catalog.json?.checkout_enabled??null});
 const auth=get('/api/public/auth');record('google_capability',auth.status===200&&typeof auth.json?.google==='boolean',{status:auth.status,googleEnabled:auth.json?.google??null});
