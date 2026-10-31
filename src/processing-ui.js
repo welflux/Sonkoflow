@@ -20,7 +20,7 @@ const modes = {
 const active = new Set(["queued", "running", "persisting"]);
 const labels = {
   queued: "Queued",
-  running: "Editing with OpenAI",
+  running: "Processing photograph",
   persisting: "Validating and saving",
   completed: "Completed",
   failed: "Could not finish",
@@ -35,7 +35,7 @@ function notice(el, text, error = false) {
 export async function processingEditor(api, shell, imageId) {
   const page = shell("projects");
   page.innerHTML =
-    '<a class="breadcrumb" id="project-link">← Back to project</a><div class="page-heading"><div><p class="eyebrow">A new perspective</p><h1>Make your next edit.</h1><p>One reference photograph. A direction that fits.</p></div></div><div id="page-notice" class="notice" role="status"></div><div class="editor-layout"><figure class="reference-panel"><img id="reference-photo" alt="Your uploaded reference photograph"><figcaption><strong id="reference-name"></strong><span>Uploaded reference · normalized WebP</span></figcaption></figure><section class="panel editor-controls"><h2>Choose your direction</h2><form id="edit-form"><label>Enhancement mode<select name="mode" aria-label="Enhancement mode" disabled><option value="personal">Personal Photo Enhancement</option><option value="portrait">Professional Portraits</option><option value="product">Product Photo Enhancement</option></select></label><p id="mode-description" class="mode-description"></p><div class="inline-row"><label>Output quality<select name="quality" aria-label="Output quality"></select></label><label>Canvas<select name="framing" aria-label="Canvas" disabled><option value="match">Closest match to reference</option><option value="square">Square · 1024 × 1024</option><option value="landscape">Landscape · 1536 × 1024</option><option value="portrait">Portrait · 1024 × 1536</option></select></label></div><p class="help">The closest supported canvas may extend the background. Images are not stretched. Generation cannot recover missing detail.</p><label>Background<select name="background" aria-label="Background"><option value="preserve">Preserve the original</option><option value="clean">Clean neutral setting</option><option value="studio">Professional studio</option></select></label><fieldset id="product-controls" hidden><legend>Preservation-focused product editing</legend><p class="help">Keep the actual product, packaging, print, logos, quantity and accessories. These edits use neutral photographic backgrounds; creative lifestyle scenes are outside this workflow.</p><label class="check-row"><input type="checkbox" name="product-operation" value="background" checked><span>Background cleanup or neutral replacement</span></label><label class="check-row"><input type="checkbox" name="product-operation" value="lighting" checked><span>Lighting improvement</span></label><label class="check-row"><input type="checkbox" name="product-operation" value="color" checked><span>Color balance and contrast correction</span></label><label class="check-row"><input type="checkbox" name="product-operation" value="shadows" checked><span>Realistic shadow enhancement</span></label><label class="check-row"><input type="checkbox" name="preserve_arrangement" checked><span>Keep the exact item arrangement</span></label><label class="check-row"><input type="checkbox" name="comparison-region"><span>Focus local comparisons on a product region</span></label><div id="product-region" hidden><p class="help">Optional region in percentages of the original image. The same region is compared in the result; reframing may trigger a review warning. This does not isolate or mask the product for editing.</p><div class="inline-row"><label>Left (%)<input name="region-left" type="number" min="0" max="95" value="10"></label><label>Top (%)<input name="region-top" type="number" min="0" max="95" value="10"></label></div><div class="inline-row"><label>Width (%)<input name="region-width" type="number" min="5" max="100" value="80"></label><label>Height (%)<input name="region-height" type="number" min="5" max="100" value="80"></label></div></div><p class="help" id="product-assessment-note"></p></fieldset><label>Optional editing instructions<textarea name="instructions" maxlength="1500" rows="4" placeholder="e.g. Soften harsh shadows and keep the warm natural colors."></textarea></label><label class="check-row"><input name="preserve_appearance" type="checkbox" required checked><span id="preserve-label">Keep recognizable identity and original appearance.</span></label><label class="check-row"><input name="provider_consent" type="checkbox" required><span>I have permission to edit this photograph and send it to OpenAI for processing. I will review the result before use.</span></label><label class="check-row" id="uncertain-ack" hidden><input name="acknowledge_uncertain" type="checkbox"><span>I understand a previous interrupted request may have incurred a charge, and this new edit can incur another.</span></label><p class="help" id="processing-limits"></p><div class="notice" id="edit-notice" role="status"></div><button type="submit" disabled>Generate edited photograph</button></form></section></div>';
+    '<a class="breadcrumb" id="project-link">← Back to project</a><div class="page-heading"><div><p class="eyebrow">A new perspective</p><h1>Make your next edit.</h1><p>One reference photograph. A direction that fits.</p></div></div><div id="page-notice" class="notice" role="status"></div><div class="editor-layout"><figure class="reference-panel"><img id="reference-photo" alt="Your uploaded reference photograph"><figcaption><strong id="reference-name"></strong><span>Uploaded reference · normalized WebP</span></figcaption></figure><section class="panel editor-controls"><h2>Choose your direction</h2><form id="edit-form"><label>Processing experience<select name="processing_experience" aria-label="Processing experience"><option value="creative">Creative Production</option><option value="authentic" disabled>Authentic Enhancement · awaiting activation</option></select></label><p class="help" id="experience-description">Creative Production can change backgrounds, lighting and presentation. Review identity and product details before use. Authentic Enhancement uses separately verified, source-preserving engines.</p><div id="engine-settings" hidden><label>Processing engine<select name="processing_engine" aria-label="Processing engine"></select></label><label>Operation<select name="processing_operation" aria-label="Operation"></select></label><label id="processing-scale-label">Resolution scale<select name="processing_scale" aria-label="Resolution scale"><option value="1">Original resolution</option><option value="2">2× resolution</option><option value="4">4× resolution</option></select></label></div><label>Enhancement mode<select name="mode" aria-label="Enhancement mode" disabled><option value="personal">Personal Photo Enhancement</option><option value="portrait">Professional Portraits</option><option value="product">Product Photo Enhancement</option></select></label><p id="mode-description" class="mode-description"></p><div class="inline-row"><label>Output quality<select name="quality" aria-label="Output quality"></select></label><label>Canvas<select name="framing" aria-label="Canvas" disabled><option value="match">Closest match to reference</option><option value="square">Square · 1024 × 1024</option><option value="landscape">Landscape · 1536 × 1024</option><option value="portrait">Portrait · 1024 × 1536</option></select></label></div><p class="help">The closest supported canvas may extend the background. Images are not stretched. Generation cannot recover missing detail.</p><label>Background<select name="background" aria-label="Background"><option value="preserve">Preserve the original</option><option value="clean">Clean neutral setting</option><option value="studio">Professional studio</option></select></label><fieldset id="product-controls" hidden><legend>Preservation-focused product editing</legend><p class="help">Keep the actual product, packaging, print, logos, quantity and accessories. These edits use neutral photographic backgrounds; creative lifestyle scenes are outside this workflow.</p><label class="check-row"><input type="checkbox" name="product-operation" value="background" checked><span>Background cleanup or neutral replacement</span></label><label class="check-row"><input type="checkbox" name="product-operation" value="lighting" checked><span>Lighting improvement</span></label><label class="check-row"><input type="checkbox" name="product-operation" value="color" checked><span>Color balance and contrast correction</span></label><label class="check-row"><input type="checkbox" name="product-operation" value="shadows" checked><span>Realistic shadow enhancement</span></label><label class="check-row"><input type="checkbox" name="preserve_arrangement" checked><span>Keep the exact item arrangement</span></label><label class="check-row"><input type="checkbox" name="comparison-region"><span>Focus local comparisons on a product region</span></label><div id="product-region" hidden><p class="help">Optional region in percentages of the original image. The same region is compared in the result; reframing may trigger a review warning. This does not isolate or mask the product for editing.</p><div class="inline-row"><label>Left (%)<input name="region-left" type="number" min="0" max="95" value="10"></label><label>Top (%)<input name="region-top" type="number" min="0" max="95" value="10"></label></div><div class="inline-row"><label>Width (%)<input name="region-width" type="number" min="5" max="100" value="80"></label><label>Height (%)<input name="region-height" type="number" min="5" max="100" value="80"></label></div></div><p class="help" id="product-assessment-note"></p></fieldset><label>Optional editing instructions<textarea name="instructions" maxlength="1500" rows="4" placeholder="e.g. Soften harsh shadows and keep the warm natural colors."></textarea></label><label class="check-row"><input name="preserve_appearance" type="checkbox" required checked><span id="preserve-label">Keep recognizable identity and original appearance.</span></label><label class="check-row"><input name="provider_consent" type="checkbox" required><span id="provider-consent-copy">I have permission to edit this photograph and send it to OpenAI for processing. I will review the result before use.</span></label><label class="check-row" id="uncertain-ack" hidden><input name="acknowledge_uncertain" type="checkbox"><span>I understand a previous interrupted request may have incurred a charge, and this new edit can incur another.</span></label><p class="help" id="processing-limits"></p><div class="notice" id="edit-notice" role="status"></div><button type="submit" disabled>Generate edited photograph</button></form></section></div>';
   const { image } = await api(`/images/${imageId}`);
   if (image.role !== "original" || image.status !== "ready")
     throw new Error("Choose a ready uploaded reference photograph.");
@@ -179,6 +179,62 @@ export async function processingEditor(api, shell, imageId) {
   submit.disabled =
     select.value === "product" &&
     capabilities.product_quality_available === false;
+  // Keep the existing editor layout and legacy payload until a verified extra
+  // engine is explicitly selected. Disabled providers cannot be selected.
+  const experience=form.elements.processing_experience;
+  const engineSelect=form.elements.processing_engine;
+  const operationSelect=form.elements.processing_operation;
+  const scaleSelect=form.elements.processing_scale;
+  const readyEngines=(capabilities.engines??[]).filter(e=>e.enabled&&['openai','topaz','claid'].includes(e.id)&&(!capabilities.billing_metered||capabilities.billing_plan!=='free'||e.id==='openai'));
+  const engineNames={openai:'OpenAI',topaz:'Topaz Labs',claid:'Claid'};
+  const authenticOption=experience.querySelector('option[value="authentic"]');
+  const canAuthentic=capabilities.authentic_enabled&&readyEngines.some(e=>e.id!=='openai'&&e.verified_cases?.some(k=>!k.startsWith('product_finish:')));
+  authenticOption.disabled=!canAuthentic;
+  if(canAuthentic)authenticOption.textContent='Authentic Enhancement';
+  if(capabilities.creative_enabled===false)experience.querySelector('option[value="creative"]').disabled=true;
+  if(capabilities.creative_enabled===false&&canAuthentic)experience.value='authentic';
+  function selectedRemote(){return capabilities.multi_engine_enabled&&engineSelect.value&&engineSelect.value!=='openai';}
+  function fillEngines(){
+    engineSelect.replaceChildren();
+    for(const engine of readyEngines.filter(e=>experience.value==='authentic'?e.id!=='openai'&&e.verified_cases?.some(k=>!k.startsWith('product_finish:')):e.id==='openai'||e.verified_cases?.includes('product_finish:1'))){
+      const option=document.createElement('option');option.value=engine.id;option.textContent=engineNames[engine.id];engineSelect.append(option);
+    }
+  }
+  let creativeSettings=null,lastRemote=false;
+  function setProcessingControls(){
+    const authentic=experience.value==='authentic';
+    const remote=selectedRemote();
+    if(remote&&!lastRemote)creativeSettings={background:form.elements.background.value,framing:form.elements.framing.value};
+    if(!remote&&lastRemote&&creativeSettings){form.elements.background.value=creativeSettings.background;form.elements.framing.value=creativeSettings.framing;}
+    lastRemote=!!remote;
+    page.querySelector('#engine-settings').hidden=!capabilities.multi_engine_enabled;
+    const engine=readyEngines.find(e=>e.id===engineSelect.value);
+    const old=operationSelect.value;operationSelect.replaceChildren();
+    const cases=engine?.verified_cases??[];
+    for(const [value,title] of (engineSelect.value==='topaz'?[['enhance','Photographic enhancement'],['upscale','Precision upscale'],['sharpen','Natural sharpening'],['denoise','Photographic denoising']]:authentic?[['upscale','Precision upscale']]:engineSelect.value==='claid'?[['product_finish','Product lighting and white background']]:[['enhance','Creative edit']])){
+      if(remote&&!cases.some(key=>key.startsWith(value+':')))continue;
+      const option=document.createElement('option');option.value=value;option.textContent=title;operationSelect.append(option);
+    }
+    if([...operationSelect.options].some(o=>o.value===old))operationSelect.value=old;
+    for(const option of scaleSelect.options)option.disabled=remote&&!cases.includes(`${operationSelect.value}:${option.value}`);
+    if(scaleSelect.selectedOptions[0]?.disabled)scaleSelect.value=[...scaleSelect.options].find(o=>!o.disabled)?.value??'1';
+    if(!remote)scaleSelect.value='1';
+    page.querySelector('#processing-scale-label').hidden=operationSelect.value!=='upscale';
+    form.elements.quality.closest('.inline-row').hidden=!!remote;
+    form.elements.framing.closest('.inline-row').nextElementSibling.hidden=!!remote;
+    for(const name of ['background','framing','instructions'])form.elements[name].disabled=remote;
+    if(remote){form.elements.background.value=authentic?'preserve':'clean';form.elements.framing.value='match';}
+    else form.elements.framing.disabled=capabilities.billing_plan==='free';
+    form.elements.instructions.closest('label').hidden=!!remote;
+    page.querySelector('#product-controls').hidden=remote||select.value!=='product';
+    page.querySelector('#experience-description').textContent=authentic?'Authentic Enhancement keeps the original composition and uses precision processing without generative backgrounds or face reconstruction. Review the result; enhancement cannot guarantee recovery of missing detail.':(engineSelect.value==='claid'?'Claid offers a fixed product-lighting and white-background finish. Its temporary hosted output is copied to your private library; provider retention policies apply.':'Creative Production supports intentional changes to backgrounds, lighting and presentation. OpenAI supports instructions and brand layouts.');
+    page.querySelector('#provider-consent-copy').textContent=`I have permission to edit this photograph and send it to ${engineNames[engineSelect.value]??'OpenAI'} for processing. I will review the result before use.`;
+    if(capabilities.multi_engine_enabled)submit.disabled=!canGenerate||!engine||!operationSelect.value||(engineSelect.value==='claid'&&!authentic&&select.value!=='product')||(select.value==='product'&&capabilities.product_quality_available===false);
+  }
+  fillEngines();setProcessingControls();
+  experience.addEventListener('change',()=>{form.elements.provider_consent.checked=false;fillEngines();setProcessingControls();});
+  for(const element of [engineSelect,operationSelect,scaleSelect])element.addEventListener('change',()=>{form.elements.provider_consent.checked=false;setProcessingControls();});
+  select.addEventListener('change',setProcessingControls);
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (submit.disabled) return;
@@ -200,7 +256,11 @@ export async function processingEditor(api, shell, imageId) {
         provider_consent: values.provider_consent === "on",
         acknowledge_uncertain: values.acknowledge_uncertain === "on",
       };
-      if (select.value === "product") {
+      if(capabilities.multi_engine_enabled&&engineSelect.value){
+        body.processing={experience:experience.value,engine:engineSelect.value,operation:operationSelect.value,scale:Number(scaleSelect.value),consented_engine:engineSelect.value};
+        if(selectedRemote()){body.framing='match';body.background=experience.value==='authentic'?'preserve':'clean';body.instructions='';}
+      }
+      if (select.value === "product" && !selectedRemote()) {
         if (brand.value()) body.brand = brand.value();
         body.product_options = {
           operations: new FormData(form).getAll("product-operation"),
@@ -403,16 +463,18 @@ export async function processingResult(api, shell, id) {
       row("Model", job.model);
       row("Submitted", new Date(job.created_at).toLocaleString());
       if (job.instructions) row("Your instructions", job.instructions);
-      if (job.provider_usage)
+      if (job.provider_usage && Number.isFinite(job.provider_usage.input_tokens))
         row(
           "Provider token usage",
           `${job.provider_usage.input_tokens} input · ${job.provider_usage.output_tokens} output`,
         );
+      if(job.settings?.engine_route){row('Processing experience',job.settings.engine_route.experience==='authentic'?'Authentic Enhancement':'Creative Production');row('Processing engine',job.settings.engine_route.provider==='topaz'?'Topaz Labs':'Claid');row('Operation',job.settings.engine_route.operation);}
+      if(job.provider_usage?.provider)row('Provider operation',`${job.provider_usage.provider} · ${job.provider_usage.output_pixels} output pixels · provider did not report an invoice cost`);
       row(
         "Estimated provider cost",
         job.cost_estimate_micro_usd == null
           ? "Not available; an unknown outcome must not be treated as free."
-          : `$${(job.cost_estimate_micro_usd / 1e6).toFixed(6)} USD using configured uncached-token rates. Provider billing is authoritative.`,
+          : `$${(job.cost_estimate_micro_usd / 1e6).toFixed(6)} USD using the saved provider price configuration. Provider billing is authoritative.`,
       );
       if (job.quality_provider_usage)
         row(

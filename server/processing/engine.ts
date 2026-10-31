@@ -1,3 +1,5 @@
+import { loadEngineRegistry, chooseRoute, engineCapabilities, routeDigest, topazModel, ADAPTER_VERSION, type EngineRoute, type Selection } from './engine-registry.js';
+import { processRemote, type RemoteResult, type Receipt } from './remote-providers.js';
 import {BillingService} from '../billing/service.js';
 import {meterPlan} from '../billing/meter.js';
 import { BrandService } from "../brand/service.js";
@@ -57,10 +59,12 @@ export type WorkerJob = {
     provider_consent?: boolean;
     pack_context?: PackContext;
     brand_snapshot?: BrandSnapshot;
+    processing?: Selection;
+    engine_route?: EngineRoute;
   };
   quality_retry_targets?: CheckId[];
   quality_retry_instructions?: string;
-  model: ProcessingConfig["AI_IMAGE_MODEL"];
+  model: string;
   output_size: string;
   result_image_id: string;
   output_image_id: string | null;
@@ -130,6 +134,15 @@ export function supabaseJobStore(admin: SupabaseClient): JobStore {
         p,
       });
       processingDbError(error);
+      if(data===true && action==='response' && ['topaz','claid'].includes(String((p.usage as {provider?:string}|null)?.provider))){
+        // The atomic RPC already recorded usage and settled/retained its hold.
+        // Refine the legacy token-basis label without replaying a provider or
+        // turning a metadata-label failure into a failed image operation.
+        try {
+          const label=await admin.from('usage_events').update({cost_basis:p.cost==null?'provider_cost_unknown':'configured_provider_rate_estimate'}).eq('job_id',job).eq('idempotency_key',`processing:${job}`);
+          if(label.error)throw Error('label');
+        }catch{console.error(JSON.stringify({event:'processing_cost_basis_pending',job_id:job}));}
+      }
       return data === true;
     },
     async image(id, owner) {
@@ -164,6 +177,7 @@ export type EditProvider = (
   jobId: string,
   signal: AbortSignal,
   ownerId: string,
+  receipt?: Receipt,
 ) => Promise<ProviderResult>;
 export class ProcessingWorker {
   private stopped = false;
@@ -285,20 +299,25 @@ export class ProcessingWorker {
       dispatched = true;
       // Use each job's immutable model/price snapshot across configuration changes.
       const result = await this.provider(
-        { ...this.config, AI_IMAGE_MODEL: job.model },
+        { ...this.config, AI_IMAGE_MODEL: job.model as ProcessingConfig["AI_IMAGE_MODEL"] },
         input,
         bytes,
         job.output_size,
         job.id,
         controller.signal,
         job.user_id,
+        async (id, usage) => {
+          if (!(await this.checkpoint(job.id, worker, "response", {usage, request_id:id, cost:null}))) {
+            controller.abort(); throw new ProviderFailure('provider_interrupted', true, false);
+          }
+        },
       );
       received = true;
       if (
         !(await this.checkpoint(job.id, worker, "response", {
-          usage: result.usage,
+          usage: (result as Partial<RemoteResult>).engineUsage ?? result.usage,
           request_id: result.requestId,
-          cost: estimateCost(result.usage, job.price_snapshot),
+          cost: (result as Partial<RemoteResult>).engineUsage ? (result as RemoteResult).estimatedCost : estimateCost(result.usage, job.price_snapshot),
         }))
       )
         return;
@@ -432,6 +451,7 @@ export class ProcessingWorker {
   }
 }
 export class ProcessingEngine {
+  readonly engines;
   readonly billing:BillingService|null;
   readonly config: ProcessingConfig | null;
   readonly missing: string[];
@@ -449,18 +469,30 @@ export class ProcessingEngine {
     readonly admin: SupabaseClient,
     env: NodeJS.ProcessEnv = process.env,
   ) {
+    this.engines = loadEngineRegistry(env);
     this.billing=env.BILLING_ENABLED==="1"?new BillingService(admin,env):null;
     const loaded = loadProcessingConfig(env);
     this.config = loaded.config;
+    if(this.config && !this.config.AI_OPENAI_API_KEY)this.engines.openaiEnabled=false;
     this.missing = loaded.missing;
     this.quality = qualityConfig(env);
     this.packConfig = loadPackConfig(env);
     this.qualityWorker = new QualityWorker(
       qualityStore(admin),
-      this.config ? this.quality.vision : null,
+      this.config && this.engines.openaiEnabled ? this.quality.vision : null,
     );
     this.worker = this.config
-      ? new ProcessingWorker(supabaseJobStore(admin), this.config)
+      ? new ProcessingWorker(supabaseJobStore(admin), this.config, async (c,input,source,size,id,signal,owner,receipt) => {
+          const route = (input as JobInput & {engine_route?:EngineRoute}).engine_route;
+          if (route) {
+            const selected=this.engines.engines[route.provider as 'topaz'|'claid'];
+            if (route.version!==ADAPTER_VERSION || !selected?.enabled || !selected.verifiedCases.includes(`${route.operation}:${input.processing?.scale}`) || (routeDigest(route)!==route.route_hash || routeDigest({...route,rate:selected.rate})!==route.route_hash) || (route.provider==='topaz'?topazModel(route.operation):selected.model)!==route.model || route.size!==size || selected.rate?.version!==route.rate?.version)
+              throw new ProviderFailure('processing_engine_disabled',false,true);
+            return processRemote(selected,route,source,AbortSignal.any([signal,AbortSignal.timeout(c.AI_TIMEOUT_SECONDS*1000)]),receipt);
+          }
+          if (!this.engines.openaiEnabled) throw new ProviderFailure('processing_engine_disabled',false,true);
+          return editImage(c,input,source,size,id,signal,undefined,owner);
+        })
       : null;
   }
   async schemaReady() {
@@ -477,8 +509,11 @@ export class ProcessingEngine {
     const desired=billing?.plan==="free"?"low":["starter","payg"].includes(billing?.plan)?"medium":this.config?.AI_MAX_QUALITY;
     const ceiling=["low","medium","high"][Math.min(["low","medium","high"].indexOf(desired??"high"),["low","medium","high"].indexOf(this.config?.AI_MAX_QUALITY??"high"))];
     return {
+      ...engineCapabilities(this.engines,!!this.config&&history),
+      creative_enabled:!!this.config&&history&&this.engines.openaiEnabled,
+      authentic_enabled:!!this.config&&history&&Object.values(this.engines.engines).some(e=>e.enabled&&e.verifiedCases.some(k=>!k.startsWith("product_finish:"))),
       billing_metered:!!this.billing,billing_plan:billing?.plan??null,
-      enabled: !!this.config && history,
+      enabled: !!this.config && history && (this.engines.openaiEnabled || Object.values(this.engines.engines).some(e=>e.enabled)),
       history_available: history,
       reason: !history
         ? "migration_required"
@@ -491,13 +526,13 @@ export class ProcessingEngine {
             Math.min(["low", "medium", "high"].indexOf(this.config.AI_MAX_QUALITY),["low","medium","high"].indexOf(ceiling??"high")) + 1,
           )
         : [],
-      model: this.config?.AI_IMAGE_MODEL ?? null,
+      model: this.engines.openaiEnabled ? this.config?.AI_IMAGE_MODEL ?? null : null,
       default_quality:ceiling??this.config?.AI_MAX_QUALITY??"high",
       sizes: ["1024x1024", "1536x1024", "1024x1536"],
       daily_limit: this.config?.AI_USER_DAILY_LIMIT ?? null,
       product_quality_available: qualityReady,
       product_retry_limit: billing?.plan==="free"?0:this.quality.retryLimit,
-      vision_assessment: billing?.plan!=="free" && !!this.config && !!this.quality.vision,
+      vision_assessment: this.engines.openaiEnabled && billing?.plan!=="free" && !!this.config && !!this.quality.vision,
     };
   }
   async qualityReady() {
@@ -595,6 +630,12 @@ export class ProcessingEngine {
     processingDbError(error);
     if (!image || image.role !== "original" || image.status !== "ready")
       throw new AppError(404, "not_found", "Reference photograph not found.");
+    const engineRoute = retry?.parent.settings.engine_route as EngineRoute | undefined
+      ?? chooseRoute(this.engines,input,image,c.AI_IMAGE_MODEL);
+    if (!engineRoute && !this.engines.openaiEnabled)
+      throw new AppError(503,'processing_engine_disabled','Creative Production is not activated.');
+    if (retry?.parent.settings.engine_route)
+      throw new AppError(409,'processing_retry','Review the original photograph and submit a new, explicitly confirmed enhancement. Dedicated-engine outputs do not use generative correction retries.');
     if (input.brand && !retry) {
       const prior = await identity.client
         .from("processing_jobs")
@@ -676,8 +717,10 @@ export class ProcessingEngine {
                 framing: input.framing,
                 preserve_appearance: true,
                 provider_consent: true,
+                ...(input.processing ? {processing:input.processing} : {}),
+                ...(engineRoute ? {engine_route:engineRoute} : {}),
                 ...(brand ? { brand_snapshot: brand } : {}),
-                ...(input.mode === "product"
+                ...(input.mode === "product" && !engineRoute
                   ? {
                       product_options: productOptions.parse(
                         input.product_options ?? {},
@@ -685,9 +728,9 @@ export class ProcessingEngine {
                     }
                   : {}),
               },
-          model: c.AI_IMAGE_MODEL,
-          output_size: outputSize(input, image.width, image.height),
-          prompt_version: brand
+          model: engineRoute ? `${engineRoute.provider}:${engineRoute.model}` : c.AI_IMAGE_MODEL,
+          output_size: engineRoute?.size ?? outputSize(input, image.width, image.height),
+          prompt_version: engineRoute ? `${ADAPTER_VERSION}:${engineRoute.operation}` : brand
             ? "brand-product-v1"
             : input.mode === "product"
               ? PRODUCT_PROMPT_VERSION
@@ -702,7 +745,7 @@ export class ProcessingEngine {
                 }),
               )
             : fingerprint(input),
-          price_snapshot: priceSnapshot(c),
+          price_snapshot: engineRoute ? {provider:engineRoute.provider, model:engineRoute.model, ...engineRoute.rate, basis:"configured_provider_rate_estimate", actual_cost_micro_usd:null} : priceSnapshot(c),
           reserved_micro_usd: Math.ceil(
             (c.AI_OPERATION_RESERVE_USD +
               (input.mode === "product"
@@ -724,6 +767,7 @@ export class ProcessingEngine {
               }
             : {}),
           ...(metered&&!packRetryPlan?{reserved_micro_usd:metered.reserved_micro_usd,quality_reserved_micro_usd:metered.quality_reserved_micro_usd,pack_credit_plan:metered.plan,quality_model:metered.vision?.AI_QUALITY_VISION_MODEL??null,quality_price_snapshot:metered.vision?visionPrice(metered.vision):null,quality_retry_limit:metered.tier==='free'?0:this.quality.retryLimit}:{}),
+          ...(engineRoute ? {reserved_micro_usd:Math.max(engineRoute.reserve_micro_usd,meteredReservation(metered),Math.ceil(c.AI_OPERATION_RESERVE_USD*1e6)), quality_reserved_micro_usd:0,quality_model:null,quality_price_snapshot:null,quality_retry_limit:0} : {}),
           ...(packRetryPlan
             ? {
                 prompt_version: packRetryPlan.job.prompt_version,
@@ -759,3 +803,5 @@ export class ProcessingEngine {
     await this.qualityWorker.stop();
   }
 }
+
+function meteredReservation(value:Awaited<ReturnType<typeof meterPlan>>) { return value?.reserved_micro_usd ?? 0; }

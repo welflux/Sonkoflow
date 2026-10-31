@@ -11,3 +11,6 @@ build/
 /features/ecommerce-product-photography.html
 /features/portrait-enhancer.html
 /solutions/automation.html
+
+# Private comparison inputs/reports/results must never be committed.
+/artifacts/engine-comparison/

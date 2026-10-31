@@ -1,3 +1,4 @@
+import { loadEngineRegistry } from "./engine-registry.js";
 import { z } from "zod";
 const money = z.coerce.number().finite().positive().max(10000);
 const schema = z.object({
@@ -33,7 +34,40 @@ export function loadProcessingConfig(env: NodeJS.ProcessEnv = process.env): {
 } {
   if (env.AI_PROCESSING_ENABLED !== "1")
     return { config: null, missing: ["AI_PROCESSING_ENABLED"] };
-  const result = schema.safeParse(env);
+  const openai = env.AI_OPENAI_ENABLED !== "0";
+  // Disabled OpenAI fields are inert, never submitted or used as price estimates.
+  // Dedicated providers have their own required, reviewed prices and secrets.
+  const result = openai
+    ? schema.safeParse(env)
+    : schema
+        .extend({
+          AI_OPENAI_API_KEY: z.literal(""),
+          AI_PRICE_VERSION: z.literal("not_applicable"),
+          AI_TEXT_INPUT_USD_PER_MILLION: z.literal(0),
+          AI_IMAGE_INPUT_USD_PER_MILLION: z.literal(0),
+          AI_TEXT_OUTPUT_USD_PER_MILLION: z.literal(0),
+          AI_IMAGE_OUTPUT_USD_PER_MILLION: z.literal(0),
+        })
+        .safeParse({
+          ...env,
+          AI_OPENAI_API_KEY: "",
+          AI_PRICE_VERSION: "not_applicable",
+          AI_TEXT_INPUT_USD_PER_MILLION: 0,
+          AI_IMAGE_INPUT_USD_PER_MILLION: 0,
+          AI_TEXT_OUTPUT_USD_PER_MILLION: 0,
+          AI_IMAGE_OUTPUT_USD_PER_MILLION: 0,
+        });
+  if (
+    !result.success &&
+    openai &&
+    Object.values(loadEngineRegistry(env).engines).some(
+      (engine) => engine.enabled,
+    )
+  ) {
+    // A misconfigured OpenAI adapter must not disable a separately verified
+    // dedicated provider. Shared budgets still have to validate below.
+    return loadProcessingConfig({ ...env, AI_OPENAI_ENABLED: "0" });
+  }
   return result.success
     ? { config: result.data, missing: [] }
     : {

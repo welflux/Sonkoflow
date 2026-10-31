@@ -106,6 +106,7 @@ export class PackService {
     const e = this.engine;
     if (
       !e.config ||
+      e.engines?.openaiEnabled === false ||
       !e.packConfig ||
       !(await e.packsReady()) ||
       !(await e.qualityReady())

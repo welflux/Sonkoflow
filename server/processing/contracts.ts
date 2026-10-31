@@ -1,3 +1,4 @@
+import { processingSelection } from "./engine-registry.js";
 import {billingError} from '../billing/service.js';
 import {
   brandSelection,
@@ -35,6 +36,7 @@ export const jobInput = z
     acknowledge_uncertain: z.boolean().default(false),
     product_options: productOptions.optional(),
     brand: brandSelection.optional(),
+    processing: processingSelection.optional(),
   })
   .strict()
   .superRefine((input, ctx) => {
@@ -104,6 +106,7 @@ export const jobFields =
 export const qualityFields =
   "quality_state,quality_error_code,quality_report,quality_provider_usage,quality_cost_micro_usd,generation_cost_micro_usd,quality_parent_id,quality_root_id,quality_retry_number,quality_retry_limit,quality_retry_targets,quality_retry_instructions,user_decision,decision_revision,quality_decisions";
 export const errors: Record<string, string> = {
+  processing_engine_disabled: "This processing engine is disabled or awaiting verified live testing. No automatic switch to another provider was made.",
   brand_composite_failed:
     "The provider returned an image, but its brand strip could not be prepared or validated. No result was published. Usage was recorded; no automatic regeneration was attempted.",
   brand_asset_unavailable:

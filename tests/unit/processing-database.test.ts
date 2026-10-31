@@ -412,3 +412,17 @@ test("normal uploads cannot consume the generated-output slot reserved by an act
     100,
   );
 });
+
+test('dedicated-engine metadata and native dimensions use the existing idempotent job and retained unknown-cost ledger', async () => {
+  const p:any=payload();
+  p.model='topaz:Upscale High Fidelity V3';p.output_size='2048x1366';p.instructions='';
+  p.settings={background:'preserve',framing:'match',preserve_appearance:true,processing:{experience:'authentic',engine:'topaz',operation:'upscale',scale:2,consented_engine:'topaz'},engine_route:{provider:'topaz',operation:'upscale',size:p.output_size,version:'multi-engine-v1'}};
+  p.price_snapshot={provider:'topaz',version:'contract-test-rate',basis:'configured_provider_rate_estimate'};
+  const job=await submit(p);assert.equal((await submit(p)).id,job.id);assert.equal(job.output_size,'2048x1366');assert.equal(job.settings.engine_route.provider,'topaz');assert.equal(job.price_snapshot.provider,'topaz');
+  const {worker}=await claim();assert(await step(job.id,worker,'dispatch'));
+  assert(await step(job.id,worker,'response',{usage:{provider:'topaz',remote_job_id:'contract-only',actual_cost_micro_usd:null},request_id:'contract-only',cost:null}));
+  assert(await step(job.id,worker,'fail',{code:'provider_interrupted',safe:false,uncertain:true}));
+  const event=(await db.query<any>("select * from public.usage_events where job_id=$1 and operation='processing'",[job.id])).rows[0];assert.equal(event.provider_usage.provider,'topaz');assert.equal(event.cost_estimate_micro_usd,null);assert.equal(event.model,'topaz:Upscale High Fidelity V3');
+  const saved=(await db.query<any>('select * from public.processing_jobs where id=$1',[job.id])).rows[0];assert.equal(saved.status,'uncertain');assert.equal(saved.reserved_micro_usd,1e6);assert.equal(saved.safe_to_retry,false);
+  assert.equal((await db.query<any>('select role from public.images where id=$1',[source])).rows[0].role,'original');
+});

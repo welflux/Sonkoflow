@@ -4,7 +4,7 @@ const project = "11111111-1111-4111-8111-111111111111",
   image = "22222222-2222-4222-8222-222222222222",
   job = "33333333-3333-4333-8333-333333333333",
   output = "44444444-4444-4444-8444-444444444444";
-async function fixture(page, { enabled = true, status = "completed", qualities = enabled ? ["low", "medium", "high"] : [], reason = enabled ? null : "configuration_required" } = {}) {
+async function fixture(page, { extraCapabilities = {}, enabled = true, status = "completed", qualities = enabled ? ["low", "medium", "high"] : [], reason = enabled ? null : "configuration_required" } = {}) {
   const photograph = await readFile(
     new URL("../../public/images/footwear-small.webp", import.meta.url),
   );
@@ -46,6 +46,7 @@ async function fixture(page, { enabled = true, status = "completed", qualities =
         reason,
         default_quality: "high",
         daily_limit: 5,
+        ...extraCapabilities,
       };
     else if (path === `/api/images/${image}`)
       body = {
@@ -254,3 +255,34 @@ for (const requested of ['personal','portrait','product','unsupported']) {
   expect(state.submitted).toEqual([]);
  });
 }
+
+
+// Explicit UI fixtures; these do not establish live engine availability.
+test('unverified engines remain unavailable and existing creative edits stay available', async ({page})=>{
+ await fixture(page,{extraCapabilities:{multi_engine_enabled:true,creative_enabled:true,authentic_enabled:false,engines:[{id:'openai',enabled:true},{id:'topaz',enabled:false,reason:'live_validation_required'},{id:'claid',enabled:false,reason:'disabled'}]}});
+ await page.goto(`/app/edit/${image}`);
+ await expect(page.locator('select[name=processing_experience] option[value=authentic]')).toHaveJSProperty('disabled',true);
+ await expect(page.getByLabel('Processing engine')).toHaveValue('openai');
+ await expect(page.locator('select[name=processing_engine] option')).toHaveCount(1);
+ await expect(page.locator('#experience-description')).toContainText('Creative Production supports intentional changes');
+});
+test('verified authentic controls bind consent, preserve creative instructions and submit one dedicated operation',async({page})=>{
+ const state=await fixture(page,{extraCapabilities:{multi_engine_enabled:true,creative_enabled:true,authentic_enabled:true,engines:[{id:'openai',enabled:true},{id:'topaz',enabled:true,verified_cases:['enhance:1','upscale:2']}]}});
+ await page.goto(`/app/edit/${image}`);
+ await page.getByLabel('Optional editing instructions').fill('Preserve this creative draft');
+ await page.getByLabel('Processing experience').selectOption('authentic');
+ await expect(page.getByLabel('Background',{exact:true})).toBeDisabled();
+ await expect(page.locator('select[name=background]')).toHaveValue('preserve');
+ await expect(page.locator('#provider-consent-copy')).toContainText('Topaz Labs');
+ await page.getByLabel('Processing experience').selectOption('creative');
+ await expect(page.getByLabel('Optional editing instructions')).toHaveValue('Preserve this creative draft');
+ await page.getByLabel('Processing experience').selectOption('authentic');
+ await page.getByLabel('Operation',{exact:true}).selectOption('upscale');
+ await expect(page.getByLabel('Resolution scale')).toHaveValue('2');
+ await page.locator('input[name=provider_consent]').check();
+ await page.getByRole('button',{name:'Generate edited photograph',exact:true}).click();
+ await expect.poll(()=>state.submitted.length).toBe(1);
+ const body=state.submitted[0];
+ expect(body.processing).toEqual({experience:'authentic',engine:'topaz',operation:'upscale',scale:2,consented_engine:'topaz'});
+ expect(body.instructions).toBe('');expect(body.framing).toBe('match');expect(body.background).toBe('preserve');expect(body.product_options).toBeUndefined();expect(body.brand).toBeUndefined();
+});

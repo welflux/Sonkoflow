@@ -18,6 +18,13 @@ function present(job: Record<string, unknown>) {
     ",",
   ))
     result[field] = job[field] ?? null;
+  const settings=result.settings as Record<string,any>|null;
+  if(settings?.engine_route){
+    const route=settings.engine_route;
+    // Customer history needs provider/operation context, not internal pricing,
+    // reservation multipliers or the worker's immutable-route digest.
+    result.settings={...settings,engine_route:Object.fromEntries(['version','provider','model','experience','operation','size'].map(key=>[key,route[key]]))};
+  }
   result.message =
     typeof job.error_code === "string"
       ? (errors[job.error_code] ??

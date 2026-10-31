@@ -1,3 +1,4 @@
+import { chooseRoute } from "../processing/engine-registry.js";
 import type { ProcessingEngine } from "../processing/engine.js";
 import type { JobInput } from "../processing/contracts.js";
 import { buildPrompt, outputSize } from "../processing/contracts.js";
@@ -17,6 +18,15 @@ export async function meterPlan(
     tier = account.plan,
     c = engine.config!,
     pc = engine.packConfig;
+  if(!c)throw new AppError(503,"processing_not_configured","Processing is not configured.");
+  const dedicated = chooseRoute(engine.engines,input,source,c.AI_IMAGE_MODEL);
+  if(dedicated){
+    if(tier==='free'||(['starter','payg'].includes(tier)&&input.quality==='high'))
+      throw new AppError(409,'billing_entitlement','Choose an enabled paid quality tier for dedicated-engine processing.');
+    const reserve=dedicated.reserve_micro_usd;
+    return {plan:{unit_micro_usd:10000,generation_credits:Math.ceil(reserve/10000),assessment_credits:0,estimated_credits:Math.ceil(dedicated.estimate_micro_usd/10000),estimated_micro_usd:dedicated.estimate_micro_usd,version:dedicated.rate!.version},tier,account,reserved_micro_usd:reserve,quality_reserved_micro_usd:0,vision:null};
+  }
+  if(engine.engines?.openaiEnabled===false)throw new AppError(503,'processing_engine_disabled','Creative Production is disabled.');
   if (
     !pc ||
     pc.AI_PACK_CREDIT_MICRO_USD !== 10000 ||

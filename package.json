@@ -23,7 +23,9 @@
     "test:live:processing": "node --env-file-if-exists=.env --import tsx --test tests/live/processing.test.ts",
     "test:live:packs": "node --env-file-if-exists=.env --import tsx --test tests/live/packs.test.ts",
     "prebuild": "node scripts/generate-feature-pages.mjs",
-    "predev": "node scripts/generate-feature-pages.mjs"
+    "predev": "node scripts/generate-feature-pages.mjs",
+    "check:engines": "node --env-file-if-exists=.env --import tsx scripts/check-multi-engines.ts",
+    "test:live:engines": "node --env-file-if-exists=.env --import tsx scripts/compare-engines.ts"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.12",
