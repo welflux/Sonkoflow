@@ -38,3 +38,10 @@ test('delivery receipts remain sealed and are stripped from customer history set
  assert.equal(s.claid_trial.receipt_sealed,'ciphertext');
  assert.equal(publicTrialSettings(null),null);
 });
+test('only the configured owner sees blocked setting names, without credential values',async()=>{
+ const trial=new ClaidTrial({} as any,'1'.repeat(64),{...env,AI_PROCESSING_ENABLED:'1'});
+ const c=await trial.capabilities({userId:owner} as any);
+ assert.deepEqual(c?.configuration_required,['AI_PROCESSING_ENABLED']);
+ assert.equal(c?.enabled,false);assert(!JSON.stringify(c).includes(env.AI_CLAID_API_KEY));
+ assert.equal(await trial.capabilities({userId:other} as any),null);
+});

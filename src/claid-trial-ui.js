@@ -6,6 +6,7 @@ export async function renderClaidTrial(api,page,image,trial){
  const mode=['personal','portrait','product'].includes(requested)?requested:'personal';
  if(mode==='product'){const o=document.createElement('option');o.value='product_finish';o.textContent='Product lighting and white background';form.elements.operation.append(o);form.elements.operation.value='product_finish';}
  let busy=false,submission=null,job=null,locked=false;
+ if(trial.configuration_required)notice.textContent=trial.message;
  const key=`sonkoflow-claid-trial:${image.id}`;
  try{submission=sessionStorage.getItem(key)}catch{}
  panel.querySelector('#trial-summary').textContent=`Only your account can use this trial. ${trial.remaining_requests} request(s) remain, with 3 Claid API credits reserved per request and a maximum trial allowance of ${trial.max_trial_credits} credits. Subscription credits are unchanged.`;

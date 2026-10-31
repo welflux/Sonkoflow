@@ -34,16 +34,26 @@ export function publicTrialSettings(settings:any){
 function checked(error:any){if(error)throw new AppError(503,'trial_storage_unavailable','Trial storage is unavailable. No automatic processing retry was made.');}
 export class ClaidTrial {
   readonly policy;
+  private readonly candidate;
   private readonly engine;
   private readonly active=new Map<string,Promise<void>>();
   constructor(readonly admin:SupabaseClient,readonly encryptionKey:string,readonly env:NodeJS.ProcessEnv=process.env,readonly fetcher:typeof fetch=timedProviderFetch(300000)){
     this.policy=trialPolicy(env);this.engine=loadEngineRegistry(env).engines.claid;
+    try{this.candidate=policySchema.parse(JSON.parse(env.AI_CLAID_TRIAL_JSON||''));}catch{this.candidate=null;}
   }
   private owner(identity:Identity){if(!this.policy||identity.userId!==this.policy.owner_id)throw new AppError(404,'not_found','Trial not found.');}
   private ids(){return Array.from({length:Math.floor(this.policy!.max_credits/3)},(_,i)=>trialSlotId(this.policy!.owner_id,i));}
   private async rows(){const r=await this.admin.from('processing_jobs').select('*').in('id',this.ids()).eq('user_id',this.policy!.owner_id);checked(r.error);return r.data??[];}
   async capabilities(identity?:Identity){
-    if(!identity||!this.policy||identity.userId!==this.policy.owner_id)return null;
+    if(!identity)return null;
+    if(!this.policy){
+      if(this.candidate?.owner_id!==identity.userId)return null;
+      const blockers=['AI_PROCESSING_ENABLED','AI_MULTI_ENGINE_ENABLED','AI_TOPAZ_ENABLED','AI_CLAID_ENABLED','BILLING_ENABLED'].filter(n=>this.env[n]==='1');
+      if(!this.engine.key)blockers.push('AI_CLAID_API_KEY');
+      if(!blockers.length)blockers.push('AI_CLAID_TRIAL_JSON');
+      return {enabled:false,configuration_required:blockers,remaining_requests:0,max_trial_credits:this.candidate.max_credits,expires_at:this.candidate.expires_at,jobs:[],message:`Private trial configuration required: ${blockers.join(', ')}. Normal engine and billing switches must stay at 0.`};
+    }
+    if(identity.userId!==this.policy.owner_id)return null;
     const rows=await this.rows(),remaining=Math.max(0,this.ids().length-rows.length),expired=Date.now()>=Date.parse(this.policy.expires_at);
     return {enabled:!expired&&remaining>0,expired,remaining_requests:remaining,reserved_credits_per_request:3,max_trial_credits:this.policy.max_credits,expires_at:this.policy.expires_at,jobs:rows.map(j=>this.present(j))};
   }
